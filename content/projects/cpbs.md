@@ -13,7 +13,7 @@ period:
 team:
   size: 1
   type: "개인"
-role: "기획, 설계, 검증, 배포. 설계 문서와 구현 계획을 먼저 쓰고 구현은 Claude Code와 함께"
+role: "기획, 설계, 검증, 배포"
 stack:
   - React 19
   - TypeScript
