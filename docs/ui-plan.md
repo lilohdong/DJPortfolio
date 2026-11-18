@@ -420,7 +420,7 @@
 | 프로젝트 | 대표 이미지 | 본문에 넣을 사진 (어느 문단 뒤) | 사진 더 보기 |
 |---|---|---|---|
 | Calddy | calddy-calendar | calddy-diary (기능 소개 문단), calddy-calendar-overlay (맡은 도메인 문단), calddy-midpoint (지도 재설계 문단) | |
-| NudgeUp | nudgeup-main | nudgeup-erd (백엔드 구조 문단), nudgeup-task-create (앱 구조 문단), nudgeup-team-settings (독촉 트랜잭션 문단) | nudgeup-login, nudgeup-signup |
+| NudgeUp | nudgeup-main | nudgeup-erd (백엔드 구조 문단), nudgeup-task-create (앱 구조 문단), nudgeup-team-settings (독촉 권한 문단) | nudgeup-login, nudgeup-signup |
 | 여론지 | yeoronji-list-desktop | yeoronji-issue-desktop (층화 추출 문단), yeoronji-nostance-desktop (LLM 문단) | yeoronji-list-mobile, yeoronji-issue-mobile |
 | 메이플 할일 알리미 | maple-desktop | maple-notify (Cloudflare 구성과 정기 알림 문단) | maple-mobile |
 | Mongscape | mongscape-play-mine | mongscape-cart-fork (게임 소개 문단), mongscape-ready-skeleton (몸동작 인식 문단), mongscape-login (얼굴 로그인 문단) | mongscape-play-zoo (mongscape-result는 팀원을 알아볼 수 있는 닉네임이 보여 T-021 후속에서 뺐다) |
