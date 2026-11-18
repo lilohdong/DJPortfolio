@@ -1,6 +1,6 @@
 ---
 title: "Calddy"
-summary: "캘린더와 SNS를 결합한 관계 중심 다이어리 앱 (캡스톤디자인)"
+summary: "캘린더에 일기 기록과 친구 공유를 붙인 앱 (캡스톤디자인)"
 period:
   start: "2026-03"
   end: "2026-06"
@@ -8,7 +8,7 @@ team:
   size: 4
   type: "팀"
   note: "4인 팀, 캡스톤디자인"
-role: "백엔드 담당 — 백엔드 57개 기능 중 30개 설계·구현 (인증, 캘린더, 약속 조율, 지도, 알림)"
+role: "백엔드 57개 기능 중 30개 설계·구현 (인증, 캘린더, 약속 조율, 지도, 알림)"
 stack:
   - Flutter
   - Riverpod
@@ -21,10 +21,10 @@ stack:
   - Kakao Local API
   - Gemini API
 highlights:
-  - "Supabase RLS로 권한과 비즈니스 규칙을 DB 레벨에서 적용"
-  - "DB 트리거 → Edge Function → FCM으로 이어지는 이벤트 기반 알림 파이프라인 구축"
-  - "대중교통 이동 시간 기준 중간 지점 계산 기능 구현 (Kakao Local API + ODsay + Naver Map)"
-  - "Clean Architecture 레이어 분리와 백엔드 단위 테스트 작성"
+  - "별도 서버 없이 Supabase RLS로 권한과 규칙을 DB에서 처리"
+  - "DB 트리거가 알림을 만들고 Edge Function이 FCM 푸시를 보내는 알림 구조"
+  - "대중교통 이동 시간 기준 중간 지점 계산 (Kakao Local API, ODsay, Naver Map)"
+  - "도메인별 Clean Architecture 레이어 분리, UseCase·Repository 단위 테스트"
   - "2026 KMAIA 하계학술대회 논문 투고"
 links:
   - type: repo
@@ -33,28 +33,28 @@ links:
 images:
   # 앱 화면 4장은 Calddy_포스터_KMAIA.pptx 안의 이미지(ppt/media/image3~6)를 볼트에 저장한 것. 각 이미지는 휴대폰 화면 4개를 가로로 이은 것
   - src: "content/projects/calddy/calddy-calendar.webp"
-    alt: "Calddy 캘린더 화면 — 월 보기, 날짜별 일정 목록, 새 일정 종류 선택, 구간 일정 추가"
+    alt: "Calddy 캘린더 화면: 월 보기, 날짜별 일정 목록, 새 일정 종류 선택, 구간 일정 추가"
     caption: "캘린더와 일정 등록"
     use: "대표 이미지"
     width: 1279
     height: 647
     source: "프로젝트/Calddy/calddy-calendar.png"
   - src: "content/projects/calddy/calddy-calendar-overlay.webp"
-    alt: "친구 캘린더 겹쳐 보기 화면 — 빈 시간이 겹치는 친구 목록, 함께 비어 있는 날 표시, 약속 만들기"
+    alt: "친구 캘린더 겹쳐 보기 화면: 빈 시간이 겹치는 친구 목록, 함께 비어 있는 날 표시, 약속 만들기"
     caption: "친구 캘린더 겹쳐 보기와 약속 만들기"
     use: "화면 캡처"
     width: 1341
     height: 679
     source: "프로젝트/Calddy/calddy-calendar-overlay.png"
   - src: "content/projects/calddy/calddy-midpoint.webp"
-    alt: "중간 지점 찾기 화면 — 친구 태그, 출발 장소 입력, 대중교통 기준 추천 중간 지점"
+    alt: "중간 지점 찾기 화면: 친구 태그, 출발 장소 입력, 대중교통 기준 추천 중간 지점"
     caption: "대중교통 기준 중간 지점 추천"
     use: "화면 캡처"
     width: 1468
     height: 742
     source: "프로젝트/Calddy/calddy-midpoint.png"
   - src: "content/projects/calddy/calddy-diary.webp"
-    alt: "기록하기 화면 — 일정 완료 후 사진과 글로 하루를 기록하고 피드에 공유"
+    alt: "기록하기 화면: 일정 완료 후 사진과 글로 하루를 기록하고 피드에 공유"
     caption: "일정 완료 후 기록하기"
     use: "화면 캡처"
     width: 1342
@@ -78,12 +78,12 @@ island:
 unverified: []
 ---
 
-Calddy는 일정 관리와 일상 기록, 친구와의 공유를 한 앱에 담은 캘린더 기반 다이어리 SNS입니다. 일상 기록이 여러 플랫폼에 흩어지는 문제, 보여 주기 위주가 된 SNS, 약속마다 반복되는 일정 조율의 피로를 줄이는 것을 목표로 했습니다. 2026년 1학기 캡스톤디자인 프로젝트로 진행했고, 2026 KMAIA 하계학술대회에 논문을 투고했습니다.
+Calddy는 캘린더에 일기와 친구 피드를 붙인 앱입니다. 기록이 여러 앱에 흩어지고, 약속을 잡을 때마다 일정을 맞추느라 번거로운 점을 줄이려고 만들었습니다. 2026년 1학기 캡스톤디자인 프로젝트이고, 2026 KMAIA 하계학술대회에 논문을 투고했습니다.
 
-일정이 끝난 날짜는 사진·동영상·글로 남기는 다이어리로 이어지고, 친구의 캘린더를 겹쳐 보며 모두 가능한 시간대를 찾을 수 있습니다. 약속 장소는 직선거리가 아니라 대중교통과 도로 기준 이동 시간으로 중간 지점을 계산하고, Gemini API로 만남의 목적에 맞는 장소를 추천합니다.
+일정이 끝난 날짜는 사진·동영상·글로 남기는 다이어리로 이어지고, 친구의 캘린더를 겹쳐 보며 모두 가능한 시간대를 찾을 수 있습니다. 약속 장소는 대중교통과 도로 기준 이동 시간으로 중간 지점을 계산하고, Gemini API로 만남의 목적에 맞는 장소를 추천합니다.
 
 저는 백엔드 57개 기능 중 30개를 맡아 모두 완료했습니다. 담당 도메인은 인증(이메일·OTP·Google OAuth), 캘린더(일정·반복 습관·구간 일정·드로잉·공휴일), 약속 조율(초대·수락·거절·다른 날짜 제안), 지도(중간 지점 계산), 알림입니다.
 
-별도 서버 없이 Supabase의 RLS, 트리거, Edge Function으로 권한과 비즈니스 규칙을 DB 레벨에서 처리했습니다. 약속 조율은 캘린더·친구·지도·알림 네 도메인에 걸치는 기능이어서 독립 도메인으로 분리하고, DB 트리거로 알림 도메인과 통신하게 했습니다. 알림은 트리거가 알림을 만들고 Edge Function이 FCM으로 푸시를 보내는 구조입니다.
+별도 서버 없이 Supabase의 RLS, 트리거, Edge Function으로 권한과 규칙을 DB에서 처리했습니다. 약속 조율은 캘린더·친구·지도·알림 네 도메인에 걸치는 기능이어서 독립 도메인으로 분리하고, DB 트리거로 알림 도메인과 통신하게 했습니다. 알림은 트리거가 알림을 만들고 Edge Function이 FCM으로 푸시를 보내는 구조입니다.
 
 앱 코드는 Entity, Repository, UseCase, DataSource, Riverpod Provider로 이어지는 Clean Architecture로 도메인마다 레이어를 나누고, UseCase와 Repository 구현, 모델 직렬화에 단위 테스트를 작성했습니다. 지도 기능은 처음 계획한 Google Maps에서 Kakao Local API, ODsay, Naver Map 조합으로 바꾸어 다시 설계했습니다.
