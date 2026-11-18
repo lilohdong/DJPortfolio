@@ -55,7 +55,7 @@ export const ko = {
 		openWithKey: '지도 열기 (M)',
 		key: 'M',
 		title: '지도',
-		close: '닫기',
+		close: '지도 닫기',
 		closeWithKey: '지도 닫기 (Esc)',
 		closeKey: 'Esc',
 		islandList: '섬 목록',
