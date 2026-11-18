@@ -35,8 +35,8 @@ links:
     label: "데모 (API 키 없이 보기)"
     url: "https://maple-alami.pages.dev/?demo"
   - type: repo
-    label: "GitHub 저장소 (비공개)"
-    url: null
+    label: "GitHub 저장소"
+    url: "https://github.com/lilohdong/maple_alami"
 images:
   - src: "프로젝트/메이플 할일 알리미/maple-desktop.png"
     alt: "메이플 할일 알리미 대시보드 (데스크톱)"
