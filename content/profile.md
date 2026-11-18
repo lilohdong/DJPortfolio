@@ -33,7 +33,7 @@ skills:
   - group: "백엔드"
     items:
       - { name: "Spring Boot", projects: [nudgeup] }
-      - { name: "Supabase (RLS, 트리거, Edge Functions)", projects: [calddy, yeoronji] }
+      - { name: "Supabase", projects: [calddy, yeoronji] }
       - { name: "PostgreSQL", projects: [calddy, nudgeup, yeoronji, mongscape] }
       - { name: "MySQL", projects: [pos-place] }
       - { name: "Python", projects: [yeoronji, mongscape] }
@@ -45,7 +45,7 @@ skills:
       - { name: "TypeScript", projects: [yeoronji, maple-alami, cpbs] }
       - { name: "Three.js", projects: [cpbs] }
       - { name: "Flutter", projects: [calddy] }
-      - { name: "Android (Java)", projects: [nudgeup] }
+      - { name: "Android, Java", projects: [nudgeup] }
       - { name: "Java Swing", projects: [pos-place] }
   - group: "인프라와 배포"
     items:
@@ -56,14 +56,14 @@ skills:
       - { name: "Vercel", projects: [yeoronji] }
   - group: "게임"
     items:
-      - { name: "Unity (C#)", projects: [mongscape] }
+      - { name: "Unity, C#", projects: [mongscape] }
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
   - group: "테스트와 도구"
     items:
       - { name: "pytest, Vitest, Playwright", projects: [yeoronji, cpbs] }
-      - { name: "NUnit (Unity Test Framework)", projects: [mongscape] }
+      - { name: "NUnit", projects: [mongscape] }
       - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, cpbs] }
-      - { name: "Claude Code (AI 페어 프로그래밍)", projects: [yeoronji, maple-alami, mongscape, cpbs] }
+      - { name: "Claude Code", projects: [yeoronji, maple-alami, mongscape, cpbs] }
 
 education:
   - school: "명지전문대학"

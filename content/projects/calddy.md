@@ -1,6 +1,9 @@
 ---
+# 화면에 나오는 곳: title, summary, role, highlights, 사진 caption, 그리고 맨 아래 본문.
+# 본문에서 <!-- more --> 아래는 접혀 있다가 "이어서 읽기"를 누르면 펼쳐진다.
+# ![](키)는 사진 자리다. 키는 images에 적힌 파일 이름에서 확장자를 뺀 것이다.
 title: "Calddy"
-summary: "캘린더에 일기와 친구 피드를 붙인 앱 (캡스톤디자인)"
+summary: "캘린더에 일기와 친구 피드를 붙인 앱"
 period:
   start: "2026-03"
   end: "2026-06"
@@ -8,22 +11,22 @@ team:
   size: 4
   type: "팀"
   note: "4인 팀, 캡스톤디자인"
-role: "백엔드 57개 기능 중 30개를 설계하고 구현 (인증, 캘린더, 약속 조율, 지도, 알림)"
+role: "백엔드에서 인증, 캘린더, 약속 조율, 지도, 알림 기능을 설계하고 구현"
 stack:
   - Flutter
   - Riverpod
   - Supabase
   - PostgreSQL
-  - Supabase Edge Functions (Deno)
+  - Supabase Edge Functions
   - FCM
   - Naver Map
   - ODsay
   - Kakao Local API
   - Gemini API
 highlights:
-  - "별도 서버 없이 Supabase RLS로 권한과 규칙을 DB에서 처리했습니다"
+  - "별도 서버 없이 Supabase RLS로 누가 어떤 데이터를 볼 수 있는지 DB에서 정했습니다"
   - "DB 트리거가 알림을 만들면 Edge Function이 FCM으로 푸시를 보내게 했습니다"
-  - "UseCase와 Repository 구현에 단위 테스트를 붙였습니다"
+  - "앱 코드에 단위 테스트를 붙였습니다"
 links:
   - type: repo
     label: "GitHub 저장소"
@@ -86,7 +89,7 @@ unverified: []
 
 ![](calddy-midpoint)
 
-약속 장소는 대중교통 이동 시간 기준으로 중간 지점을 계산합니다. 처음 계획한 Google Maps 대신 Kakao Local API, ODsay, Naver Map을 조합해 다시 설계했습니다.
+약속 장소는 대중교통 이동 시간 기준으로 중간 지점을 계산합니다. 처음 계획한 Google Maps 대신 Kakao Local API, ODsay, Naver Map을 함께 써서 다시 만들었습니다.
 
 ![](calddy-calendar-overlay)
 
