@@ -178,22 +178,7 @@
 			</section>
 		{/if}
 
-		<!-- 장면이 너무 느린 기기: 바다를 정지 화면으로 두었다는 안내 (T-029) -->
-		{#if game.sceneStill}
-			<p
-				class="absolute bottom-4 left-1/2 z-10 w-[min(28rem,calc(100%-2rem))] -translate-x-1/2 ui-panel px-4 py-3 text-body-sm"
-				role="status"
-			>
-				{ko.fallback.still}
-				<a
-					class="ml-1 font-semibold text-link underline underline-offset-4"
-					href={resolve('list/')}
-				>
-					{ko.fallback.listLink}
-				</a>
-			</p>
-		{/if}
-
+		<!-- 정지 화면이면 배 조작(키, 조이스틱, 정박 안내)을 끈다. 정지 안내는 SailingHud가 띄운다 -->
 		<SailingHud
 			{game}
 			profile={data.profile}
