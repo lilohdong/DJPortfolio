@@ -9,14 +9,14 @@ function formatMonth(value: string): string {
 
 export const ko = {
 	site: {
-		title: 'DJ Portfolio',
-		listTitle: '목록 보기 | DJ Portfolio'
+		title: '오동준 | 적응형 개발자',
+		listTitle: '목록 | 오동준'
 	},
 	home: {
-		heading: 'DJ Portfolio',
+		heading: '오동준',
 		tagline: '배를 몰아 섬을 찾아가는 포트폴리오입니다.',
 		listLink: '목록으로 보기',
-		loading: '바다를 불러오는 중…'
+		loading: '개발자 오동준의 바다로 이동 중…'
 	},
 	list: {
 		heading: '목록 보기',
@@ -24,9 +24,9 @@ export const ko = {
 		backToSailing: '항해 보기로 돌아가기'
 	},
 	fallback: {
-		noWebgl: '이 브라우저에서는 3D 항해 화면을 띄울 수 없습니다.',
-		loadFailed: '3D 항해 화면을 불러오지 못했습니다.',
-		hint: '지도에서 섬을 눌러 내용을 보거나, 목록 보기로 한 번에 볼 수 있습니다.',
+		noWebgl: '이 브라우저에서는 바다를 띄울 수 없습니다.',
+		loadFailed: '바다를 불러오지 못했습니다.',
+		hint: '지도에서 섬을 누르면 그 섬의 내용이 열립니다. 목록에서는 모든 프로젝트를 한 페이지로 봅니다.',
 		listLink: '목록으로 보기'
 	},
 	islands: {
@@ -35,7 +35,7 @@ export const ko = {
 	},
 	lighthousePanel: {
 		heading: '등대섬',
-		body: '소개 섬입니다. 이름, 자기소개, 주요 링크가 이 자리에 들어갈 예정입니다.'
+		body: '소개는 준비 중입니다.'
 	},
 	controls: {
 		hint: 'W A S D 또는 방향키로 배를 움직이고, 섬 선착장 근처에서 E로 정박합니다. M으로 지도를 엽니다.',
@@ -61,7 +61,7 @@ export const ko = {
 		islandList: '섬 목록',
 		here: '지금 있는 섬',
 		boat: '내 배',
-		goTo: (island: string) => `${island}(으)로 이동`
+		goTo: (island: string) => `${island} 선착장으로 이동`
 	},
 	panel: {
 		close: '닫기',
