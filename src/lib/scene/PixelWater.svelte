@@ -61,6 +61,7 @@
 			wake: { value: wakeData },
 			camRight: { value: new Vector2(1, 0) },
 			camForward: { value: new Vector2(0, -1) },
+			boatPos: { value: new Vector2() },
 			maxFog: { value: SEA_MAX_FOG }
 		},
 		defines: { MAX_ISLANDS, WAKE_POINTS, WAKE_LIFE: WAKE_LIFE.toFixed(2) },
@@ -91,6 +92,7 @@
 			uniform vec4 wake[WAKE_POINTS];
 			uniform vec2 camRight;
 			uniform vec2 camForward;
+			uniform vec2 boatPos;
 			uniform float maxFog;
 			varying vec3 vWorld;
 			varying float vViewDepth;
@@ -137,7 +139,9 @@
 				float fwF = max(abs(dFdy(dot(w, camForward))), 1e-3);
 
 				// 바탕색: 가까운 물은 밝고, 먼 바다는 짙게
-				float camDist = length(w - cameraPosition.xz);
+				// 거리 기준은 카메라가 아니라 배(카메라가 도는 중심)다. 카메라가 배 둘레를 돌 때(회전)
+				// 바다 위 한 점의 색·무늬 단계가 바뀌지 않게 한다. +15는 카메라가 배 뒤 15에 있는 것을 맞춘 값.
+				float camDist = length(w - boatPos) + 15.0;
 				vec3 color = mix(nearColor, farColor, smoothstep(18.0, 95.0, camDist));
 
 				// 섬 둘레: 두 단계 얕은 물빛 + 거품 띠
@@ -204,7 +208,10 @@
 				// 두 단계 사이는 칸마다 어느 단계를 쓸지 나눠(경계가 띠로 보이지 않게) 섞는다.
 				// 단계는 화면 가로 픽셀 크기로 정해 가로 밀도를 거리와 상관없이 비슷하게 둔다.
 				// 앞뒤로는 원근 때문에 칸이 납작해져, 먼 곳은 촘촘한 가로 줄무늬가 된다.
-				float lod = clamp(log2(max(fwR / 0.1, 1.0)), 0.0, 7.0);
+				// 한 픽셀이 덮는 가로 길이는 (시선 방향 깊이 × 카메라 고정값)이다. 깊이 대신 배 기준 거리를 넣어
+				// 회전할 때 같은 점의 단계가 바뀌지 않게 한다 (화면 해상도·픽셀 크기는 그대로 반영된다).
+				float pxPerDepth = fwR / max(vViewDepth, 1e-3);
+				float lod = clamp(log2(max(pxPerDepth * camDist / 0.1, 1.0)), 0.0, 7.0);
 				float level = floor(lod);
 				float blend = lod - level;
 				float s0 = exp2(level);
@@ -296,6 +303,7 @@
 		const { x, z, heading, speed } = game.boat;
 		const t = game.time;
 		mesh.position.set(x, 0, z);
+		(material.uniforms.boatPos.value as Vector2).set(x, z);
 
 		const u = material.uniforms;
 		u.time.value = t;
