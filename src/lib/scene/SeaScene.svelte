@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
-	import { Fog, Vector3, type DirectionalLight, type PerspectiveCamera } from 'three';
+	import { Fog, type DirectionalLight, type PerspectiveCamera } from 'three';
 	import { onMount } from 'svelte';
 	import Boat from './Boat.svelte';
 	import Island from './Island.svelte';
@@ -42,28 +42,35 @@
 		fog.color.set(toHex(palette.fog));
 	});
 
-	// 카메라: 배 뒤 위쪽에서 부드럽게 따라간다. 텔레포트·즉시 정박 때는 보간 없이 붙는다.
+	// 카메라: 배를 중심으로 한 극좌표로 따라간다. 요(yaw) 각도만 부드럽게 따라가고
+	// 배까지의 거리·높이·내려다보는 각도는 늘 같다. 예전처럼 위치를 직선 보간하면
+	// 회전 중에는 카메라가 원호 대신 현을 따라 배에 가까워졌다가, 회전이 끝나면 뒤로 물러나며
+	// 화면이 가운데로 모이는 것처럼 보였다. 텔레포트·즉시 정박 때는 보간 없이 붙는다.
 	const CAMERA_BACK = 15;
 	const CAMERA_UP = 7.5;
+	const LOOK_AHEAD = 6;
+	const LOOK_HEIGHT = 1.5;
+	/** 요 따라잡기 속도 (예전 위치 보간과 같은 값) */
+	const YAW_FOLLOW = 3.2;
 	let camera = $state<PerspectiveCamera>();
 	let sun = $state<DirectionalLight>();
-	const desired = new Vector3();
-	const target = new Vector3();
-	const lookTarget = new Vector3();
+	let cameraYaw = 0;
 
 	useTask((delta) => {
 		game.step(delta);
 		const { x, z, heading } = game.boat;
-		const fx = -Math.sin(heading);
-		const fz = -Math.cos(heading);
 
 		if (camera) {
-			desired.set(x - fx * CAMERA_BACK, CAMERA_UP, z - fz * CAMERA_BACK);
-			target.set(x + fx * 6, 1.5, z + fz * 6);
-			const k = game.cameraSnap ? 1 : 1 - Math.exp(-3.2 * Math.min(delta, 0.1));
-			camera.position.lerp(desired, k);
-			lookTarget.lerp(target, k);
-			camera.lookAt(lookTarget);
+			if (game.cameraSnap) {
+				cameraYaw = heading;
+			} else {
+				const k = 1 - Math.exp(-YAW_FOLLOW * Math.min(delta, 0.1));
+				cameraYaw += Math.atan2(Math.sin(heading - cameraYaw), Math.cos(heading - cameraYaw)) * k;
+			}
+			const fx = -Math.sin(cameraYaw);
+			const fz = -Math.cos(cameraYaw);
+			camera.position.set(x - fx * CAMERA_BACK, CAMERA_UP, z - fz * CAMERA_BACK);
+			camera.lookAt(x + fx * LOOK_AHEAD, LOOK_HEIGHT, z + fz * LOOK_AHEAD);
 			game.cameraSnap = false;
 		}
 
