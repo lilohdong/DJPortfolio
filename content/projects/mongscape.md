@@ -24,10 +24,8 @@ stack:
   - NUnit
 highlights:
   - "BlazePose를 Unity 안에서 GPU로 추론하고, 구간마다 판정 기준을 달리해 오인식을 없앴습니다"
-  - "얼굴 사진 대신 특징값만 저장하는 로그인 서버를 만들고 코인, 상점, 통합 랭킹을 붙였습니다"
-  - "Docker, Caddy, PostgreSQL로 VPS에 배포하고 요청 속도 제한, SSH 키 로그인, 방화벽, 매일 DB 백업을 설정했습니다"
-  - "씨드로 장애물을 배치하고 난이도 곡선과 튜토리얼을 만들었습니다. 테스트는 약 290개입니다"
-  - "전시용 데모를 일반 배포용으로 정리해 GitHub Releases로 v1.0.0을 출시했습니다"
+  - "같은 판의 코인이 두 번 적립되지 않게 멱등 처리했습니다"
+  - "Docker Compose로 Caddy, API, PostgreSQL을 묶어 VPS에 배포했습니다"
 links:
   - type: release
     label: "v1.0.0 내려받기"
@@ -35,39 +33,46 @@ links:
   - type: repo
     label: "GitHub 저장소"
     url: "https://github.com/kihwan04/Mongscape"
+logo:
+  # 원본 1942x809 가로로 긴 글자 로고(2.2MB). 깃발에 넣으려면 정사각형 128 안에 맞추면 글자가 작아진다
+  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
+  src: "content/projects/mongscape/mongscape-logo.webp"
+  alt: "Mongscape 로고"
+  source: "프로젝트/Mongscape/mongscape-logo.png"
+  width: 256
+  height: 107
 images:
   - src: "content/projects/mongscape/mongscape-play-mine.webp"
     alt: "Mongscape 광산 구간 플레이 화면"
+    caption: "광산 구간, 오른쪽 아래는 웹캠 자세 인식"
     use: "대표 이미지"
     width: 1600
     height: 1000
     source: "프로젝트/무한옥/mongscape-play-mine.png"
   - src: "content/projects/mongscape/mongscape-ready-skeleton.webp"
     alt: "탈출 준비 화면: 웹캠 자세 인식 뼈대 표시"
+    caption: "플레이 방식 선택과 웹캠 자세 인식"
     use: "화면 캡처"
     width: 1600
     height: 1000
     source: "프로젝트/무한옥/mongscape-ready-skeleton.png"
   - src: "content/projects/mongscape/mongscape-cart-fork.webp"
     alt: "수레 갈림길 구간"
+    caption: "수레 갈림길에서 몸을 기울여 길 고르기"
     use: "화면 캡처"
     width: 1600
     height: 1000
     source: "프로젝트/무한옥/mongscape-cart-fork.png"
-  - src: "content/projects/mongscape/mongscape-result.webp"
-    alt: "결과 화면"
-    use: "화면 캡처"
-    width: 1600
-    height: 1000
-    source: "프로젝트/무한옥/mongscape-result.png"
   - src: "content/projects/mongscape/mongscape-login.webp"
     alt: "로그인 화면"
+    caption: "얼굴 로그인"
     use: "화면 캡처"
     width: 1600
     height: 1000
     source: "프로젝트/무한옥/mongscape-login.png"
   - src: "content/projects/mongscape/mongscape-play-zoo.webp"
     alt: "사육장 구간 플레이 화면"
+    caption: "동물원 구간, 끊긴 레일 피하기 튜토리얼"
     use: "화면 캡처"
     width: 1600
     height: 1000
@@ -81,14 +86,22 @@ island:
 unverified: []
 ---
 
-Mongscape(몽스케이프)는 광산, 수레 갈림길, 감옥, 동물원을 달려 탈출하는 3레인 러너 게임입니다. 웹캠으로 인식한 실제 몸동작으로 장애물을 피합니다. 바리케이드는 점프, 철창은 숙이기, 계단은 무릎 번갈아 들기로 넘고, 수레 구간에서는 몸을 기울여 레일을 고릅니다. 전신, 상체, 키보드 세 가지 방식으로 플레이할 수 있습니다.
+![](mongscape-play-mine)
+
+웹캠으로 인식한 몸동작으로 장애물을 피하는 3레인 러너 게임입니다. 점프하고 숙이고 무릎을 들고 몸을 기울여서 광산과 감옥, 동물원을 달려 탈출합니다. 5인 팀 프로젝트입니다.
+
+저는 10월 전시 버전 이후의 기능 확장과 서버, 출시 작업 대부분을 맡았습니다. 커밋 169개 중 156개가 제 것입니다.
+
+![](mongscape-ready-skeleton)
 
 2026년 11월 14일 v1.0.0을 GitHub Releases로 출시했습니다.
 
-저는 10월 전시 버전 이후의 기능 확장과 서버, 출시 작업 대부분을 맡았습니다. 몸동작 인식은 별도 Python 서버 없이 Unity 안에서 BlazePose를 GPU로 추론합니다. 달리는 구간은 엉덩이 위치로만, 수레 구간은 어깨선 기울기로만 좌우를 판정해서 몸이 흔들리거나 기울 때 레인이 바뀌는 오인식을 없앴습니다. 무릎 들기는 반대쪽 무릎이 기준을 넘는 순간을 한 걸음으로 세어, 한쪽만 들고 버티는 방법을 막았습니다.
+<!-- more -->
 
-회원은 얼굴로 로그인합니다. 서버는 얼굴 사진을 저장하지 않고 특징값만 보관하며, 같은 판의 코인이 두 번 적립되지 않게 멱등 처리했습니다. 직접 서버를 호스팅한 것은 이번이 처음이었습니다. Docker Compose로 Caddy, API, PostgreSQL을 묶어 VPS에 배포했고 요청 속도 제한, SSH 키 전용 로그인, 방화벽, 매일 DB 백업을 설정했습니다.
+![](mongscape-cart-fork)
 
-게임 쪽에서는 판마다 배치가 바뀌어도 지나갈 차선이 항상 남도록 씨드로 장애물을 배치했습니다. 거리에 따라 난이도가 오르게 했고, 방식별 7단계 튜토리얼과 아이템, 상점, 랭킹을 만들었습니다. 게임 규칙은 Unity에 의존하지 않는 계층으로 떼어 내 단위 테스트를 붙였습니다. 테스트는 Unity 쪽 약 260개, 서버 쪽 30개입니다.
+달리는 구간은 엉덩이 위치로만, 수레 구간은 어깨선 기울기로만 좌우를 판정해서 몸이 흔들릴 때 레인이 바뀌는 문제를 없앴습니다.
 
-출시하면서 개발자용 기능은 Release 빌드에서 컴파일 단계부터 빠지게 했습니다. 개인정보와 얼굴 특징값 동의는 항목별로 나누고, 개인정보 처리방침을 썼습니다. 동의를 거부해도 게스트로 플레이할 수 있습니다.
+![](mongscape-login)
+
+회원은 얼굴로 로그인하고, 서버는 얼굴 사진 대신 특징값만 보관합니다. 서버를 직접 호스팅한 것은 처음이었고 요청 속도 제한, 방화벽, 매일 DB 백업을 설정했습니다. 테스트는 Unity 쪽 약 260개, 서버 쪽 30개입니다.
