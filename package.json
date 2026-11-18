@@ -37,7 +37,8 @@
 		"tailwindcss": "^4.3.5",
 		"typescript": "^6.0.3",
 		"typescript-eslint": "^8.72.2",
-		"vite": "^8.3.8"
+		"vite": "^8.3.8",
+		"yaml": "^2.9.1"
 	},
 	"dependencies": {
 		"@threlte/core": "^8.7.0",
