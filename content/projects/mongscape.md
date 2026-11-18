@@ -1,15 +1,17 @@
 ---
+# 화면에 나오는 곳: title, summary, role, highlights, 사진 caption, 그리고 맨 아래 본문.
+# 본문에서 <!-- more --> 아래는 접혀 있다가 "이어서 읽기"를 누르면 펼쳐진다.
+# ![](키)는 사진 자리다. 키는 images에 적힌 파일 이름에서 확장자를 뺀 것이다.
 title: "Mongscape"
-summary: "웹캠으로 인식한 몸동작으로 플레이하는 운동 러너 게임 (v1.0.0 정식 출시)"
+summary: "웹캠으로 인식한 몸동작으로 플레이하는 운동 러너 게임"
 period:
   start: "2026-09"
   end: "2026-11"
-  note: "2026-09-18 ~ 2026-11-14"
+  # 일 단위 기간(화면에는 안 나옴): 2026-09-18 ~ 2026-11-14
 team:
   size: 5
   type: "팀"
-  note: "5인 팀"
-role: "몸동작 인식, 얼굴 로그인 계정 서버, 출시 담당 (커밋 169개 중 156개)"
+role: "몸동작 인식, 얼굴 로그인 계정 서버, 출시 담당"
 stack:
   - Unity 6
   - C#
@@ -17,14 +19,14 @@ stack:
   - BlazePose
   - UI Toolkit
   - Python
-  - OpenCV (YuNet, SFace)
+  - OpenCV
   - PostgreSQL 17
   - Docker Compose
   - Caddy
   - NUnit
 highlights:
-  - "BlazePose를 Unity 안에서 GPU로 추론하고, 구간마다 판정 기준을 달리해 오인식을 없앴습니다"
-  - "같은 판의 코인이 두 번 적립되지 않게 멱등 처리했습니다"
+  - "BlazePose 자세 인식을 Unity 안에서 GPU로 돌리고, 구간마다 판정 기준을 달리해 잘못 인식하는 경우를 없앴습니다"
+  - "같은 판의 코인이 두 번 쌓이지 않게 했습니다"
   - "Docker Compose로 Caddy, API, PostgreSQL을 묶어 VPS에 배포했습니다"
 links:
   - type: release
@@ -101,4 +103,4 @@ unverified: []
 
 ![](mongscape-login)
 
-회원은 얼굴로 로그인하고, 서버는 얼굴 사진 대신 특징값만 보관합니다. 서버를 직접 호스팅한 것은 처음이었고 요청 속도 제한, 방화벽, 매일 DB 백업을 설정했습니다. 테스트는 Unity 쪽 약 260개, 서버 쪽 30개입니다.
+회원은 얼굴로 로그인하고, 서버는 얼굴 사진 대신 얼굴을 구별하는 숫자 값만 보관합니다. 서버를 직접 호스팅한 것은 처음이었고 요청 속도 제한, 방화벽, 매일 DB 백업을 설정했습니다. 테스트는 Unity 쪽 약 260개, 서버 쪽 30개입니다.

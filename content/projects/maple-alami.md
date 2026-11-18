@@ -1,14 +1,17 @@
 ---
+# 화면에 나오는 곳: title, summary, role, highlights, 사진 caption, 그리고 맨 아래 본문.
+# 본문에서 <!-- more --> 아래는 접혀 있다가 "이어서 읽기"를 누르면 펼쳐진다.
+# ![](키)는 사진 자리다. 키는 images에 적힌 파일 이름에서 확장자를 뺀 것이다.
 title: "메이플 할일 알리미"
 summary: "메이플스토리 숙제와 주간 수익을 보여 주는 PWA, 남은 숙제를 알려 주는 디스코드 봇"
 period:
   start: "2026-10"
   end: "2026-10"
-  note: "2026-10-23 ~ 2026-10-26"
+  # 일 단위 기간(화면에는 안 나옴): 2026-10-23 ~ 2026-10-26
 team:
   size: 1
   type: "개인"
-role: "기획, 요구사항 정의, 실사용 테스트, 배포 (구현은 Claude Code와 페어 프로그래밍)"
+role: "기획, 요구사항 정리, 직접 써 보며 테스트, 배포. 구현은 Claude Code와 함께"
 stack:
   - React 18
   - TypeScript
@@ -22,15 +25,15 @@ stack:
   - Discord Interactions API
   - WebCrypto
 highlights:
-  - "웹앱과 Worker가 같은 계산 코드를 써서 앱과 디스코드에 같은 수치가 나옵니다"
-  - "API 키는 AES-GCM으로 암호화해 저장하고, 디스코드 요청은 Ed25519 서명을 검증합니다"
+  - "웹앱과 디스코드 봇이 같은 계산 코드를 써서 어디서 봐도 수치가 같습니다"
+  - "API 키는 암호화해서 저장하고, 디스코드에서 온 요청인지 서명으로 확인합니다"
   - "서버 없이 Cloudflare 무료 플랜만으로 운영합니다"
 links:
   - type: deploy
     label: "서비스 바로가기"
     url: "https://maple-alami.pages.dev"
   - type: demo
-    label: "데모 (API 키 없이 보기)"
+    label: "API 키 없이 데모 보기"
     url: "https://maple-alami.pages.dev/?demo"
   - type: repo
     label: "GitHub 저장소"
@@ -45,14 +48,14 @@ logo:
 images:
   - src: "content/projects/maple-alami/maple-desktop.webp"
     alt: "메이플 할일 알리미 대시보드 (데스크톱)"
-    caption: "캐릭터별 숙제와 주간 결정석 수익 (데모 데이터)"
+    caption: "데모 데이터로 본 캐릭터별 숙제와 주간 결정석 수익"
     use: "대표 이미지"
     width: 1280
     height: 1000
     source: "프로젝트/메이플 할일 알리미/maple-desktop.png"
   - src: "content/projects/maple-alami/maple-mobile.webp"
     alt: "대시보드 (모바일)"
-    caption: "대시보드 (모바일)"
+    caption: "모바일 대시보드"
     use: "화면 캡처"
     width: 500
     height: 1250
@@ -83,4 +86,4 @@ unverified: []
 
 ![](maple-notify)
 
-정기 알림은 수요일 18시와 매일 22시에, 남은 항목이 있을 때만 보냅니다. 봇은 상시 실행 프로세스 없이 디스코드 HTTP Interactions로 Worker 요청마다 동작합니다.
+정기 알림은 수요일 18시와 매일 22시에, 남은 항목이 있을 때만 보냅니다. 봇은 늘 켜 두는 서버 없이, 디스코드에서 요청이 올 때만 Cloudflare Worker에서 돌아갑니다.
