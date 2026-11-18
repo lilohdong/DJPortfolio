@@ -162,6 +162,28 @@
 		ontitle={onshowtitle}
 	/>
 
+	<!--
+		정지 화면 안내 (T-029): 이 기기에서 장면이 너무 느려 바다를 멈춰 둔 상태.
+		플레이어 카드 바로 아래 왼쪽에 둔다. 오른쪽 서랍 패널, 오른쪽 위 버튼, 모바일 아래 시트와 겹치지 않는다.
+		배를 몰 수 없으므로 지도와 목록으로 가는 길을 안내 안에 바로 둔다.
+	-->
+	{#if game.sceneStill}
+		<div
+			class="pointer-events-auto absolute top-24 left-4 w-[min(22rem,calc(100%-2rem))] ui-panel px-4 py-3 text-body-sm md:top-32"
+			role="status"
+		>
+			<p>{ko.fallback.still}</p>
+			<div class="mt-3 flex flex-wrap items-center gap-4">
+				<Button aria-expanded={game.mapOpen} onclick={() => game.toggleMap()}>
+					{ko.map.open}
+				</Button>
+				<a class="font-semibold text-link underline underline-offset-4" href={resolve('list/')}>
+					{ko.fallback.listLink}
+				</a>
+			</div>
+		</div>
+	{/if}
+
 	<div class="pointer-events-auto absolute top-4 right-4 flex gap-2">
 		<Button
 			shortcut={coarsePointer ? undefined : ko.map.key}
