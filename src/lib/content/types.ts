@@ -54,3 +54,39 @@ export interface Project {
 	/** 대표 이미지도 아니고 본문에도 쓰지 않은 나머지 사진 ("사진 더 보기") */
 	extraImages: ContentImage[];
 }
+
+// content/profile.md (등대섬 패널, 제목 화면, 목록 페이지 머리)
+
+export interface SkillItem {
+	name: string;
+	/** 이 기술을 쓴 프로젝트 slug. 로더가 실제로 있는 프로젝트만 남긴다 */
+	projects: string[];
+}
+
+export interface Profile {
+	name: string;
+	nameEn: string | null;
+	headline: string | null;
+	photo: ContentImage | null;
+	status: string | null;
+	location: string | null;
+	/** 소개 문장. 줄바꿈 단위로 나눈 목록 */
+	intro: string[];
+	introPoints: string[];
+	skills: { group: string; items: SkillItem[] }[];
+	education: {
+		school: string;
+		major: string | null;
+		degree: string | null;
+		graduation: string | null;
+		status: string | null;
+	}[];
+	activities: {
+		title: string;
+		detail: string | null;
+		date: string | null;
+		project: string | null;
+	}[];
+	certifications: string[];
+	contact: { email: string | null; github: string | null; links: ProjectLink[] };
+}
