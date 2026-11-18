@@ -16,8 +16,8 @@ const COAST_DRAG = 0.9;
 const TURN_RATE = 1.4;
 /** 선착장 끝 충돌 원: 섬 가장자리에서 PIER_TIP만큼 나간 곳, 반지름 PIER_RADIUS.
  *  정박 위치(가장자리 + DOCK_GAP)는 이 원 바깥이다. Island.svelte의 선착장 모양과 맞춘다. */
-const PIER_TIP = 1.3;
-const PIER_RADIUS = 0.9;
+export const PIER_TIP = 1.3;
+export const PIER_RADIUS = 0.9;
 /** 정박 안내가 뜨는 거리 (선착장 기준) */
 const DOCK_RANGE = 9;
 /** 키로 정박할 때 배가 선착장으로 미끄러져 들어가는 시간 (초) */
