@@ -28,7 +28,7 @@ Windows에서는 PowerShell로 `$env:BASE_PATH = '/DJPortfolio'; npm run build`�
 
 ## 콘텐츠 이미지 가져오기
 
-`content/`에 적힌 이미지를 원본 볼트에서 읽어 WebP로 변환해 `static/content/`에 저장하고, 콘텐츠 파일의 `src`·`width`·`height`를 채운다. 자세한 규칙은 `docs/planning.md` §4.1, §5.
+`content/`에 적힌 이미지와 로고(`logo`, 긴 변 256px)를 원본 볼트에서 읽어 WebP로 변환해 `static/content/`에 저장하고, 콘텐츠 파일의 `src`·`width`·`height`를 채운다. 자세한 규칙은 `docs/planning.md` §4.1, §5.
 
 ```sh
 npm run images:import -- --vault "<볼트 경로>"   # 또는 PORTFOLIO_VAULT 환경 변수, --dry-run, --force

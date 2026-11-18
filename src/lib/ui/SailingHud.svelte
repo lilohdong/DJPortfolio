@@ -105,6 +105,17 @@
 	/** ? 버튼으로 연 조작 안내. 처음 들어왔을 때(배를 아직 안 움직였을 때)는 저절로 보인다. */
 	let helpOpen = $state(false);
 
+	// 패널 바닥의 이전, 다음 섬. 섬 목록은 등대섬 다음에 프로젝트가 order 순서로 놓여 있고,
+	// 마지막 프로젝트 다음은 등대섬으로 돌아간다. 섬이 둘뿐이면 이전과 다음이 같으므로 다음만 둔다.
+	const neighbors = $derived.by(() => {
+		const list = game.islands;
+		const i = list.findIndex((island) => island.id === game.openIslandId);
+		if (i < 0 || list.length < 2) return { prev: null, next: null };
+		const next = list[(i + 1) % list.length];
+		const prev = list.length > 2 ? list[(i - 1 + list.length) % list.length] : null;
+		return { prev, next };
+	});
+
 	const showDock = $derived(sceneReady && game.controlsActive && game.nearIsland !== null);
 	// 정박 안내와 처음 안내가 함께 뜨면 처음 안내는 숨긴다. ?로 직접 연 안내는 그대로 둔다.
 	const showHint = $derived(
@@ -183,7 +194,15 @@
 	{/if}
 
 	{#if game.openIsland}
-		<IslandPanel island={game.openIsland} onclose={closePanel} />
+		{#key game.openIsland.id}
+			<IslandPanel
+				island={game.openIsland}
+				prev={neighbors.prev}
+				next={neighbors.next}
+				onclose={closePanel}
+				onnavigate={(id) => game.teleport(id)}
+			/>
+		{/key}
 	{/if}
 
 	{#if game.mapOpen}

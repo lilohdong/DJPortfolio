@@ -1,4 +1,4 @@
-// 콘텐츠 파일(content/profile.md, content/projects/*.md)에 적힌 이미지를
+// 콘텐츠 파일(content/profile.md, content/projects/*.md)에 적힌 이미지와 로고를
 // 원본 포트폴리오 볼트에서 읽어 웹용 WebP로 변환하고 static/content/ 아래에 저장한다.
 // 변환 후 콘텐츠 파일의 src를 저장소 경로로 바꾸고 width/height를 기록한다.
 // 원본 위치는 source 필드에 남겨 다시 실행할 수 있게 한다.
@@ -24,7 +24,9 @@ const CONTENT_DIR = path.join(ROOT, 'content');
 const STATIC_DIR = path.join(ROOT, 'static');
 
 /** 긴 변 최대 길이(px) */
-const MAX_EDGE = { project: 1600, profile: 640 };
+// 로고는 3D 깃발 텍스처(128px 안팎)와 패널 머리(높이 32px, 화면 배율 2)에 쓴다.
+// 가로로 긴 글자 로고(Mongscape)도 패널에서 읽히도록 긴 변을 256px로 둔다.
+const MAX_EDGE = { project: 1600, profile: 640, logo: 256 };
 const WEBP_QUALITY = 80;
 const UNVERIFIED = '확인 필요';
 const RASTER_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.tif', '.tiff', '.avif']);
@@ -133,9 +135,14 @@ async function processImage(
 	const before = (await stat(inputPath)).size;
 
 	let info;
-	if (!args.force && (await exists(outPath))) {
-		const meta = await sharp(outPath).metadata();
-		info = { width: meta.width, height: meta.height, size: (await stat(outPath)).size };
+	// 이미 변환된 파일이 있으면 그대로 쓴다. 다만 지금 기준(maxEdge)보다 크면 다시 변환한다
+	// (예: 예전에 프로젝트 이미지 기준 1600px로 변환한 로고).
+	// 파일 경로로 열면 Windows에서 sharp가 파일을 잡고 있어 덮어쓰기가 실패하므로 버퍼로 읽는다.
+	const existing =
+		!args.force && (await exists(outPath)) ? await sharp(await readFile(outPath)).metadata() : null;
+	const fits = existing && Math.max(existing.width, existing.height) <= maxEdge;
+	if (existing && fits) {
+		info = { width: existing.width, height: existing.height, size: (await stat(outPath)).size };
 	} else if (args.dryRun) {
 		const meta = await sharp(inputPath).metadata();
 		const scale = Math.min(1, maxEdge / Math.max(meta.width, meta.height));
@@ -195,20 +202,26 @@ async function main() {
 		const doc = parseDocument(yaml);
 		if (doc.errors.length) throw new Error(`${rel}: YAML 오류 ${doc.errors[0].message}`);
 
-		/** @type {{node: any, label: string, fixedName?: string}[]} */
+		/** @type {{node: any, label: string, maxEdge: number, fixedName?: string}[]} */
 		const items = [];
 		let outUrlDir;
 		if (kind === 'profile') {
 			outUrlDir = 'content/profile';
 			const photo = doc.get('photo', true);
-			if (isMap(photo)) items.push({ node: photo, label: 'photo', fixedName: 'photo' });
+			if (isMap(photo)) {
+				items.push({ node: photo, label: 'photo', maxEdge: MAX_EDGE.profile, fixedName: 'photo' });
+			}
 		} else {
 			const slug = path.basename(file, '.md');
 			outUrlDir = `content/projects/${slug}`;
+			const logo = doc.get('logo', true);
+			if (isMap(logo)) items.push({ node: logo, label: 'logo', maxEdge: MAX_EDGE.logo });
 			const images = doc.get('images', true);
 			if (isSeq(images)) {
 				images.items.forEach((node, i) => {
-					if (isMap(node)) items.push({ node, label: `images[${i}]` });
+					if (isMap(node)) {
+						items.push({ node, label: `images[${i}]`, maxEdge: MAX_EDGE.project });
+					}
 				});
 			}
 		}
@@ -220,7 +233,7 @@ async function main() {
 				vault,
 				outDir: path.join(STATIC_DIR, ...outUrlDir.split('/')),
 				outUrlDir,
-				maxEdge: MAX_EDGE[kind],
+				maxEdge: item.maxEdge,
 				fixedName: item.fixedName,
 				usedNames,
 				args

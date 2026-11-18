@@ -36,9 +36,11 @@ links:
 logo:
   # 원본 1942x809 가로로 긴 글자 로고(2.2MB). 깃발에 넣으려면 정사각형 128 안에 맞추면 글자가 작아진다
   # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
-  src: "프로젝트/Mongscape/mongscape-logo.png"
+  src: "content/projects/mongscape/mongscape-logo.webp"
   alt: "Mongscape 로고"
   source: "프로젝트/Mongscape/mongscape-logo.png"
+  width: 256
+  height: 107
 images:
   - src: "content/projects/mongscape/mongscape-play-mine.webp"
     alt: "Mongscape 광산 구간 플레이 화면"

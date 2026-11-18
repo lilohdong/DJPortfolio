@@ -38,9 +38,11 @@ links:
 logo:
   # 원본 512x512 PNG, 같은 폴더에 SVG도 있다
   # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
-  src: "프로젝트/메이플 할일 알리미/maple-alami-logo.png"
+  src: "content/projects/maple-alami/maple-alami-logo.webp"
   alt: "메이플 할일 알리미 로고"
   source: "프로젝트/메이플 할일 알리미/maple-alami-logo.png"
+  width: 256
+  height: 256
 images:
   - src: "content/projects/maple-alami/maple-desktop.webp"
     alt: "메이플 할일 알리미 대시보드 (데스크톱)"
