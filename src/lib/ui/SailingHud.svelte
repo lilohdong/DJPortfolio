@@ -189,7 +189,7 @@
 		<div
 			class={[
 				'pointer-events-auto absolute left-1/2 flex -translate-x-1/2 items-center gap-4 ui-panel py-2 pr-2 pl-4',
-				coarsePointer ? 'bottom-44' : 'bottom-20'
+				coarsePointer ? 'bottom-44' : helpOpen ? 'bottom-32' : 'bottom-20'
 			]}
 			role="status"
 		>
