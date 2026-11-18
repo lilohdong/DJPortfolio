@@ -31,32 +31,53 @@ links:
     label: "GitHub 저장소"
     url: "https://github.com/lilohdong/NudgeUp"
 images:
-  - src: "프로젝트/NudgeUp/nudgeup-main.png"
+  - src: "content/projects/nudgeup/nudgeup-main.webp"
     alt: "NudgeUp 메인 화면 디자인 시안 — 팀원, 팀 할 일, 내 할 일"
     caption: "메인 화면 (디자인 시안)"
     use: "대표 이미지. 실제 앱 화면이 아니라 디자인 시안"
-  - src: "프로젝트/NudgeUp/nudgeup-logo.png"
+    width: 472
+    height: 1015
+    source: "프로젝트/NudgeUp/nudgeup-main.png"
+  - src: "content/projects/nudgeup/nudgeup-logo.webp"
     alt: "NudgeUp 로고"
     use: "로고"
-  - src: "프로젝트/NudgeUp/nudgeup-login.png"
+    width: 99
+    height: 100
+    source: "프로젝트/NudgeUp/nudgeup-logo.png"
+  - src: "content/projects/nudgeup/nudgeup-login.webp"
     alt: "로그인 화면 디자인 시안"
     caption: "로그인 (디자인 시안)"
     use: "디자인 시안"
-  - src: "프로젝트/NudgeUp/nudgeup-signup.png"
+    width: 438
+    height: 654
+    source: "프로젝트/NudgeUp/nudgeup-login.png"
+  - src: "content/projects/nudgeup/nudgeup-signup.webp"
     alt: "회원가입 화면 디자인 시안"
     caption: "회원가입 (디자인 시안)"
     use: "디자인 시안"
-  - src: "프로젝트/NudgeUp/nudgeup-task-create.png"
+    width: 383
+    height: 629
+    source: "프로젝트/NudgeUp/nudgeup-signup.png"
+  - src: "content/projects/nudgeup/nudgeup-task-create.webp"
     alt: "작업 생성 화면 디자인 시안"
     caption: "작업 생성 (디자인 시안)"
     use: "디자인 시안"
-  - src: "프로젝트/NudgeUp/nudgeup-team-settings.png"
+    width: 649
+    height: 1168
+    source: "프로젝트/NudgeUp/nudgeup-task-create.png"
+  - src: "content/projects/nudgeup/nudgeup-team-settings.webp"
     alt: "팀 설정 화면 디자인 시안 — 팀장 지정, 팀원별 독촉 권한"
     caption: "팀 설정 (디자인 시안)"
     use: "디자인 시안"
-  - src: "프로젝트/NudgeUp/nudgeup-erd.jpg"
+    width: 535
+    height: 1128
+    source: "프로젝트/NudgeUp/nudgeup-team-settings.png"
+  - src: "content/projects/nudgeup/nudgeup-erd.webp"
     alt: "NudgeUp 데이터베이스 ERD"
     use: "DB 설계도"
+    width: 1600
+    height: 836
+    source: "프로젝트/NudgeUp/nudgeup-erd.jpg"
 order: 2
 featured: true
 island:

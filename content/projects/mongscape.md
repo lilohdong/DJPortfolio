@@ -36,24 +36,42 @@ links:
     label: "GitHub 저장소"
     url: "https://github.com/kihwan04/Mongscape"
 images:
-  - src: "프로젝트/무한옥/mongscape-play-mine.png"
+  - src: "content/projects/mongscape/mongscape-play-mine.webp"
     alt: "Mongscape 광산 구간 플레이 화면"
     use: "대표 이미지"
-  - src: "프로젝트/무한옥/mongscape-ready-skeleton.png"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-play-mine.png"
+  - src: "content/projects/mongscape/mongscape-ready-skeleton.webp"
     alt: "탈출 준비 화면 — 웹캠 자세 인식 뼈대 표시"
     use: "화면 캡처"
-  - src: "프로젝트/무한옥/mongscape-cart-fork.png"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-ready-skeleton.png"
+  - src: "content/projects/mongscape/mongscape-cart-fork.webp"
     alt: "수레 갈림길 구간"
     use: "화면 캡처"
-  - src: "프로젝트/무한옥/mongscape-result.png"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-cart-fork.png"
+  - src: "content/projects/mongscape/mongscape-result.webp"
     alt: "결과 화면"
     use: "화면 캡처"
-  - src: "프로젝트/무한옥/mongscape-login.png"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-result.png"
+  - src: "content/projects/mongscape/mongscape-login.webp"
     alt: "로그인 화면"
     use: "화면 캡처"
-  - src: "프로젝트/무한옥/mongscape-play-zoo.png"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-login.png"
+  - src: "content/projects/mongscape/mongscape-play-zoo.webp"
     alt: "사육장 구간 플레이 화면"
     use: "화면 캡처"
+    width: 1600
+    height: 1000
+    source: "프로젝트/무한옥/mongscape-play-zoo.png"
 order: 5
 featured: true
 island:

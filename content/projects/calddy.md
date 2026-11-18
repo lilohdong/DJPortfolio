@@ -32,25 +32,40 @@ links:
     url: "https://github.com/lilohdong/Calddy"
 images:
   # 앱 화면 4장은 Calddy_포스터_KMAIA.pptx 안의 이미지(ppt/media/image3~6)를 볼트에 저장한 것. 각 이미지는 휴대폰 화면 4개를 가로로 이은 것
-  - src: "프로젝트/Calddy/calddy-calendar.png"
+  - src: "content/projects/calddy/calddy-calendar.webp"
     alt: "Calddy 캘린더 화면 — 월 보기, 날짜별 일정 목록, 새 일정 종류 선택, 구간 일정 추가"
     caption: "캘린더와 일정 등록"
     use: "대표 이미지"
-  - src: "프로젝트/Calddy/calddy-calendar-overlay.png"
+    width: 1279
+    height: 647
+    source: "프로젝트/Calddy/calddy-calendar.png"
+  - src: "content/projects/calddy/calddy-calendar-overlay.webp"
     alt: "친구 캘린더 겹쳐 보기 화면 — 빈 시간이 겹치는 친구 목록, 함께 비어 있는 날 표시, 약속 만들기"
     caption: "친구 캘린더 겹쳐 보기와 약속 만들기"
     use: "화면 캡처"
-  - src: "프로젝트/Calddy/calddy-midpoint.png"
+    width: 1341
+    height: 679
+    source: "프로젝트/Calddy/calddy-calendar-overlay.png"
+  - src: "content/projects/calddy/calddy-midpoint.webp"
     alt: "중간 지점 찾기 화면 — 친구 태그, 출발 장소 입력, 대중교통 기준 추천 중간 지점"
     caption: "대중교통 기준 중간 지점 추천"
     use: "화면 캡처"
-  - src: "프로젝트/Calddy/calddy-diary.png"
+    width: 1468
+    height: 742
+    source: "프로젝트/Calddy/calddy-midpoint.png"
+  - src: "content/projects/calddy/calddy-diary.webp"
     alt: "기록하기 화면 — 일정 완료 후 사진과 글로 하루를 기록하고 피드에 공유"
     caption: "일정 완료 후 기록하기"
     use: "화면 캡처"
-  - src: "프로젝트/Calddy/Calddy_logo.png"
+    width: 1342
+    height: 679
+    source: "프로젝트/Calddy/calddy-diary.png"
+  - src: "content/projects/calddy/calddy-logo.webp"
     alt: "Calddy 로고"
     use: "로고 (섬 표지, 패널 머리)"
+    width: 492
+    height: 404
+    source: "프로젝트/Calddy/Calddy_logo.png"
   - src: "프로젝트/Calddy/Calddy_포스터_KMAIA.pdf"
     alt: "KMAIA 학술대회 포스터"
     use: "학술대회 포스터 (PDF, 이미지로 변환 필요)"

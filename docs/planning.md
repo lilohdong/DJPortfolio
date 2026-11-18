@@ -236,7 +236,12 @@ content/
 
 - 값이 노트에 없거나 확인이 필요하면 문자열 `"확인 필요"`를 넣는다. 앱은 이 값을 **"없음"으로 취급해 화면에 그리지 않는다**(해당 줄이나 링크를 숨김). 빌드 때 경고로 목록을 출력하면 좋다.
 - 공개하지 않는 링크는 `url: null`로 두고 `label`에 사유를 적는다(예: "GitHub 저장소 (비공개)"). 앱은 링크 없이 글자로만 표시한다.
-- 이미지 파일은 아직 저장소에 없다. `images[].src`와 `profile.photo.src`는 **원본 Obsidian 볼트 루트 기준 상대 경로**다(프로필 사진만 볼트 바깥이라 `../`로 시작). 이미지를 옮길 때 `static/projects/<slug>/<파일명>` 같은 저장소 경로로 바꾼다(§5).
+- 이미지 필드(`images[]`, `profile.photo`)는 아래 네 값을 쓴다. `src`, `width`, `height`는 가져오기 스크립트(`npm run images:import`)가 채운다(§5).
+  - `src`: `static/` 기준 경로. 앞에 `/`를 붙이지 않는다(예: `content/projects/calddy/calddy-calendar.webp`). 화면에서는 `$app/paths`의 `asset(src)`로 감싸 하위 경로 배포에서도 맞는 주소가 되게 한다.
+  - `width`, `height`: 변환된 이미지의 실제 픽셀 크기. `<img>`의 `width`/`height` 속성에 넣어 레이아웃 밀림을 막는다.
+  - `source`: 원본 위치. **원본 Obsidian 볼트 루트 기준 상대 경로**다(프로필 사진만 볼트 바깥이라 `../`로 시작). 스크립트를 다시 돌릴 때만 쓰고 **화면에는 쓰지 않는다**.
+  - 아직 옮기지 못한 항목은 `src`에 원본 경로나 `"확인 필요"`가 남아 있고 `width`/`height`가 없다. 앱은 `width`가 없는 항목을 아직 옮기지 않은 이미지로 보고 그리지 않는다(제안, 콘텐츠 로더 작업에서 확정).
+- 변환된 파일은 `static/content/projects/<slug>/`와 `static/content/profile/`에 있다. WebP, 긴 변 최대 1600px(프로필 사진은 640px), 파일 이름은 원본 이름을 영문 소문자·숫자·`-`로 바꾼 것이다.
 - 팀원 실명, 팀원 개인 정보는 어떤 필드에도 넣지 않는다.
 
 ### 4.2 프로젝트 파일 (`content/projects/<slug>.md`)
@@ -256,7 +261,7 @@ content/
 | `stack` | 문자열 배열 | 필수 | 사용 기술. 표시 순서 그대로 |
 | `highlights` | 문자열 배열 (3~5개) | 필수 | 핵심 기여. 패널과 카드에 그대로 나온다 |
 | `links[]` | `{ type, label, url }` 배열 | 선택 | `type`: `deploy` \| `demo` \| `repo` \| `release` \| `doc`. `url`이 `null`이면 링크 없이 표시 |
-| `images[]` | `{ src, alt, caption?, use }` 배열 | 필수(1개 이상) | 첫 항목이 대표 이미지. `alt`는 대체 글, `caption`은 이미지 아래 표시하는 짧은 설명(선택, 예: "메인 화면 (디자인 시안)"), `use`는 용도 메모(화면에는 안 씀) |
+| `images[]` | `{ src, alt, caption?, use, width, height, source }` 배열 | 필수(1개 이상) | 첫 항목이 대표 이미지. `alt`는 대체 글, `caption`은 이미지 아래 표시하는 짧은 설명(선택, 예: "메인 화면 (디자인 시안)"), `use`는 용도 메모(화면에는 안 씀). `src`·`width`·`height`·`source`는 §4.1 |
 | `order` | 정수 | 필수 | 노출 순서이자 섬 배치 순서. 파일 사이에 중복 금지 |
 | `featured` | 불리언 | 필수 | 대표 프로젝트 여부. `true`면 큰 섬, 목록 앞쪽 |
 | `island` | `{ x, z, size }` | 선택 | 생략하면 §1.3 규칙으로 계산. 값이 있으면 수동 배치 |
@@ -268,7 +273,7 @@ content/
 | 필드 | 형식 | 쓰이는 곳 |
 |---|---|---|
 | `name`, `name_en`, `headline` | 문자열 | 진입 카드, 등대섬, 목록 머리, 페이지 제목 |
-| `photo` | `{ src, alt }` | 등대섬 |
+| `photo` | `{ src, alt, width, height, source }` (§4.1) | 등대섬 |
 | `status`, `location` | 문자열 | 등대섬 |
 | `intro` | 여러 줄 문자열 | 등대섬 자기소개 |
 | `intro_points` | 문자열 배열 | 등대섬 요점 |
@@ -286,7 +291,11 @@ content/
 2. §4.2의 필수 필드를 채운다. 모르는 값은 `"확인 필요"`로 둔다.
 3. `order`는 기존 최댓값 + 1로 둔다. 순서를 바꾸고 싶으면 다른 파일의 `order`도 함께 고쳐 중복이 없게 한다.
 4. `island`는 생략한다. 섬 위치는 §1.3 규칙으로 자동 계산된다(군도 오른쪽 열 끝에 붙음).
-5. 이미지는 `static/projects/<slug>/`에 넣고 `images[].src`를 그 경로로 적는다. 대체 글(`alt`)을 꼭 쓴다.
+5. 이미지는 원본 볼트에 넣고 `images[]`에 `src`(볼트 루트 기준 원본 경로)와 대체 글(`alt`, 꼭 쓴다), `use`를 적는다. 그다음 가져오기 스크립트를 실행한다.
+   ```sh
+   npm run images:import -- --vault "C:\Users\rhkdr\바탕 화면\포폴\포트폴리오"
+   ```
+   볼트 경로는 `PORTFOLIO_VAULT` 환경 변수로 줘도 된다. 스크립트가 WebP로 변환해 `static/content/projects/<slug>/`에 저장하고, `src`를 저장소 경로로 바꾸고, `width`·`height`·`source`를 채운다. 먼저 `--dry-run`으로 할 일만 볼 수 있고, 원본을 바꿨다면 `--force`로 다시 변환한다. 변환된 이미지와 바뀐 콘텐츠 파일을 함께 커밋한다. PDF처럼 이미지가 아닌 파일은 건너뛰므로 PNG/JPG로 먼저 바꿔 둔다.
 6. 기술 섬과 연결하려면 `content/profile.md`의 `skills` 항목 `projects`에 새 slug를 추가한다.
 7. 로컬에서 항해 보기(지도에 새 섬이 보이는지)와 `/list`, `/projects/<slug>`를 확인한다.
 
@@ -300,7 +309,7 @@ content/
 
 | 항목 | 상태 |
 |---|---|
-| 프로필 사진 | 받음: `바탕 화면\포폴\동준_정장.png` (볼트 바깥, profile에 볼트 기준 상대 경로 `../동준_정장.png`로 기록, 아직 복사 안 함) |
+| 프로필 사진 | 받음: `바탕 화면\포폴\동준_정장.png` (볼트 바깥). `static/content/profile/photo.webp`로 변환해 저장소에 넣음 |
 | 이력서 PDF | 없음 → 이력서 내려받기 기능을 두지 않는다 |
 | 공개용 이메일, 거주 지역, 영문 이름, 학력, 자격증 | 받음 (profile.md 반영) |
 | 회사 경력 | 볼트에 근거 없음 → 항목을 두지 않는다 |

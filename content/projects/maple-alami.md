@@ -38,15 +38,24 @@ links:
     label: "GitHub 저장소"
     url: "https://github.com/lilohdong/maple_alami"
 images:
-  - src: "프로젝트/메이플 할일 알리미/maple-desktop.png"
+  - src: "content/projects/maple-alami/maple-desktop.webp"
     alt: "메이플 할일 알리미 대시보드 (데스크톱)"
     use: "대표 이미지"
-  - src: "프로젝트/메이플 할일 알리미/maple-mobile.png"
+    width: 1280
+    height: 1000
+    source: "프로젝트/메이플 할일 알리미/maple-desktop.png"
+  - src: "content/projects/maple-alami/maple-mobile.webp"
     alt: "대시보드 (모바일)"
     use: "화면 캡처"
-  - src: "프로젝트/메이플 할일 알리미/maple-notify.png"
+    width: 500
+    height: 1250
+    source: "프로젝트/메이플 할일 알리미/maple-mobile.png"
+  - src: "content/projects/maple-alami/maple-notify.webp"
     alt: "디스코드 알림 설정 화면"
     use: "화면 캡처"
+    width: 1280
+    height: 760
+    source: "프로젝트/메이플 할일 알리미/maple-notify.png"
 order: 4
 featured: true
 island:
