@@ -6,6 +6,7 @@
 		PlaneGeometry,
 		ShaderMaterial,
 		SRGBColorSpace,
+		Vector2,
 		Vector3,
 		Vector4,
 		type Mesh
@@ -13,17 +14,19 @@
 	import { onDestroy } from 'svelte';
 	import { PIER_RADIUS, PIER_TIP, type Sailing } from '../sailing/sailing.svelte';
 	import type { Palette } from '../sailing/time-of-day';
+	import { SEA_MAX_FOG } from '../sailing/render-style';
 
 	// 픽셀 스타일 수면.
 	// - 조명 음영을 쓰지 않는 안정된 바탕색 (밝기 단계가 화면 전체에서 출렁이지 않게)
-	// - 세계 좌표에 고정된 도트 물결 무늬 (배가 움직이면 흘러 지나간다)
+	// - 세계 좌표에 고정된 도트 물결 무늬 (배가 움직이면 흘러 지나간다). 거리별 크기 단계로 수평선까지 이어진다
 	// - 섬·선착장 둘레의 얕은 물빛과 거품 띠, 배 뒤 항적
 	// - 카메라에서 멀수록 짙어지는 바다색, 안개
 	// 무늬 굵기는 화면 픽셀 크기(fwidth)에 맞춰 늘려, 저해상도에서 1픽셀 아래로 가늘어져 깜빡이지 않게 한다.
 
 	let { game, palette }: { game: Sailing; palette: Palette } = $props();
 
-	const { scene } = useThrelte();
+	const { scene, camera } = useThrelte();
+	const viewDir = new Vector3();
 
 	const MAX_ISLANDS = 16;
 	const WAKE_POINTS = 32;
@@ -55,7 +58,10 @@
 			islands: { value: islandData },
 			piers: { value: pierData },
 			islandCount: { value: 0 },
-			wake: { value: wakeData }
+			wake: { value: wakeData },
+			camRight: { value: new Vector2(1, 0) },
+			camForward: { value: new Vector2(0, -1) },
+			maxFog: { value: SEA_MAX_FOG }
 		},
 		defines: { MAX_ISLANDS, WAKE_POINTS, WAKE_LIFE: WAKE_LIFE.toFixed(2) },
 		vertexShader: /* glsl */ `
@@ -83,6 +89,9 @@
 			uniform vec3 piers[MAX_ISLANDS];
 			uniform int islandCount;
 			uniform vec4 wake[WAKE_POINTS];
+			uniform vec2 camRight;
+			uniform vec2 camForward;
+			uniform float maxFog;
 			varying vec3 vWorld;
 			varying float vViewDepth;
 
@@ -90,11 +99,42 @@
 				return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 			}
 
+			// 물결 무늬 한 단계. 칸(cell) 중심은 세계 좌표에 고정되고, 조각은 늘 화면 가로(카메라 오른쪽)로 눕는다.
+			// scale: 이 단계의 칸·조각 크기 배율. keepFrom~keepTo: 단계 사이를 칸 단위로 섞기 위한 선택 구간.
+			// fwR, fwF: 화면 한 픽셀이 덮는 세계 길이 (가로 방향, 앞뒤 방향)
+			float ripple(vec2 w, float scale, float keepFrom, float keepTo, float fwR, float fwF, float far) {
+				vec2 p = w + vec2(time * 0.22, time * 0.06);
+				vec2 cellSize = vec2(2.8, 2.0) * scale;
+				vec2 cell = floor(p / cellSize);
+				vec2 key = cell + vec2(scale * 17.0, scale * 5.0);
+				float pick = hash(key + 11.7);
+				if (pick < keepFrom || pick >= keepTo) return 0.0;
+				float h = hash(key);
+				vec2 jitter = (vec2(hash(key + 7.1), hash(key + 3.3)) - 0.5) * cellSize * 0.5;
+				vec2 local = p - (cell + 0.5) * cellSize - jitter;
+				float lx = dot(local, camRight);
+				float ly = dot(local, camForward);
+				// 먼 곳은 화면에서 몇 줄밖에 안 되므로 조각을 더 많이, 더 오래 보이게 해 줄무늬 띠로 읽히게 한다
+				float pulse = clamp(sin(time * 0.45 + h * 6.2832) + far * 0.7, 0.0, 1.0);
+				// 길이는 화면에서 최대 약 16픽셀까지만 (먼 곳에서 한 줄로 길게 이어지지 않게)
+				float halfLen = min(pulse * (0.45 + h * 0.45) * scale, fwR * 8.0) * step(mix(0.5, 0.1, far), h);
+				// 앞뒤 굵기는 최소 1.6픽셀: 멀어질수록 세계 크기로는 두꺼워지고 화면에서는 가는 가로줄이 된다
+				float halfThick = max(0.12 * scale, fwF * 0.8);
+				float d = step(abs(ly), halfThick) * step(abs(lx), halfLen);
+				// 가로 길이가 3픽셀보다 짧은 조각은 깜빡임만 만들므로 그리지 않는다
+				return d * step(fwR * 1.5, halfLen);
+			}
+
 			void main() {
 				vec2 w = vWorld.xz;
 				// 이 화면 픽셀 하나가 덮는 세계 크기
 				vec2 fw = max(fwidth(w), vec2(1e-3));
 				float px = max(fw.x, fw.y);
+				// 화면 가로(카메라 오른쪽)와 앞뒤 방향으로 한 픽셀이 덮는 세계 길이.
+				// 반복문·분기 안에서는 미분값이 정의되지 않으므로 여기서 미리 구한다.
+				// fwidth는 가로·세로 변화를 더해 먼 곳 화면 가장자리에서 크게 부풀므로, 축별로 한쪽 미분만 쓴다.
+				float fwR = max(abs(dFdx(dot(w, camRight))), 1e-3);
+				float fwF = max(abs(dFdy(dot(w, camForward))), 1e-3);
 
 				// 바탕색: 가까운 물은 밝고, 먼 바다는 짙게
 				float camDist = length(w - cameraPosition.xz);
@@ -159,27 +199,32 @@
 				float keep = step(hash(vec2(floor(bestAlong * 1.5), 3.0)), bestLife * 1.3);
 				float wakeFoam = max(wakeLines * keep, wakeCenter) * step(0.06, bestLife);
 
-				// 도트 물결 무늬: 세계 좌표에 고정, 아주 천천히 흐르며 길어졌다 짧아진다.
-				vec2 p = w + vec2(time * 0.22, time * 0.06);
-				vec2 cellSize = vec2(4.2, 2.8);
-				vec2 cell = floor(p / cellSize);
-				float h = hash(cell);
-				vec2 jitter = (vec2(hash(cell + 7.1), hash(cell + 3.3)) - 0.5) * cellSize * 0.5;
-				vec2 local = p - (cell + 0.5) * cellSize - jitter;
-				float pulse = max(0.0, sin(time * 0.45 + h * 6.2832));
-				float halfLen = pulse * (0.4 + h * 0.4) * step(0.55, h);
-				float halfThick = max(0.12, fw.y * 0.75);
-				float glint = step(abs(local.y), halfThick) * step(abs(local.x), halfLen);
-				// 1픽셀보다 짧은 조각은 깜빡임만 만드므로 그리지 않는다
-				glint *= step(fw.x * 1.5, halfLen);
-				// 멀리서는 무늬가 픽셀보다 작아져 지글거리므로 지운다
-				glint *= 1.0 - smoothstep(0.35, 0.7, px);
+				// 도트 물결 무늬: 세계 좌표에 고정, 아주 천천히 흐르며 길어졌다 짧아진다. 수평선까지 이어진다.
+				// 멀어질수록 칸·조각을 2배씩 키우는 단계(밉맵과 같은 발상)를 고르고,
+				// 두 단계 사이는 칸마다 어느 단계를 쓸지 나눠(경계가 띠로 보이지 않게) 섞는다.
+				// 단계는 화면 가로 픽셀 크기로 정해 가로 밀도를 거리와 상관없이 비슷하게 둔다.
+				// 앞뒤로는 원근 때문에 칸이 납작해져, 먼 곳은 촘촘한 가로 줄무늬가 된다.
+				float lod = clamp(log2(max(fwR / 0.1, 1.0)), 0.0, 7.0);
+				float level = floor(lod);
+				float blend = lod - level;
+				float s0 = exp2(level);
+				float farness = smoothstep(35.0, 140.0, camDist);
+				float glint = max(
+					ripple(w, s0, blend, 1.0, fwR, fwF, farness),
+					ripple(w, s0 * 2.0, 0.0, blend, fwR, fwF, farness)
+				);
+				// 멀수록 옅게 (색 단계가 없어지지 않을 만큼만)
+				float glintAmount = mix(1.0, 0.8, smoothstep(40.0, 200.0, camDist));
 
-				color = mix(color, glintColor, glint * (1.0 - shallow * 0.5));
 				color = mix(color, foamColor, max(foam, wakeFoam));
 
-				float fogFactor = smoothstep(fogNear, fogFar, vViewDepth);
-				gl_FragColor = vec4(mix(color, fogColor, fogFactor), 1.0);
+				// 안개는 상한을 둬 바다가 하늘과 구분되는 수평선을 남긴다
+				float fogFactor = min(smoothstep(fogNear, fogFar, vViewDepth), maxFog);
+				color = mix(color, fogColor, fogFactor);
+				// 물결 무늬는 안개를 절반만 받게 해, 먼 곳에서도 색 단계 하나 이상 차이가 남아 보이게 한다
+				vec3 farGlint = mix(glintColor, fogColor, fogFactor * 0.45);
+				color = mix(color, farGlint, glint * glintAmount * (1.0 - shallow * 0.5) * (1.0 - max(foam, wakeFoam)));
+				gl_FragColor = vec4(color, 1.0);
 			}
 		`
 	});
@@ -254,6 +299,11 @@
 
 		const u = material.uniforms;
 		u.time.value = t;
+		// 물결 조각을 화면 가로로 눕히기 위한 카메라 방향 (수면 위 성분)
+		camera.current.getWorldDirection(viewDir);
+		const len = Math.hypot(viewDir.x, viewDir.z) || 1;
+		(u.camForward.value as Vector2).set(viewDir.x / len, viewDir.z / len);
+		(u.camRight.value as Vector2).set(-viewDir.z / len, viewDir.x / len);
 		if (scene.fog instanceof Fog) {
 			(u.fogColor.value as Color).copy(scene.fog.color);
 			u.fogNear.value = scene.fog.near;

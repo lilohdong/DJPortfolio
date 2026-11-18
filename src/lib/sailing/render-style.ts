@@ -11,6 +11,11 @@ export interface RenderStyle {
 }
 
 export const DEFAULT_PIXEL_SIZE = 4;
+
+/** 픽셀 렌더에서 수면이 받는 안개 상한. 1이면 먼 바다가 하늘색에 녹아 수평선이 사라진다. */
+export const SEA_MAX_FOG = 0.5;
+/** 이보다 먼 깊이는 하늘·해로 본다 (수면 판 대각선 절반 ≈ 640 < 이 값 < 해 거리 700) */
+export const SKY_DEPTH = 680;
 const MIN_PIXEL_SIZE = 2;
 const MAX_PIXEL_SIZE = 12;
 
