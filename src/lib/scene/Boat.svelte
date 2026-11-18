@@ -28,10 +28,17 @@
 	const deck = new ShapeGeometry(deckShape);
 	deck.rotateX(-Math.PI / 2);
 
-	const sailShape = new Shape().moveTo(0, 0).lineTo(0, 2.4).lineTo(1.5, 0.15).closePath();
+	// 가로돛: 배를 가로질러 펼쳐, 뒤따라오는 카메라에서 돛 면이 보이게 한다.
+	// (세로 삼각돛은 뒤에서 보면 옆면이라 막대처럼 보였다)
+	const sailShape = new Shape()
+		.moveTo(-1.05, 0)
+		.lineTo(1.05, 0)
+		.lineTo(0.85, 2.1)
+		.lineTo(-0.85, 2.1)
+		.closePath();
 	const sail = new ShapeGeometry(sailShape);
-	// 돛은 돛대에서 배 뒤쪽(+z)으로 펼친다.
-	sail.rotateY(-Math.PI / 2);
+	// 바람을 받아 아래쪽이 살짝 앞으로 부푼 모양
+	sail.rotateX(0.12);
 
 	let outer = $state<Group>();
 	let inner = $state<Group>();
@@ -70,8 +77,13 @@
 			<T.CylinderGeometry args={[0.06, 0.08, 3.4, 5]} />
 			<T.MeshStandardMaterial color="#6b4a32" flatShading />
 		</T.Mesh>
-		<T.Mesh geometry={sail} position={[0, 1.65, -0.12]} castShadow>
+		<T.Mesh geometry={sail} position={[0, 1.75, -0.08]} castShadow>
 			<T.MeshStandardMaterial color="#f6f1e4" flatShading side={DoubleSide} />
+		</T.Mesh>
+		<!-- 활대 -->
+		<T.Mesh position={[0, 3.85, 0.17]}>
+			<T.BoxGeometry args={[2.0, 0.09, 0.09]} />
+			<T.MeshStandardMaterial color="#6b4a32" flatShading />
 		</T.Mesh>
 		<T.Mesh position={[0, 4.15, -0.2]}>
 			<T.ConeGeometry args={[0.18, 0.4, 4]} />

@@ -5,6 +5,11 @@
 	import { buildIslands } from '#lib/sailing/islands.ts';
 	import { Sailing } from '#lib/sailing/sailing.svelte.ts';
 	import { parseHourOverride } from '#lib/sailing/time-of-day.ts';
+	import {
+		DEFAULT_RENDER_STYLE,
+		parseRenderStyle,
+		type RenderStyle
+	} from '#lib/sailing/render-style.ts';
 	import SailingHud from '#lib/ui/SailingHud.svelte';
 	import type { PageProps } from './$types';
 
@@ -16,9 +21,14 @@
 	type SceneStatus = 'loading' | 'ready' | 'no-webgl' | 'failed';
 	let status = $state<SceneStatus>('loading');
 	let hourOverride = $state<number | null>(null);
+	let renderStyle = $state<RenderStyle>(DEFAULT_RENDER_STYLE);
 
 	// 캔버스(Three.js)는 서버 렌더링 결과에 넣지 않고 브라우저에서만 불러온다.
-	let SeaCanvas = $state<Component<{ game: Sailing; hourOverride: number | null }> | null>(null);
+	let SeaCanvas = $state<Component<{
+		game: Sailing;
+		hourOverride: number | null;
+		renderStyle: RenderStyle;
+	}> | null>(null);
 
 	function hasWebGL(): boolean {
 		try {
@@ -32,6 +42,7 @@
 	onMount(async () => {
 		game.reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		hourOverride = parseHourOverride(window.location.search);
+		renderStyle = parseRenderStyle(window.location.search);
 		if (!hasWebGL()) {
 			status = 'no-webgl';
 			return;
@@ -59,7 +70,7 @@
 					status = 'failed';
 				}}
 			>
-				<SeaCanvas {game} {hourOverride} />
+				<SeaCanvas {game} {hourOverride} {renderStyle} />
 			</svelte:boundary>
 		{/if}
 	</div>
