@@ -70,9 +70,10 @@ images:
 order: 4
 featured: true
 island:
-  x: 78
-  z: -28
+  x: 48
+  z: -64
   size: 6
+  landmark: "checklist"
 unverified: []
 ---
 

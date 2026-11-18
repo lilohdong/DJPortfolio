@@ -81,9 +81,10 @@ images:
 order: 5
 featured: true
 island:
-  x: 78
-  z: 0
+  x: -22
+  z: -68
   size: 6
+  landmark: "monkey"
 unverified: []
 ---
 

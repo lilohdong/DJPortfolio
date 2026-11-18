@@ -74,9 +74,10 @@ images:
 order: 3
 featured: true
 island:
-  x: 50
-  z: 28
+  x: 48
+  z: 14
   size: 6
+  landmark: "bar-chart"
 unverified:
   - "yeoronji-issue-mobile은 원본이 780x9748 세로 전체 캡처라 변환 후 128x1600이 됐다. 본문에 쓰지 않음. 위쪽만 자른 캡처로 바꾸면 쓸 수 있다"
 ---

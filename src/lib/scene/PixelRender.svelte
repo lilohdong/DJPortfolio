@@ -14,6 +14,7 @@
 	import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 	import { onDestroy } from 'svelte';
 	import { SEA_MAX_FOG, SKY_DEPTH } from '../sailing/render-style';
+	import { placeholderDepth, POSTERIZE_LEVELS, SHARP_LAYER, sharpUniforms } from './sharp-flags';
 
 	// 픽셀 렌더: 장면을 저해상도 타깃에 그린 뒤, 보간 없이(Nearest) 화면 크기로 늘린다.
 	// 늘리는 셰이더에서 톤 매핑·sRGB 변환 → 색 단계 제한 → 깊이 외곽선을 적용한다.
@@ -43,7 +44,7 @@
 			skyDepth: { value: SKY_DEPTH },
 			fogFar: { value: 2e5 },
 			/** 밝기 단계 수. 디더링은 수면·경계에서 체크 무늬가 지저분해 쓰지 않는다. */
-			levels: { value: 9 },
+			levels: { value: POSTERIZE_LEVELS },
 			/** 외곽선 어둡게 하는 정도 */
 			outline: { value: 0.45 }
 		},
@@ -144,6 +145,23 @@
 			gl.render(scene, cam);
 			gl.setRenderTarget(null);
 			quad.render(gl);
+
+			// 깃발 천만 화면 해상도로 다시 그린다 (sharp-flags.ts). 저해상도 깊이로 가려짐을 판단한다.
+			sharpUniforms.tSceneDepth.value = target.depthTexture ?? placeholderDepth;
+			gl.getDrawingBufferSize(sharpUniforms.uResolution.value);
+			sharpUniforms.uNear.value = material.uniforms.cameraNear.value;
+			sharpUniforms.uFar.value = material.uniforms.cameraFar.value;
+			sharpUniforms.uSharp.value = 1;
+			const mask = cam.layers.mask;
+			const autoClear = gl.autoClear;
+			cam.layers.set(SHARP_LAYER);
+			gl.autoClear = false;
+			gl.clearDepth();
+			gl.render(scene, cam);
+			gl.autoClear = autoClear;
+			cam.layers.mask = mask;
+			sharpUniforms.uSharp.value = 0;
+			sharpUniforms.tSceneDepth.value = placeholderDepth;
 		},
 		{ stage: renderStage, autoInvalidate: false }
 	);

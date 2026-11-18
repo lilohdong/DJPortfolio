@@ -9,7 +9,15 @@ import {
 	textList,
 	type Warn
 } from './parse.server';
-import type { BodyBlock, ContentImage, IslandPlacement, Project, ProjectLink } from './types';
+import {
+	LANDMARKS,
+	type BodyBlock,
+	type ContentImage,
+	type IslandPlacement,
+	type Landmark,
+	type Project,
+	type ProjectLink
+} from './types';
 
 // content/projects/*.md 를 빌드(사전 렌더링) 시점에 읽는다.
 // 파일 하나 = 프로젝트 하나 = 섬 하나. 파일을 추가하면 목록에 자동으로 들어온다.
@@ -52,6 +60,18 @@ function parseIsland(value: unknown): IslandPlacement | null {
 	const z = num(value.z);
 	const size = num(value.size);
 	return x === null || z === null || size === null ? null : { x, z, size };
+}
+
+function parseLandmark(value: unknown, path: string, warn: Warn): Landmark | null {
+	if (!isRecord(value) || value.landmark === undefined || value.landmark === null) return null;
+	const name = value.landmark;
+	if (typeof name === 'string' && (LANDMARKS as readonly string[]).includes(name)) {
+		return name as Landmark;
+	}
+	warn(
+		`${path}: island.landmark 값 "${String(name)}"을 모름 (${LANDMARKS.join(', ')}), 조형물 없이 둠`
+	);
+	return null;
 }
 
 /**
@@ -165,6 +185,7 @@ function parseProject(path: string, source: string, warn: Warn): Project | null 
 		featured,
 		// island 값이 있으면 수동 배치, 없으면 §1.3 규칙으로 계산
 		island: parseIsland(data.island) ?? projectIslandPlacement(order, featured),
+		landmark: parseLandmark(data.island, path, warn),
 		// unverified와 이미지의 source, use는 화면에 쓰지 않으므로 옮기지 않는다.
 		logo,
 		cover,
