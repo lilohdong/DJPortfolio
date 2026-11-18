@@ -9,7 +9,7 @@ function formatMonth(value: string): string {
 
 export const ko = {
 	site: {
-		title: '오동준 | 적응형 개발자',
+		title: '오동준 | 신입',
 		listTitle: '목록 | 오동준'
 	},
 	home: {
