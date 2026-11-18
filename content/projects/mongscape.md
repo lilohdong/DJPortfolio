@@ -35,7 +35,6 @@ links:
     url: "https://github.com/kihwan04/Mongscape"
 logo:
   # 원본 1942x809 가로로 긴 글자 로고(2.2MB). 깃발에 넣으려면 정사각형 128 안에 맞추면 글자가 작아진다
-  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
   src: "content/projects/mongscape/mongscape-logo.webp"
   alt: "Mongscape 로고"
   source: "프로젝트/Mongscape/mongscape-logo.png"
@@ -88,13 +87,11 @@ unverified: []
 
 ![](mongscape-play-mine)
 
-웹캠으로 인식한 몸동작으로 장애물을 피하는 3레인 러너 게임입니다. 점프하고 숙이고 무릎을 들고 몸을 기울여서 광산과 감옥, 동물원을 달려 탈출합니다. 5인 팀 프로젝트입니다.
-
-저는 10월 전시 버전 이후의 기능 확장과 서버, 출시 작업 대부분을 맡았습니다. 커밋 169개 중 156개가 제 것입니다.
+점프하고 숙이고 무릎을 들고 몸을 기울여서 광산과 감옥, 동물원을 달려 탈출하는 3레인 러너입니다.
 
 ![](mongscape-ready-skeleton)
 
-2026년 11월 14일 v1.0.0을 GitHub Releases로 출시했습니다.
+10월 전시 버전 이후의 기능 확장과 서버, 출시 작업 대부분을 맡아 2026년 11월 14일 GitHub Releases로 v1.0.0을 냈습니다.
 
 <!-- more -->
 

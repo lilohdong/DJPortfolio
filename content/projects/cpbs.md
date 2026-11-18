@@ -36,7 +36,6 @@ links:
     url: null
 logo:
   # 원본 180x180 PNG, 같은 폴더에 SVG도 있다
-  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
   src: "content/projects/cpbs/cpbs-logo.webp"
   alt: "CPBS 로고"
   source: "프로젝트/cpbs/cpbs-logo.png"
@@ -76,11 +75,9 @@ unverified:
 
 ![](cpbs-batting)
 
-컴투스프로야구 V26에는 투수를 골라 반복해서 타격을 연습할 방법이 없어서, 웹에서 연습하는 비공식 팬 도구를 만들었습니다. 타격 트레이닝, 강화와 스킬 변경 시뮬레이터, 스킬 점수 계산기가 있습니다.
+게임에는 투수를 골라 반복해서 타격을 연습할 방법이 없어서 만들었습니다.
 
-혼자 기획하고 설계를 정했습니다. 구현은 설계 문서와 구현 계획을 먼저 쓴 뒤 Claude Code와 함께 했고, 서버 없이 정적 사이트로 만들어 Cloudflare Pages에 배포했습니다.
-
-4일 동안 v0.1.0부터 v0.5.1까지 11번 릴리스했습니다.
+서버 없이 정적 사이트로 만들어 Cloudflare Pages에 배포했고, 4일 동안 v0.1.0부터 v0.5.1까지 11번 릴리스했습니다.
 
 <!-- more -->
 

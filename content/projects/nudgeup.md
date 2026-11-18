@@ -72,6 +72,7 @@ images:
     source: "프로젝트/NudgeUp/nudgeup-team-settings.png"
   - src: "content/projects/nudgeup/nudgeup-erd.webp"
     alt: "NudgeUp 데이터베이스 ERD"
+    caption: "DB 설계도 (ERD)"
     use: "DB 설계도"
     width: 1600
     height: 836
@@ -88,9 +89,9 @@ unverified:
 
 ![](nudgeup-main)
 
-팀장이 팀원에게 작업을 맡기고, 늦어지는 팀원에게 푸시 알림으로 독촉하는 안드로이드 앱입니다. 모바일 과목에서 2인 팀으로 만들었습니다.
+초대 코드로 승인 없이 팀에 들어가고, 한 사람이 여러 팀에 속할 수 있습니다.
 
-계획서에서는 독촉 알림과 팀 설정, DB 설계를 맡았는데, 개발하면서 Spring Boot 백엔드 전체와 앱의 API 연동까지 맡았습니다. 커밋 104개 중 96개가 제 것입니다.
+계획서에서 제 몫은 독촉 알림과 팀 설정, DB 설계였는데, 개발하면서 Spring Boot 백엔드 전체와 앱의 API 연동까지 맡게 됐습니다.
 
 <!-- more -->
 
