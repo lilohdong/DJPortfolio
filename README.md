@@ -15,7 +15,7 @@ npm run dev
 
 ```sh
 npm run build    # 결과물: build/
-npm run preview  # 빌드 결과 미리 보기
+npm run preview  # 빌드 결과 미리 보기 (build와 같은 BASE_PATH로 실행해야 한다)
 ```
 
 하위 경로에 배포할 때(예: GitHub Pages 프로젝트 페이지)는 `BASE_PATH`를 지정해 빌드한다.

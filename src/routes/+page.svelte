@@ -26,7 +26,7 @@
 		<p class="text-sm text-slate-700">항해 보기 (준비 중)</p>
 		<a
 			class="w-fit rounded bg-white/90 px-3 py-1.5 text-sm font-medium text-slate-900 underline"
-			href={resolve('/list')}
+			href={resolve('list/')}
 		>
 			목록으로 보기
 		</a>
