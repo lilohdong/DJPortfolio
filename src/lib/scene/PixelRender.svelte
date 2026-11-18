@@ -13,6 +13,7 @@
 	} from 'three';
 	import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 	import { onDestroy } from 'svelte';
+	import { SEA_MAX_FOG, SKY_DEPTH } from '../sailing/render-style';
 
 	// 픽셀 렌더: 장면을 저해상도 타깃에 그린 뒤, 보간 없이(Nearest) 화면 크기로 늘린다.
 	// 늘리는 셰이더에서 톤 매핑·sRGB 변환 → 색 단계 제한 → 깊이 외곽선을 적용한다.
@@ -38,6 +39,8 @@
 			cameraNear: { value: 0.5 },
 			cameraFar: { value: 1600 },
 			fogNear: { value: 1e5 },
+			seaMaxFog: { value: SEA_MAX_FOG },
+			skyDepth: { value: SKY_DEPTH },
 			fogFar: { value: 2e5 },
 			/** 밝기 단계 수. 디더링은 수면·경계에서 체크 무늬가 지저분해 쓰지 않는다. */
 			levels: { value: 9 },
@@ -59,6 +62,8 @@
 			uniform float cameraFar;
 			uniform float fogNear;
 			uniform float fogFar;
+			uniform float seaMaxFog;
+			uniform float skyDepth;
 			uniform float levels;
 			uniform float outline;
 			varying vec2 vUv;
@@ -84,7 +89,8 @@
 				#if defined( TONE_MAPPING )
 					mapped = toneMapping(lit);
 				#endif
-				float fogFactor = smoothstep(fogNear, fogFar, d);
+				// 수면은 안개 상한(seaMaxFog)까지만 받으므로 같은 비율로 맞춘다. 하늘·해(skyDepth 너머)는 톤 매핑 없이.
+				float fogFactor = d > skyDepth ? 1.0 : min(smoothstep(fogNear, fogFar, d), seaMaxFog);
 				gl_FragColor = linearToOutputTexel(vec4(mix(mapped, lit, fogFactor), 1.0));
 
 				// 색 단계 제한 (sRGB 공간에서)
