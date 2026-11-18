@@ -19,10 +19,9 @@ status: "구직 중"
 location: "경기도 고양시"
 
 # intro 근거: 각 프로젝트 파일의 stack. 프로젝트 7개의 주 기술 조합이 서로 다르다.
-#   Claude Code는 여론지, 메이플 할일 알리미, CPBS의 role과 Mongscape 기술 연결에 있다.
 intro: |
   일곱 개 프로젝트를 모두 다른 기술 조합으로 만들었습니다.
-  Java Swing, Android와 Spring Boot, Flutter와 Supabase, Unity, Next.js, React와 Three.js를 썼고, 최근 프로젝트는 Claude Code로 구현합니다.
+  Java Swing, Android와 Spring Boot, Flutter와 Supabase, Unity, Next.js, React와 Three.js를 썼습니다.
 
 intro_points:
   - "Mongscape에서 처음으로 서버를 직접 호스팅해 VPS에 배포했습니다."
@@ -62,7 +61,6 @@ skills:
       - { name: "pytest, Vitest, Playwright", projects: [yeoronji, cpbs] }
       - { name: "NUnit", projects: [mongscape] }
       - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, cpbs] }
-      - { name: "Claude Code", projects: [yeoronji, maple-alami, mongscape, cpbs] }
 
 education:
   - school: "명지전문대학"

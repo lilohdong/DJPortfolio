@@ -29,7 +29,7 @@ stack:
 highlights:
   - "컴투스가 공개한 확률표로 강화와 스킬 변경 결과를 미리 돌려 봅니다"
   - "게임 영상에서 투구 125개를 재서 공의 속도감을 게임에 맞췄습니다"
-  - "코드를 올릴 때마다 GitHub Actions가 검사와 테스트, 빌드를 자동으로 돌립니다"
+  - "PR을 열거나 develop, main에 올릴 때마다 GitHub Actions가 검사와 테스트, 빌드를 돌립니다"
 links:
   - type: deploy
     label: "서비스 바로가기"
