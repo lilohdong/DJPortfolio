@@ -32,7 +32,7 @@ links:
     url: "https://github.com/lilohdong/NudgeUp"
 images:
   - src: "content/projects/nudgeup/nudgeup-main.webp"
-    alt: "NudgeUp 메인 화면 디자인 시안 — 팀원, 팀 할 일, 내 할 일"
+    alt: "NudgeUp 메인 화면 디자인 시안: 팀원, 팀 할 일, 내 할 일"
     caption: "메인 화면 (디자인 시안)"
     use: "대표 이미지. 실제 앱 화면이 아니라 디자인 시안"
     width: 472
@@ -66,7 +66,7 @@ images:
     height: 1168
     source: "프로젝트/NudgeUp/nudgeup-task-create.png"
   - src: "content/projects/nudgeup/nudgeup-team-settings.webp"
-    alt: "팀 설정 화면 디자인 시안 — 팀장 지정, 팀원별 독촉 권한"
+    alt: "팀 설정 화면 디자인 시안: 팀장 지정, 팀원별 독촉 권한"
     caption: "팀 설정 (디자인 시안)"
     use: "디자인 시안"
     width: 535
@@ -88,7 +88,7 @@ unverified:
   - "화면 이미지 5장은 실제 앱 화면이 아니라 디자인 시안. 나중에 실제 앱 화면 캡처로 교체 예정"
 ---
 
-NudgeUp은 팀 단위로 일할 때 팀장이 팀원에게 작업을 맡기고, 진행이 느린 팀원에게 푸시 알림으로 바로 독촉할 수 있는 안드로이드 팀 업무 관리 앱입니다. 초대 코드로 승인 절차 없이 팀에 참가하고, 한 사람이 여러 팀에 동시에 소속될 수 있습니다.
+NudgeUp은 팀 단위로 일할 때 팀장이 팀원에게 작업을 맡기고, 진행이 느린 팀원에게 푸시 알림으로 독촉하는 안드로이드 팀 업무 관리 앱입니다. 초대 코드로 승인 절차 없이 팀에 참가하고, 한 사람이 여러 팀에 동시에 소속될 수 있습니다.
 
 계획서에서는 독촉 알림, 팀 생성·설정, DB 설계를 맡았지만, 개발이 진행되면서 Spring Boot 백엔드 전체와 앱의 API 연동까지 담당했습니다. 백엔드는 auth, user, team, task, nudge 도메인과 JWT·보안·FCM·예외 처리를 모은 공통 레이어로 나누었고, 공통 응답 래퍼와 에러 코드, 전역 예외 처리기로 에러 응답 형식을 통일했습니다.
 

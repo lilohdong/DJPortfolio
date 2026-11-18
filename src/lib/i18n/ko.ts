@@ -20,7 +20,7 @@ export const ko = {
 	},
 	list: {
 		heading: '목록 보기',
-		body: '포트폴리오 내용을 목록으로 볼 수 있는 페이지입니다. 준비 중입니다.',
+		body: '포트폴리오를 목록으로 보는 페이지입니다. 아직 준비 중입니다.',
 		backToSailing: '항해 보기로 돌아가기'
 	},
 	fallback: {
@@ -62,7 +62,7 @@ export const ko = {
 		period: '기간',
 		team: '팀',
 		role: '역할',
-		highlights: '핵심 기여',
+		highlights: '한 일',
 		stack: '사용 기술',
 		links: '링크',
 		about: '소개',
