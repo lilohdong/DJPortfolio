@@ -28,6 +28,12 @@ links:
   - type: repo
     label: "GitHub 저장소"
     url: "https://github.com/lilohdong/NudgeUp"
+logo:
+  src: "content/projects/nudgeup/nudgeup-logo.webp"
+  alt: "NudgeUp 로고"
+  width: 99
+  height: 100
+  source: "프로젝트/NudgeUp/nudgeup-logo.png"
 images:
   - src: "content/projects/nudgeup/nudgeup-main.webp"
     alt: "NudgeUp 메인 화면 디자인 시안: 팀원, 팀 할 일, 내 할 일"
@@ -36,12 +42,6 @@ images:
     width: 472
     height: 1015
     source: "프로젝트/NudgeUp/nudgeup-main.png"
-  - src: "content/projects/nudgeup/nudgeup-logo.webp"
-    alt: "NudgeUp 로고"
-    use: "로고"
-    width: 99
-    height: 100
-    source: "프로젝트/NudgeUp/nudgeup-logo.png"
   - src: "content/projects/nudgeup/nudgeup-login.webp"
     alt: "로그인 화면 디자인 시안"
     caption: "로그인 (디자인 시안)"

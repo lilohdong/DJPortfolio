@@ -33,6 +33,12 @@ links:
   - type: repo
     label: "GitHub 저장소"
     url: "https://github.com/kihwan04/Mongscape"
+logo:
+  # 원본 1942x809 가로로 긴 글자 로고(2.2MB). 깃발에 넣으려면 정사각형 128 안에 맞추면 글자가 작아진다
+  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
+  src: "프로젝트/Mongscape/mongscape-logo.png"
+  alt: "Mongscape 로고"
+  source: "프로젝트/Mongscape/mongscape-logo.png"
 images:
   - src: "content/projects/mongscape/mongscape-play-mine.webp"
     alt: "Mongscape 광산 구간 플레이 화면"
@@ -55,13 +61,6 @@ images:
     width: 1600
     height: 1000
     source: "프로젝트/무한옥/mongscape-cart-fork.png"
-  - src: "content/projects/mongscape/mongscape-result.webp"
-    alt: "결과 화면"
-    caption: "판이 끝난 뒤 점수와 랭킹"
-    use: "화면 캡처"
-    width: 1600
-    height: 1000
-    source: "프로젝트/무한옥/mongscape-result.png"
   - src: "content/projects/mongscape/mongscape-login.webp"
     alt: "로그인 화면"
     caption: "얼굴 로그인"
@@ -82,8 +81,7 @@ island:
   x: 78
   z: 0
   size: 6
-unverified:
-  - "mongscape-result 랭킹에 다른 회원 닉네임이 보인다. 팀원 이름을 영문 자판으로 친 것일 수 있어 본문에 쓰지 않았다. 사이트에 실을지 확인 필요"
+unverified: []
 ---
 
 ![](mongscape-play-mine)

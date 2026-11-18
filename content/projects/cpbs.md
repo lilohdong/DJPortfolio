@@ -34,6 +34,12 @@ links:
   - type: repo
     label: "GitHub 저장소 (비공개)"
     url: null
+logo:
+  # 원본 180x180 PNG, 같은 폴더에 SVG도 있다
+  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
+  src: "프로젝트/cpbs/cpbs-logo.png"
+  alt: "CPBS 로고"
+  source: "프로젝트/cpbs/cpbs-logo.png"
 images:
   - src: "content/projects/cpbs/cpbs-batting.webp"
     alt: "타격 트레이닝 화면: 3D 타석 시점, 스코어보드와 스트라이크 존 (모바일)"

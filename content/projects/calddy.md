@@ -28,6 +28,12 @@ links:
   - type: repo
     label: "GitHub 저장소"
     url: "https://github.com/lilohdong/Calddy"
+logo:
+  src: "content/projects/calddy/calddy-logo.webp"
+  alt: "Calddy 로고"
+  width: 492
+  height: 404
+  source: "프로젝트/Calddy/Calddy_logo.png"
 images:
   # 앱 화면 4장은 Calddy_포스터_KMAIA.pptx 안의 이미지(ppt/media/image3~6)를 볼트에 저장한 것. 각 이미지는 휴대폰 화면 4개를 가로로 이은 것
   - src: "content/projects/calddy/calddy-calendar.webp"
@@ -58,12 +64,6 @@ images:
     width: 1342
     height: 679
     source: "프로젝트/Calddy/calddy-diary.png"
-  - src: "content/projects/calddy/calddy-logo.webp"
-    alt: "Calddy 로고"
-    use: "로고 (섬 표지, 패널 머리)"
-    width: 492
-    height: 404
-    source: "프로젝트/Calddy/Calddy_logo.png"
   - src: "프로젝트/Calddy/Calddy_포스터_KMAIA.pdf"
     alt: "KMAIA 학술대회 포스터"
     use: "학술대회 포스터 (PDF, 이미지로 변환 필요)"
