@@ -49,20 +49,13 @@ images:
   - src: "프로젝트/여론지/yeoronji-nostance-desktop.png"
     alt: "찬반 쟁점이 없는 이슈 화면 — 감정 비율만 표시"
     use: "화면 캡처"
-  - src: "프로젝트/여론지/yeoronji-detail-sample.png"
-    alt: "확인 필요"
-    use: "확인 필요 — 노트 본문에서 쓰이지 않은 파일"
-  - src: "프로젝트/여론지/yeoronji-detail-sample-mobile.png"
-    alt: "확인 필요"
-    use: "확인 필요 — 노트 본문에서 쓰이지 않은 파일"
 order: 3
 featured: true
 island:
   x: 50
   z: 28
   size: 6
-unverified:
-  - "yeoronji-detail-sample 이미지 2장의 용도"
+unverified: []
 ---
 
 여론지는 같은 사건을 여러 언론사가 보도하면 하나의 이슈로 묶어 한 장으로 요약하고, 그 기사들의 네이버 댓글에서 표본을 뽑아 AI로 찬반과 감정 비율을 세는 정치 이슈 사이트입니다. 이슈를 감지하고 6시간 뒤와 24시간 뒤 두 번 분석해 여론이 어떻게 변했는지 비교합니다.

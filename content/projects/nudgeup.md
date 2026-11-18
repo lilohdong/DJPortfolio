@@ -32,23 +32,28 @@ links:
     url: "https://github.com/lilohdong/NudgeUp"
 images:
   - src: "프로젝트/NudgeUp/nudgeup-main.png"
-    alt: "NudgeUp 메인 화면 — 팀원, 팀 할 일, 내 할 일"
-    use: "대표 이미지"
+    alt: "NudgeUp 메인 화면 디자인 시안 — 팀원, 팀 할 일, 내 할 일"
+    caption: "메인 화면 (디자인 시안)"
+    use: "대표 이미지. 실제 앱 화면이 아니라 디자인 시안"
   - src: "프로젝트/NudgeUp/nudgeup-logo.png"
     alt: "NudgeUp 로고"
     use: "로고"
   - src: "프로젝트/NudgeUp/nudgeup-login.png"
-    alt: "로그인 화면"
-    use: "화면 캡처"
+    alt: "로그인 화면 디자인 시안"
+    caption: "로그인 (디자인 시안)"
+    use: "디자인 시안"
   - src: "프로젝트/NudgeUp/nudgeup-signup.png"
-    alt: "회원가입 화면"
-    use: "화면 캡처"
+    alt: "회원가입 화면 디자인 시안"
+    caption: "회원가입 (디자인 시안)"
+    use: "디자인 시안"
   - src: "프로젝트/NudgeUp/nudgeup-task-create.png"
-    alt: "작업 생성 화면"
-    use: "화면 캡처"
+    alt: "작업 생성 화면 디자인 시안"
+    caption: "작업 생성 (디자인 시안)"
+    use: "디자인 시안"
   - src: "프로젝트/NudgeUp/nudgeup-team-settings.png"
-    alt: "팀 설정 화면 — 팀장 지정, 팀원별 독촉 권한"
-    use: "화면 캡처"
+    alt: "팀 설정 화면 디자인 시안 — 팀장 지정, 팀원별 독촉 권한"
+    caption: "팀 설정 (디자인 시안)"
+    use: "디자인 시안"
   - src: "프로젝트/NudgeUp/nudgeup-erd.jpg"
     alt: "NudgeUp 데이터베이스 ERD"
     use: "DB 설계도"
@@ -59,7 +64,7 @@ island:
   z: 0
   size: 6
 unverified:
-  - "화면 캡처가 실제 앱 화면인지 설계 시안인지 (노트에서는 '화면 설계' 절에 있음)"
+  - "화면 이미지 5장은 실제 앱 화면이 아니라 디자인 시안. 나중에 실제 앱 화면 캡처로 교체 예정"
 ---
 
 NudgeUp은 팀 단위로 일할 때 팀장이 팀원에게 작업을 맡기고, 진행이 느린 팀원에게 푸시 알림으로 바로 독촉할 수 있는 안드로이드 팀 업무 관리 앱입니다. 초대 코드로 승인 절차 없이 팀에 참가하고, 한 사람이 여러 팀에 동시에 소속될 수 있습니다.
