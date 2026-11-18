@@ -3,7 +3,8 @@ title: "여론지"
 summary: "여러 언론사 기사를 이슈 단위로 요약하고 네이버 댓글 여론을 AI로 분석하는 정치 이슈 웹 서비스"
 period:
   start: "2026-10"
-  end: "2026-10"
+  end: "2026-11"
+  note: "2026-10-30 ~ 2026-11-15 (저장소 커밋 기준, KST)"
 team:
   size: 1
   type: "개인"
@@ -48,22 +49,13 @@ images:
   - src: "프로젝트/여론지/yeoronji-nostance-desktop.png"
     alt: "찬반 쟁점이 없는 이슈 화면 — 감정 비율만 표시"
     use: "화면 캡처"
-  - src: "프로젝트/여론지/yeoronji-detail-sample.png"
-    alt: "확인 필요"
-    use: "확인 필요 — 노트 본문에서 쓰이지 않은 파일"
-  - src: "프로젝트/여론지/yeoronji-detail-sample-mobile.png"
-    alt: "확인 필요"
-    use: "확인 필요 — 노트 본문에서 쓰이지 않은 파일"
 order: 3
 featured: true
 island:
   x: 50
   z: 28
   size: 6
-unverified:
-  - "작업 기간의 시작일·종료일 (노트에는 2026-10까지만 있음)"
-  - "서비스 이름 '여론지'는 노트에 임시 이름으로 적혀 있음"
-  - "yeoronji-detail-sample 이미지 2장의 용도"
+unverified: []
 ---
 
 여론지는 같은 사건을 여러 언론사가 보도하면 하나의 이슈로 묶어 한 장으로 요약하고, 그 기사들의 네이버 댓글에서 표본을 뽑아 AI로 찬반과 감정 비율을 세는 정치 이슈 사이트입니다. 이슈를 감지하고 6시간 뒤와 24시간 뒤 두 번 분석해 여론이 어떻게 변했는지 비교합니다.

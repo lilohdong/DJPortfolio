@@ -1,18 +1,18 @@
 ---
-# 소개·기술·경력/학력·연락 섬에 쓰는 내용 (초안)
-# 원본: 포트폴리오 볼트의 "프로젝트 목록.md", "사람인 포트폴리오.md", "사람인 자기소개서.md", 각 프로젝트 노트
-# 노트에 없는 값은 "확인 필요"로 둔다.
+# 소개·기술·경력/학력·연락 섬에 쓰는 내용
+# 원본: 포트폴리오 볼트의 "프로젝트 목록.md", "사람인 포트폴리오.md", "사람인 자기소개서.md", 각 프로젝트 노트,
+#       2026-11-18 사용자 답변(이메일, 사진, 학력, 자격증, 거주 지역, 영문 이름, 현재 상태)
+# 노트와 답변에 없는 값은 "확인 필요"로 둔다.
 
 name: "오동준"
-name_en: "확인 필요"
+name_en: "Dongjun Oh"
 headline: "직접 돌려 보고 확인하는 백엔드 개발자"
 photo:
-  src: "확인 필요"
-  alt: "오동준 프로필 사진"
-status: "확인 필요"   # 예: 구직 중 — 노트에 명시 없음
-location: "확인 필요"  # 공개 가능하다고 결정됐으나 노트에 값 없음
-resume:
-  src: "확인 필요"     # 공개용 이력서 PDF 파일이 볼트에 없음
+  # 볼트 바깥, "바탕 화면\포폴" 폴더 바로 아래 파일. 경로는 볼트 루트 기준 상대 경로. 아직 저장소로 복사하지 않음
+  src: "../동준_정장.png"
+  alt: "오동준 정장 차림 프로필 사진"
+status: "구직 중"
+location: "경기도 고양시"
 
 intro: |
   기능이 동작하는 데서 멈추지 않고, 권한과 데이터가 믿을 만한지 끝까지 확인하는 백엔드 개발자입니다.
@@ -31,7 +31,7 @@ skills:
       - { name: "Spring Boot", projects: [nudgeup] }
       - { name: "Supabase (RLS, 트리거, Edge Functions)", projects: [calddy, yeoronji] }
       - { name: "PostgreSQL", projects: [calddy, nudgeup, yeoronji, mongscape] }
-      - { name: "MySQL", projects: [pos-place, quiz] }
+      - { name: "MySQL", projects: [pos-place] }
       - { name: "Python", projects: [yeoronji, mongscape] }
       - { name: "JWT 인증", projects: [nudgeup] }
       - { name: "FCM 푸시 알림", projects: [calddy, nudgeup] }
@@ -42,7 +42,6 @@ skills:
       - { name: "Flutter", projects: [calddy] }
       - { name: "Android (Java)", projects: [nudgeup] }
       - { name: "Java Swing", projects: [pos-place] }
-      - { name: "PHP", projects: [quiz] }
   - group: "인프라·배포"
     items:
       - { name: "Docker Compose", projects: [nudgeup, mongscape] }
@@ -51,25 +50,26 @@ skills:
       - { name: "Vercel", projects: [yeoronji] }
   - group: "게임"
     items:
-      - { name: "Unity (C#)", projects: [mongscape, shivival, tank-attack] }
-      - { name: "Photon PUN 2", projects: [tank-attack] }
+      - { name: "Unity (C#)", projects: [mongscape] }
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
   - group: "테스트·도구"
     items:
       - { name: "pytest, Vitest, Playwright", projects: [yeoronji] }
       - { name: "NUnit (Unity Test Framework)", projects: [mongscape] }
-      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, shivival] }
+      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape] }
       - { name: "Claude Code (AI 페어 프로그래밍)", projects: [yeoronji, maple-alami, mongscape] }
 
 education:
   - school: "명지전문대학"
     major: "컴퓨터공학과"
-    period: "확인 필요"
-    status: "확인 필요"   # 재학/졸업(예정) — 노트상 2026년 기준 3학년 과목 이력이 있음
+    degree: "전문학사"
+    graduation: "2027-02"
+    status: "졸업 예정"
 
-experience: []   # 회사 경력 — 노트에 없음. 없으면 항로섬은 학력·활동·성과로 구성
+# 회사 경력은 볼트에 근거가 없어 항목을 두지 않는다.
+
 activities:
-  - title: "2026 KMAIA 하계학술대회 논문·포스터 발표"
+  - title: "2026 KMAIA 하계학술대회 논문 투고"
     detail: "SNS와 캘린더의 결합, 'Calddy'"
     date: "2026"
     project: calddy
@@ -77,15 +77,23 @@ activities:
     detail: "GitHub Releases"
     date: "2026-11-14"
     project: mongscape
-certifications: "확인 필요"   # 자격증·수상 — 노트에 없음
+
+certifications:
+  - "네트워크관리사 2급"
+  - "SQLD"
+  - "정보처리산업기사"
+  - "운전면허 1종 보통"
 
 contact:
-  email: "확인 필요"   # 공개용 이메일 — 노트에 없음
+  email: "rhkdrh102010@gmail.com"
   github: "https://github.com/lilohdong"
-  links: []           # 블로그 등 — 노트에 없음
+  links: []
+
+unverified:
+  - "headline, intro 문구 승인 (자기소개서 콘셉트를 사이트용으로 줄인 초안)"
+  - "자격증 취득일 (답변에 이름만 있음)"
 ---
 
 <!--
 본문은 비워 둔다. 화면 문구(버튼, 안내)는 이 파일이 아니라 문구 파일(ko)에 둔다.
-intro는 사람인 자기소개서 v1 콘셉트와 링커리어 자기소개를 사이트용으로 줄인 것이다.
 -->

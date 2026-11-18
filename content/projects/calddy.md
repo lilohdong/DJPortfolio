@@ -25,34 +25,45 @@ highlights:
   - "DB 트리거 → Edge Function → FCM으로 이어지는 이벤트 기반 알림 파이프라인 구축"
   - "대중교통 이동 시간 기준 중간 지점 계산 기능 구현 (Kakao Local API + ODsay + Naver Map)"
   - "Clean Architecture 레이어 분리와 백엔드 단위 테스트 작성"
-  - "2026 KMAIA 하계학술대회 논문·포스터 발표"
+  - "2026 KMAIA 하계학술대회 논문 투고"
 links:
   - type: repo
     label: "GitHub 저장소"
     url: "https://github.com/lilohdong/Calddy"
 images:
+  # 앱 화면 4장은 Calddy_포스터_KMAIA.pptx 안의 이미지(ppt/media/image3~6)를 볼트에 저장한 것. 각 이미지는 휴대폰 화면 4개를 가로로 이은 것
+  - src: "프로젝트/Calddy/calddy-calendar.png"
+    alt: "Calddy 캘린더 화면 — 월 보기, 날짜별 일정 목록, 새 일정 종류 선택, 구간 일정 추가"
+    caption: "캘린더와 일정 등록"
+    use: "대표 이미지"
+  - src: "프로젝트/Calddy/calddy-calendar-overlay.png"
+    alt: "친구 캘린더 겹쳐 보기 화면 — 빈 시간이 겹치는 친구 목록, 함께 비어 있는 날 표시, 약속 만들기"
+    caption: "친구 캘린더 겹쳐 보기와 약속 만들기"
+    use: "화면 캡처"
+  - src: "프로젝트/Calddy/calddy-midpoint.png"
+    alt: "중간 지점 찾기 화면 — 친구 태그, 출발 장소 입력, 대중교통 기준 추천 중간 지점"
+    caption: "대중교통 기준 중간 지점 추천"
+    use: "화면 캡처"
+  - src: "프로젝트/Calddy/calddy-diary.png"
+    alt: "기록하기 화면 — 일정 완료 후 사진과 글로 하루를 기록하고 피드에 공유"
+    caption: "일정 완료 후 기록하기"
+    use: "화면 캡처"
   - src: "프로젝트/Calddy/Calddy_logo.png"
     alt: "Calddy 로고"
     use: "로고 (섬 표지, 패널 머리)"
   - src: "프로젝트/Calddy/Calddy_포스터_KMAIA.pdf"
-    alt: "KMAIA 학술대회 발표 포스터"
-    use: "발표 포스터 (PDF, 이미지로 변환 필요)"
-  - src: "확인 필요"
-    alt: "확인 필요"
-    use: "대표 이미지 — 앱 화면 캡처가 원본 폴더에 없음"
+    alt: "KMAIA 학술대회 포스터"
+    use: "학술대회 포스터 (PDF, 이미지로 변환 필요)"
 order: 1
 featured: true
 island:
   x: 50
   z: -28
   size: 6
-unverified:
-  - "앱 화면 캡처(대표 이미지)가 원본 폴더에 없음"
-  - "GitHub 저장소 공개 여부"
-  - "학술대회 성과 표기: 노트 대부분은 '논문·포스터 발표', 자기소개서 D안은 '논문 투고'"
+unverified: []
 ---
 
-Calddy는 일정 관리와 일상 기록, 친구와의 공유를 한 앱에 담은 캘린더 기반 다이어리 SNS입니다. 일상 기록이 여러 플랫폼에 흩어지는 문제, 보여 주기 위주가 된 SNS, 약속마다 반복되는 일정 조율의 피로를 줄이는 것을 목표로 했습니다. 2026년 1학기 캡스톤디자인 프로젝트로 진행했고, 2026 KMAIA 하계학술대회에서 논문과 포스터로 발표했습니다.
+Calddy는 일정 관리와 일상 기록, 친구와의 공유를 한 앱에 담은 캘린더 기반 다이어리 SNS입니다. 일상 기록이 여러 플랫폼에 흩어지는 문제, 보여 주기 위주가 된 SNS, 약속마다 반복되는 일정 조율의 피로를 줄이는 것을 목표로 했습니다. 2026년 1학기 캡스톤디자인 프로젝트로 진행했고, 2026 KMAIA 하계학술대회에 논문을 투고했습니다.
 
 일정이 끝난 날짜는 사진·동영상·글로 남기는 다이어리로 이어지고, 친구의 캘린더를 겹쳐 보며 모두 가능한 시간대를 찾을 수 있습니다. 약속 장소는 직선거리가 아니라 대중교통과 도로 기준 이동 시간으로 중간 지점을 계산하고, Gemini API로 만남의 목적에 맞는 장소를 추천합니다.
 
