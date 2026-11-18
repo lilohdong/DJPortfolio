@@ -4,6 +4,7 @@
 //   ?style=lowpoly      이전 로우폴리 화면 (비교용)
 //   ?style=pixel        기본값과 같음 (예전 링크 호환)
 //   ?quality=low|mid|high  품질 단계 고정 (검수용, 자동 조절 끔)
+//   ?quality=debug      자동 조절은 그대로, 화면 구석에 단계와 판정 근거 표시
 
 export type QualityParam = 'low' | 'mid' | 'high';
 
@@ -13,6 +14,8 @@ export interface RenderStyle {
 	pixelSize: number;
 	/** 품질 단계 고정 값. null이면 자동 */
 	quality: QualityParam | null;
+	/** ?quality=debug */
+	qualityDebug: boolean;
 }
 
 export const DEFAULT_PIXEL_SIZE = 4;
@@ -27,7 +30,8 @@ const MAX_PIXEL_SIZE = 12;
 export const DEFAULT_RENDER_STYLE: RenderStyle = {
 	kind: 'pixel',
 	pixelSize: DEFAULT_PIXEL_SIZE,
-	quality: null
+	quality: null,
+	qualityDebug: false
 };
 
 function parseQuality(params: URLSearchParams): QualityParam | null {
@@ -38,12 +42,13 @@ function parseQuality(params: URLSearchParams): QualityParam | null {
 export function parseRenderStyle(search: string): RenderStyle {
 	const params = new URLSearchParams(search);
 	const quality = parseQuality(params);
+	const qualityDebug = params.get('quality') === 'debug';
 	if (params.get('style') === 'lowpoly')
-		return { kind: 'lowpoly', pixelSize: DEFAULT_PIXEL_SIZE, quality };
+		return { kind: 'lowpoly', pixelSize: DEFAULT_PIXEL_SIZE, quality, qualityDebug };
 	const raw = Number(params.get('px'));
 	const pixelSize =
 		params.has('px') && Number.isFinite(raw)
 			? Math.min(MAX_PIXEL_SIZE, Math.max(MIN_PIXEL_SIZE, Math.round(raw)))
 			: DEFAULT_PIXEL_SIZE;
-	return { kind: 'pixel', pixelSize, quality };
+	return { kind: 'pixel', pixelSize, quality, qualityDebug };
 }
