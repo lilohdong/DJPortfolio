@@ -2,10 +2,16 @@
 	import { T, useTask } from '@threlte/core';
 	import { DoubleSide, ExtrudeGeometry, Shape, ShapeGeometry, type Group } from 'three';
 	import { waveHeight } from '../sailing/waves';
+	import { useMergeStatic } from './merge-static';
 	import type { Sailing } from '../sailing/sailing.svelte';
 
 	/** flatWater: 픽셀 스타일처럼 수면이 평평하면 파도 높이 대신 작게 출렁인다 */
-	let { game, flatWater = false }: { game: Sailing; flatWater?: boolean } = $props();
+	/** still: 동작 줄이기. 출렁임을 멈춘다 */
+	let {
+		game,
+		flatWater = false,
+		still = false
+	}: { game: Sailing; flatWater?: boolean; still?: boolean } = $props();
 
 	// 기본 도형으로 만든 작은 돛단배. 앞쪽은 −z.
 	const hullShape = new Shape()
@@ -43,13 +49,15 @@
 
 	let outer = $state<Group>();
 	let inner = $state<Group>();
+	// 배를 이루는 메시도 합친다 (돛은 양면이라 그대로 둠)
+	useMergeStatic(() => inner);
 
 	useTask(() => {
 		if (!outer || !inner) return;
 		const { x, z, heading, turnVelocity, speed } = game.boat;
 		const t = game.time;
-		const bob = flatWater ? Math.sin(t * 1.1) * 0.06 : waveHeight(x, z, t) * 0.8;
-		const sway = flatWater ? 0.5 : 1;
+		const bob = still ? 0 : flatWater ? Math.sin(t * 1.1) * 0.06 : waveHeight(x, z, t) * 0.8;
+		const sway = still ? 0 : flatWater ? 0.5 : 1;
 		outer.position.set(x, bob - 0.15, z);
 		outer.rotation.y = heading;
 		// 파도에 흔들리고, 돌 때는 바깥쪽으로 살짝 기운다.

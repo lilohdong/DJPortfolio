@@ -70,6 +70,16 @@ export class Sailing {
 	mapOpen = $state(false);
 	hasMoved = $state(false);
 	reducedMotion = $state(false);
+	/**
+	 * 제목 화면이 바다를 덮고 있는지. 장면은 이 값을 보고 프레임을 크게 낮춘다.
+	 * 매 프레임 읽기만 하므로 반응형으로 두지 않는다.
+	 */
+	titleShown = false;
+	/**
+	 * 이 기기에서 장면이 너무 느려(프레임당 100ms 이상) 바다를 정지 화면으로 둔 상태.
+	 * 화면은 안내 문구를 띄우고, 지도·패널·목록으로 내용을 보게 한다.
+	 */
+	sceneStill = $state(false);
 	/** 텔레포트할 때마다 1씩 늘어난다. 화면 전환 효과의 키로 쓴다. */
 	teleportCount = $state(0);
 

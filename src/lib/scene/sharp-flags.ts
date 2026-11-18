@@ -1,4 +1,4 @@
-import { Color, DataTexture, MeshBasicMaterial, Vector2, type Texture } from 'three';
+import { Color, DataTexture, MeshBasicMaterial, Vector2, type Mesh, type Texture } from 'three';
 
 // 깃발 천을 픽셀 렌더의 4px 덩어리보다 촘촘하게(화면 해상도로) 그리는 장치.
 //
@@ -10,6 +10,9 @@ import { Color, DataTexture, MeshBasicMaterial, Vector2, type Texture } from 'th
 
 /** 화면 해상도로 다시 그릴 물체의 레이어 */
 export const SHARP_LAYER = 1;
+
+/** 다시 그릴 깃발 천 목록. 화면 안에 하나도 없으면 다시 그리기 패스를 건너뛴다 */
+export const sharpMeshes = new Set<Mesh>();
 /** PixelRender의 밝기 단계 수. 두 곳이 같은 값을 쓴다 */
 export const POSTERIZE_LEVELS = 9;
 

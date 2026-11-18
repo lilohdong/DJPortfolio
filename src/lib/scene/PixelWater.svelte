@@ -23,7 +23,12 @@
 	// - 카메라에서 멀수록 짙어지는 바다색, 안개
 	// 무늬 굵기는 화면 픽셀 크기(fwidth)에 맞춰 늘려, 저해상도에서 1픽셀 아래로 가늘어져 깜빡이지 않게 한다.
 
-	let { game, palette }: { game: Sailing; palette: Palette } = $props();
+	/** still: 동작 줄이기. 물결 무늬를 멈춘다 (항적은 배 움직임을 알려 주므로 둔다) */
+	let {
+		game,
+		palette,
+		still = false
+	}: { game: Sailing; palette: Palette; still?: boolean } = $props();
 
 	const { scene, camera } = useThrelte();
 	const viewDir = new Vector3();
@@ -295,7 +300,7 @@
 		born: number;
 		strength: number;
 	}
-	let trail: WakePoint[] = [];
+	const trail: WakePoint[] = [];
 	let lastSample = -Infinity;
 
 	useTask(() => {
@@ -306,7 +311,7 @@
 		(material.uniforms.boatPos.value as Vector2).set(x, z);
 
 		const u = material.uniforms;
-		u.time.value = t;
+		if (!still) u.time.value = t;
 		// 물결 조각을 화면 가로로 눕히기 위한 카메라 방향 (수면 위 성분)
 		camera.current.getWorldDirection(viewDir);
 		const len = Math.hypot(viewDir.x, viewDir.z) || 1;
@@ -322,12 +327,14 @@
 		const sz = z + Math.cos(heading) * STERN_OFFSET;
 		const strength = Math.min(1, Math.abs(speed) / (MAX_SPEED * 0.5));
 		// 텔레포트하면 이전 자취와 이어지지 않게 지운다
-		if (trail.length > 0 && Math.hypot(trail[0].x - sx, trail[0].z - sz) > 6) trail = [];
+		if (trail.length > 0 && Math.hypot(trail[0].x - sx, trail[0].z - sz) > 6) trail.length = 0;
 		if (t - lastSample >= WAKE_INTERVAL) {
 			lastSample = t;
 			if (strength > 0.05) trail.unshift({ x: sx, z: sz, born: t, strength });
 		}
-		trail = trail.filter((p) => t - p.born < WAKE_LIFE).slice(0, WAKE_POINTS - 1);
+		// 오래된 점은 끝에 몰려 있으므로 뒤에서부터 잘라 낸다 (매 프레임 새 배열을 만들지 않게)
+		while (trail.length > 0 && t - trail[trail.length - 1].born >= WAKE_LIFE) trail.pop();
+		if (trail.length > WAKE_POINTS - 1) trail.length = WAKE_POINTS - 1;
 
 		const head = trail.length > 0 && strength > 0.05;
 		wakeData[0].set(sx, sz, 0, head ? strength : 0);

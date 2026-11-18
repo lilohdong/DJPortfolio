@@ -36,6 +36,10 @@
 
 	/** 'title': 제목 화면, 'sea': 항해 화면. 서버 렌더링 결과는 제목 화면이다. */
 	let screen = $state<'title' | 'sea'>('title');
+	// 제목 화면이 떠 있는 동안 장면은 프레임을 낮춘다 (T-027)
+	$effect(() => {
+		game.titleShown = screen === 'title';
+	});
 	/** 다른 날 다시 온 방문자: 로딩이 끝나면 "항해 시작"에 초점 */
 	let returning = $state(false);
 
@@ -174,10 +178,26 @@
 			</section>
 		{/if}
 
+		<!-- 장면이 너무 느린 기기: 바다를 정지 화면으로 두었다는 안내 (T-029) -->
+		{#if game.sceneStill}
+			<p
+				class="absolute bottom-4 left-1/2 z-10 w-[min(28rem,calc(100%-2rem))] -translate-x-1/2 ui-panel px-4 py-3 text-body-sm"
+				role="status"
+			>
+				{ko.fallback.still}
+				<a
+					class="ml-1 font-semibold text-link underline underline-offset-4"
+					href={resolve('list/')}
+				>
+					{ko.fallback.listLink}
+				</a>
+			</p>
+		{/if}
+
 		<SailingHud
 			{game}
 			profile={data.profile}
-			sceneReady={status === 'ready'}
+			sceneReady={status === 'ready' && !game.sceneStill}
 			onshowtitle={() => (screen = 'title')}
 		/>
 	{/if}
