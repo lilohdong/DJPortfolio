@@ -54,3 +54,18 @@ npm run check   # 타입 검사
 npm run lint    # Prettier + ESLint
 npm run format  # 자동 포맷
 ```
+
+## 화면 모양 (테마)
+
+색, 글꼴, 글자 크기, 테두리와 그림자는 `src/routes/layout.css`의 `@theme` 블록과 `:root` 변수에 모여 있다. 컴포넌트는 `bg-panel`, `text-ink`, `font-display` 같은 토큰 이름과 `ui-panel`, `ui-btn`, `ui-chip` 유틸리티만 쓴다. 공통 부품은 `src/lib/ui/kit/`에 있다. 기획은 `docs/ui-plan.md`.
+
+## 글꼴 출처
+
+글꼴 파일은 `static/fonts/`에 넣어 사이트와 함께 배포한다. 외부 CDN을 쓰지 않는다.
+
+| 글꼴                                                                    | 쓰는 곳             | 버전   | 라이선스                                           |
+| ----------------------------------------------------------------------- | ------------------- | ------ | -------------------------------------------------- |
+| [Galmuri11 Bold](https://github.com/quiple/galmuri) (Lee Minseo)        | 제목, 버튼, 섬 이름 | 2.40.3 | SIL OFL 1.1, `static/fonts/galmuri/LICENSE.txt`    |
+| [Pretendard](https://github.com/orioncactus/pretendard) (Kil Hyung-jin) | 본문                | 1.3.9  | SIL OFL 1.1, `static/fonts/pretendard/LICENSE.txt` |
+
+두 글꼴 모두 배포처의 파일을 고치지 않고 그대로 넣었다. Pretendard는 배포처가 만든 woff2 동적 서브셋 중 Regular(400)와 SemiBold(600)만 넣었고, 브라우저는 화면에 나온 글자가 든 조각만 내려받는다. `@font-face` 선언은 `static/fonts/fonts.css`에 있다.

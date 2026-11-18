@@ -5,6 +5,7 @@
 	import IslandPanel from './IslandPanel.svelte';
 	import Joystick from './Joystick.svelte';
 	import MapOverlay from './MapOverlay.svelte';
+	import Button from './kit/Button.svelte';
 
 	// 3D 위에 겹치는 화면 요소와 키보드 입력.
 	// sceneReady가 false(로딩 중, 3D 실패)여도 지도 버튼·지도·패널은 동작한다.
@@ -54,6 +55,7 @@
 
 		if (e.key === 'Escape') {
 			if (game.mapOpen) game.mapOpen = false;
+			else if (helpOpen) helpOpen = false;
 			else if (game.openIslandId) closePanel();
 			return;
 		}
@@ -100,8 +102,14 @@
 		if (!game.controlsActive) releaseAll();
 	});
 
+	/** ? 버튼으로 연 조작 안내. 처음 들어왔을 때(배를 아직 안 움직였을 때)는 저절로 보인다. */
+	let helpOpen = $state(false);
+
 	const showDock = $derived(sceneReady && game.controlsActive && game.nearIsland !== null);
-	const showHint = $derived(sceneReady && game.controlsActive && !game.hasMoved);
+	// 정박 안내와 처음 안내가 함께 뜨면 처음 안내는 숨긴다. ?로 직접 연 안내는 그대로 둔다.
+	const showHint = $derived(
+		sceneReady && game.controlsActive && (helpOpen || (!game.hasMoved && !showDock))
+	);
 </script>
 
 <svelte:window {onkeydown} {onkeyup} onblur={releaseAll} />
@@ -109,46 +117,61 @@
 <div class="pointer-events-none absolute inset-0 z-20 overflow-hidden">
 	{#if game.teleportCount > 0 && !game.reducedMotion}
 		{#key game.teleportCount}
-			<div class="teleport-fade absolute inset-0 bg-white"></div>
+			<div class="teleport-fade absolute inset-0 bg-flash"></div>
 		{/key}
 	{/if}
 
-	<button
-		type="button"
-		class="pointer-events-auto absolute top-4 right-4 rounded-xl bg-white/90 px-4 py-2 text-sm font-semibold text-slate-900 shadow-md hover:bg-white focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:outline-none"
-		aria-label={ko.map.openWithKey}
-		title={ko.map.openWithKey}
-		aria-expanded={game.mapOpen}
-		onclick={() => game.toggleMap()}
-	>
-		{ko.map.open}
-	</button>
+	<div class="pointer-events-auto absolute top-4 right-4 flex gap-2">
+		<Button
+			shortcut={coarsePointer ? undefined : ko.map.key}
+			aria-label={ko.map.openWithKey}
+			title={ko.map.openWithKey}
+			aria-expanded={game.mapOpen}
+			onclick={() => game.toggleMap()}
+		>
+			{ko.map.open}
+		</Button>
+		<Button
+			class="min-w-9"
+			aria-label={helpOpen ? ko.controls.helpHide : ko.controls.helpShow}
+			title={helpOpen ? ko.controls.helpHide : ko.controls.helpShow}
+			aria-expanded={helpOpen}
+			aria-controls="controls-hint"
+			disabled={!sceneReady}
+			onclick={() => (helpOpen = !helpOpen)}
+		>
+			{ko.controls.helpButton}
+		</Button>
+	</div>
 
 	{#if showDock && game.nearIsland}
 		<div
 			class={[
-				'pointer-events-auto absolute left-1/2 flex -translate-x-1/2 items-center gap-3 rounded-2xl bg-white/90 py-2 pr-2 pl-4 text-sm text-slate-900 shadow-lg',
-				coarsePointer ? 'bottom-44' : 'bottom-24'
+				'pointer-events-auto absolute left-1/2 flex -translate-x-1/2 items-center gap-4 ui-panel py-2 pr-2 pl-4',
+				coarsePointer ? 'bottom-44' : 'bottom-20'
 			]}
 			role="status"
 		>
-			<span class="font-semibold whitespace-nowrap">{ko.dock.prompt(game.nearIsland.name)}</span>
-			<button
-				type="button"
-				class="rounded-xl bg-sky-600 px-3 py-1.5 font-semibold whitespace-nowrap text-white hover:bg-sky-700 focus-visible:ring-2 focus-visible:ring-sky-300 focus-visible:outline-none"
+			<span class="font-display text-label whitespace-nowrap">
+				{ko.dock.prompt(game.nearIsland.name)}
+			</span>
+			<Button
+				variant="primary"
+				shortcut={coarsePointer ? undefined : ko.dock.key}
 				onclick={() => game.dock()}
 			>
 				{ko.dock.action}
-				<kbd class="ml-1 rounded bg-white/25 px-1.5 font-mono text-xs">{ko.dock.key}</kbd>
-			</button>
+			</Button>
 		</div>
 	{/if}
 
 	{#if showHint}
 		<p
+			id="controls-hint"
 			class={[
-				'absolute left-1/2 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 rounded-xl bg-slate-900/70 px-4 py-2 text-center text-sm text-white',
-				coarsePointer ? 'top-20' : 'bottom-6'
+				'absolute left-1/2 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 ui-panel px-4 py-2 text-center text-body-sm',
+				// 터치 화면에서는 왼쪽 위 이름표 아래에 둔다 (조이스틱이 아래쪽을 쓴다)
+				coarsePointer ? 'top-24' : 'bottom-4'
 			]}
 		>
 			{coarsePointer ? ko.controls.hintTouch : ko.controls.hint}

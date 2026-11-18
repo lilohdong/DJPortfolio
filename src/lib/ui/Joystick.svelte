@@ -53,7 +53,7 @@
 </script>
 
 <div
-	class="pointer-events-auto absolute bottom-6 left-6 flex size-32 touch-none items-center justify-center rounded-full border-2 border-white/60 bg-slate-900/25 select-none"
+	class="pointer-events-auto absolute bottom-6 left-6 flex size-32 touch-none items-center justify-center border-(length:--ui-border-width) border-line/70 bg-panel/40 select-none"
 	role="img"
 	aria-label={ko.controls.joystick}
 	{onpointerdown}
@@ -63,7 +63,7 @@
 	onlostpointercapture={onpointerup}
 >
 	<span
-		class="block size-14 rounded-full bg-white/85 shadow"
+		class="block size-14 border-(length:--ui-border-width) border-line bg-panel-raised shadow-pixel"
 		style:translate="{knob.x}px {knob.y}px"
 	></span>
 </div>

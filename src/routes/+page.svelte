@@ -61,7 +61,7 @@
 	<title>{ko.site.title}</title>
 </svelte:head>
 
-<main class="relative h-dvh w-full overflow-hidden bg-sky-200">
+<main class="relative h-dvh w-full overflow-hidden bg-map-sea">
 	<div class="absolute inset-0" aria-hidden="true">
 		{#if SeaCanvas && status === 'ready'}
 			<svelte:boundary
@@ -75,31 +75,34 @@
 		{/if}
 	</div>
 
-	<header class="pointer-events-none absolute top-0 left-0 z-10 flex flex-col gap-2 p-4">
-		<h1 class="w-fit rounded bg-white/80 px-2 py-0.5 text-xl font-bold text-slate-900">
-			{ko.home.heading}
-		</h1>
+	<header
+		class="pointer-events-none absolute top-4 left-4 z-10 flex flex-col gap-2 ui-panel px-4 py-3"
+	>
+		<h1 class="font-display text-label">{ko.home.heading}</h1>
 		<a
-			class="pointer-events-auto w-fit rounded bg-white/90 px-3 py-1.5 text-sm font-medium text-slate-900 underline"
+			class="pointer-events-auto w-fit text-body-sm font-semibold text-link underline underline-offset-4"
 			href={resolve('list/')}
 		>
 			{ko.home.listLink}
 		</a>
 		{#if status === 'loading'}
-			<p class="text-sm text-slate-700">{ko.home.loading}</p>
+			<p class="text-body-sm text-ink-muted">{ko.home.loading}</p>
 		{/if}
 	</header>
 
 	{#if status === 'no-webgl' || status === 'failed'}
 		<section
-			class="absolute top-1/2 left-1/2 z-10 w-[min(28rem,calc(100%-2rem))] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white/95 p-5 text-slate-800 shadow-xl"
+			class="absolute top-1/2 left-1/2 z-10 w-[min(28rem,calc(100%-2rem))] -translate-x-1/2 -translate-y-1/2 ui-panel p-5"
 			role="alert"
 		>
-			<p class="font-semibold text-slate-900">
+			<p class="font-semibold">
 				{status === 'no-webgl' ? ko.fallback.noWebgl : ko.fallback.loadFailed}
 			</p>
-			<p class="mt-2 text-sm">{ko.fallback.hint}</p>
-			<a class="mt-3 inline-block font-medium text-sky-700 underline" href={resolve('list/')}>
+			<p class="mt-2 text-body-sm text-ink-muted">{ko.fallback.hint}</p>
+			<a
+				class="mt-4 inline-block font-semibold text-link underline underline-offset-4"
+				href={resolve('list/')}
+			>
 				{ko.fallback.listLink}
 			</a>
 		</section>

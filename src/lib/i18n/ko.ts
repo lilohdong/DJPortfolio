@@ -40,7 +40,10 @@ export const ko = {
 	controls: {
 		hint: 'W A S D 또는 방향키로 배를 움직이고, 섬 선착장 근처에서 E로 정박합니다. M으로 지도를 엽니다.',
 		hintTouch: '왼쪽 아래 조이스틱으로 배를 움직이고, 섬 근처에서 정박 버튼을 누릅니다.',
-		joystick: '배 조종 조이스틱'
+		joystick: '배 조종 조이스틱',
+		helpButton: '?',
+		helpShow: '조작 안내 보기',
+		helpHide: '조작 안내 닫기'
 	},
 	dock: {
 		prompt: (island: string) => `${island} 선착장`,
@@ -50,15 +53,20 @@ export const ko = {
 	map: {
 		open: '지도',
 		openWithKey: '지도 열기 (M)',
+		key: 'M',
 		title: '지도',
 		close: '지도 닫기',
+		closeWithKey: '지도 닫기 (Esc)',
+		closeKey: 'Esc',
 		islandList: '섬 목록',
+		here: '지금 있는 섬',
 		boat: '내 배',
 		goTo: (island: string) => `${island}(으)로 이동`
 	},
 	panel: {
 		close: '닫기',
 		closeWithKey: '패널 닫기 (Esc)',
+		closeKey: 'Esc',
 		period: '기간',
 		team: '팀',
 		role: '역할',
@@ -71,6 +79,10 @@ export const ko = {
 			if (start && end) return `${formatMonth(start)} ~ ${formatMonth(end)}`;
 			if (start) return `${formatMonth(start)} ~`;
 			return end ? `~ ${formatMonth(end)}` : null;
+		},
+		/** 기간 메모는 괄호로 붙인다 (가운뎃점을 쓰지 않는다) */
+		formatPeriodNote(note: string): string {
+			return `(${note})`;
 		},
 		formatTeam(size: number | null, type: string | null): string | null {
 			if (type === '개인' || size === 1) return '개인 프로젝트';
