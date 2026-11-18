@@ -6,7 +6,7 @@
 
 name: "오동준"
 name_en: "Dongjun Oh"
-headline: "직접 배포하고 써 보며 고치는 개발자"
+headline: "적응형 개발자"
 photo:
   # src는 static/ 기준 경로(npm run images:import가 변환해 채움). source는 원본 위치로 볼트 루트 기준 상대 경로이며,
   # 원본이 볼트 바깥("바탕 화면\포폴" 폴더 바로 아래)이라 ../로 시작한다
@@ -18,16 +18,15 @@ photo:
 status: "구직 중"
 location: "경기도 고양시"
 
-# intro 근거: 개인 프로젝트 3개(여론지, 메이플 할일 알리미, CPBS)는 기획·배포를 혼자 함.
-#   팀 프로젝트 4개 중 NudgeUp(96/104), Mongscape(156/169), POS PLACE(팀 내 최다)에서 커밋 최다. Calddy는 커밋 비율 미확인.
+# intro 근거: 각 프로젝트 파일의 stack. 프로젝트 7개의 주 기술 조합이 서로 다르다.
+#   Claude Code는 여론지, 메이플 할일 알리미, CPBS의 role과 Mongscape 기술 연결에 있다.
 intro: |
-  여론지, 메이플 할일 알리미, CPBS는 혼자 기획하고 Claude Code와 함께 만들었습니다.
-  팀 프로젝트 네 개 중 세 개에서는 커밋을 가장 많이 했습니다.
+  일곱 개 프로젝트를 모두 다른 기술 조합으로 만들었습니다.
+  Java Swing, Android와 Spring Boot, Flutter와 Supabase, Unity, Next.js, React와 Three.js를 썼고, 최근 프로젝트는 Claude Code로 구현합니다.
 
 intro_points:
-  - "NudgeUp과 Calddy에서는 다른 팀이나 다른 사람의 데이터에 접근하지 못하게 권한 검사를 넣었습니다."
-  - "여론지와 메이플 할일 알리미는 테스트가 통과한 뒤 실제 데이터를 보다가 버그를 찾아 고쳤습니다."
-  - "Mongscape는 v1.0.0으로 출시했고, CPBS는 4일 동안 11번 릴리스했습니다."
+  - "CPBS는 4일 동안 11번 릴리스했습니다."
+  - "Mongscape에서 처음으로 서버를 직접 호스팅해 VPS에 배포했습니다."
 
 skills:
   # 숙련도 표시는 하지 않고, 각 기술을 쓴 프로젝트(slug)로 연결한다.
@@ -97,7 +96,7 @@ contact:
   links: []
 
 unverified:
-  - "headline, intro 문구 승인 (2026-11-18 AI 슬롭 기준으로 다시 쓴 초안, 직무 이름은 쓰지 않음)"
+  - "intro 문구 승인 (headline \"적응형 개발자\"는 2026-11-18 사용자 확정)"
   - "자격증 취득일 (답변에 이름만 있음)"
 ---
 
