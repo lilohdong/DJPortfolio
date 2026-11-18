@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { MediaQuery } from 'svelte/reactivity';
+	import { asset } from '$app/paths';
+	import type { AssetPath } from '$app/types';
 	import type { Profile } from '../content/types';
 	import { ko } from '../i18n/ko';
-	import PixelPortrait from './PixelPortrait.svelte';
 
 	// 항해 화면 왼쪽 위의 플레이어 정보 카드. 누르면 제목 화면으로 간다.
 	// 글은 모두 content/profile.md에서 온다(이름, 한 줄 소개, 상태). 지어낸 수치(레벨, 연차)는 넣지 않는다.
@@ -17,9 +17,11 @@
 
 	const t = ko.nameTag;
 
-	/** scripts/make-portrait.js로 만든 초상화 (사진에서 자르고 색을 줄인 40×40 PNG) */
-	const PORTRAIT = { src: 'content/profile/portrait.png', grid: 40 };
-	const wide = new MediaQuery('min-width: 768px', false);
+	/**
+	 * scripts/make-portrait.js(npm run portrait)로 만든 초상화. 머리부터 어깨까지 자른 240×240 사진.
+	 * 화면에는 데스크톱 80px, 모바일 40px로 부드럽게 줄여 보여 준다(배율 3까지 선명).
+	 */
+	const PORTRAIT = { src: 'content/profile/portrait.webp', size: 240 };
 </script>
 
 <button
@@ -29,11 +31,13 @@
 	onclick={ontitle}
 >
 	{#if profile.photo}
-		<PixelPortrait
-			src={PORTRAIT.src}
-			grid={PORTRAIT.grid}
+		<img
+			class="box-content block size-10 shrink-0 border-(length:--ui-border-width) border-line bg-shadow object-cover md:size-20"
+			src={asset(PORTRAIT.src as AssetPath)}
 			alt={profile.photo.alt}
-			size={wide.current ? 80 : 40}
+			width={PORTRAIT.size}
+			height={PORTRAIT.size}
+			decoding="async"
 		/>
 	{/if}
 	<span class="flex min-w-0 flex-col gap-1">
