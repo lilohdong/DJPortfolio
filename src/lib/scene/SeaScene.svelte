@@ -5,11 +5,17 @@
 	import Boat from './Boat.svelte';
 	import Island from './Island.svelte';
 	import Ocean from './Ocean.svelte';
+	import PixelRender from './PixelRender.svelte';
 	import Sky from './Sky.svelte';
 	import { kstHour, paletteAt, sunAzimuth, toHex } from '../sailing/time-of-day';
 	import type { Sailing } from '../sailing/sailing.svelte';
+	import type { RenderStyle } from '../sailing/render-style';
 
-	let { game, hourOverride }: { game: Sailing; hourOverride: number | null } = $props();
+	let {
+		game,
+		hourOverride,
+		renderStyle
+	}: { game: Sailing; hourOverride: number | null; renderStyle: RenderStyle } = $props();
 
 	const { scene } = useThrelte();
 
@@ -94,7 +100,11 @@
 	}}
 />
 
-<Ocean {game} color={toHex(palette.water)} />
+<Ocean {game} color={toHex(palette.water)} pixel={renderStyle.kind === 'pixel'} />
+
+{#if renderStyle.kind === 'pixel'}
+	<PixelRender pixelSize={renderStyle.pixelSize} />
+{/if}
 
 {#each game.islands as island (island.id)}
 	<Island {island} night={palette.night} />
