@@ -1,7 +1,7 @@
 ---
 # 소개·기술·경력/학력·연락 섬에 쓰는 내용
 # 원본: 포트폴리오 볼트의 "프로젝트 목록.md", "사람인 포트폴리오.md", "사람인 자기소개서.md", 각 프로젝트 노트,
-#       2026-11-18 사용자 답변(이메일, 사진, 학력, 자격증, 거주 지역, 영문 이름)
+#       2026-11-18 사용자 답변(이메일, 사진, 학력, 자격증, 거주 지역, 영문 이름, 현재 상태)
 # 노트와 답변에 없는 값은 "확인 필요"로 둔다.
 
 name: "오동준"
@@ -11,7 +11,7 @@ photo:
   # 볼트 바깥, "바탕 화면\포폴" 폴더 바로 아래 파일. 경로는 볼트 루트 기준 상대 경로. 아직 저장소로 복사하지 않음
   src: "../동준_정장.png"
   alt: "오동준 정장 차림 프로필 사진"
-status: "확인 필요"   # 예: 구직 중 — 노트와 답변에 명시 없음
+status: "구직 중"
 location: "경기도 고양시"
 
 intro: |
@@ -50,13 +50,13 @@ skills:
       - { name: "Vercel", projects: [yeoronji] }
   - group: "게임"
     items:
-      - { name: "Unity (C#)", projects: [mongscape, shivival] }
+      - { name: "Unity (C#)", projects: [mongscape] }
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
   - group: "테스트·도구"
     items:
       - { name: "pytest, Vitest, Playwright", projects: [yeoronji] }
       - { name: "NUnit (Unity Test Framework)", projects: [mongscape] }
-      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, shivival] }
+      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape] }
       - { name: "Claude Code (AI 페어 프로그래밍)", projects: [yeoronji, maple-alami, mongscape] }
 
 education:
@@ -90,7 +90,6 @@ contact:
   links: []
 
 unverified:
-  - "status(현재 상태) 문구"
   - "headline, intro 문구 승인 (자기소개서 콘셉트를 사이트용으로 줄인 초안)"
   - "자격증 취득일 (답변에 이름만 있음)"
 ---
