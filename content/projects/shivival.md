@@ -20,11 +20,11 @@ highlights:
   - "웨이브, 경험치, 드랍 테이블, 특성 트리 등 초기 핵심 시스템 구현"
 links:
   - type: repo
-    label: "GitHub 저장소 (Shivival)"
-    url: "https://github.com/lilohdong/Shivival"
+    label: "GitHub 저장소 (Shivival, 비공개)"
+    url: null
   - type: repo
-    label: "GitHub 저장소 (초기 콘셉트)"
-    url: "https://github.com/kmzmzm/Sync-Infinite"
+    label: "GitHub 저장소 (초기 콘셉트, 비공개)"
+    url: null
 images:
   - src: "확인 필요"
     alt: "확인 필요"
@@ -38,7 +38,6 @@ island:
 unverified:
   - "플레이 캡처·UI 시안 이미지가 원본 폴더에 없음"
   - "노트의 '내 역할' 절에 '빠진 부분은 직접 보충'이라고 적혀 있음"
-  - "GitHub 저장소 공개 여부, 초기 콘셉트 저장소 주소에 팀원의 GitHub 계정 이름이 들어 있음"
 ---
 
 Shivival은 배를 타고 바다를 항해하며 7개 구역의 보스를 모두 쓰러뜨리는 뱀서라이크 게임입니다. 뱃머리, 선체, 무기, 돛, 배 꼬리를 바꿔 끼우는 배 부품 커스터마이징과, 레벨업 때 고르는 "물고기 친구" 무기 조합이 핵심입니다. 4인 팀에서 개발을 맡았고, 현재는 개발을 보류한 상태입니다.
