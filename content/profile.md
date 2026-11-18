@@ -6,7 +6,7 @@
 
 name: "오동준"
 name_en: "Dongjun Oh"
-headline: "만든 것을 직접 배포하고, 써 보면서 고칩니다."
+headline: "직접 배포하고 써 보며 고치는 개발자"
 photo:
   # src는 static/ 기준 경로(npm run images:import가 변환해 채움). source는 원본 위치로 볼트 루트 기준 상대 경로이며,
   # 원본이 볼트 바깥("바탕 화면\포폴" 폴더 바로 아래)이라 ../로 시작한다
@@ -21,7 +21,7 @@ location: "경기도 고양시"
 # intro 근거: 개인 프로젝트 3개(여론지, 메이플 할일 알리미, CPBS)는 기획·배포를 혼자 함.
 #   팀 프로젝트 4개 중 NudgeUp(96/104), Mongscape(156/169), POS PLACE(팀 내 최다)에서 커밋 최다. Calddy는 커밋 비율 미확인.
 intro: |
-  개인 프로젝트 세 개는 Claude Code와 함께 만들어 혼자 배포했습니다.
+  여론지, 메이플 할일 알리미, CPBS는 혼자 기획하고 Claude Code와 함께 만들었습니다.
   팀 프로젝트 네 개 중 세 개에서는 커밋을 가장 많이 했습니다.
 
 intro_points:
@@ -40,7 +40,7 @@ skills:
       - { name: "Python", projects: [yeoronji, mongscape] }
       - { name: "JWT 인증", projects: [nudgeup] }
       - { name: "FCM 푸시 알림", projects: [calddy, nudgeup] }
-  - group: "프론트엔드·앱"
+  - group: "프론트엔드와 앱"
     items:
       - { name: "React / Next.js", projects: [yeoronji, maple-alami, cpbs] }
       - { name: "TypeScript", projects: [yeoronji, maple-alami, cpbs] }
@@ -48,7 +48,7 @@ skills:
       - { name: "Flutter", projects: [calddy] }
       - { name: "Android (Java)", projects: [nudgeup] }
       - { name: "Java Swing", projects: [pos-place] }
-  - group: "인프라·배포"
+  - group: "인프라와 배포"
     items:
       - { name: "Docker Compose", projects: [nudgeup, mongscape] }
       - { name: "Caddy, Ubuntu VPS 운영", projects: [mongscape] }
@@ -59,7 +59,7 @@ skills:
     items:
       - { name: "Unity (C#)", projects: [mongscape] }
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
-  - group: "테스트·도구"
+  - group: "테스트와 도구"
     items:
       - { name: "pytest, Vitest, Playwright", projects: [yeoronji, cpbs] }
       - { name: "NUnit (Unity Test Framework)", projects: [mongscape] }
