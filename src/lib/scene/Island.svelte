@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { T } from '@threlte/core';
 	import type { Island } from '../sailing/islands';
+	import Flag from './Flag.svelte';
 
 	let { island, night }: { island: Island; night: number } = $props();
 
@@ -145,16 +146,14 @@
 			/>
 		</T.Group>
 	{:else}
-		<!-- 프로젝트 섬 표지: 깃대 (프로젝트별 상징물은 나중에) -->
-		<T.Group position={[island.dir.x * r * 0.35, GRASS_TOP, island.dir.z * r * 0.35]}>
-			<T.Mesh position.y={2}>
-				<T.CylinderGeometry args={[0.08, 0.1, 4, 5]} />
-				<T.MeshStandardMaterial color="#5a4632" flatShading />
-			</T.Mesh>
-			<T.Mesh position={[0.65, 3.5, 0]}>
-				<T.BoxGeometry args={[1.3, 0.8, 0.06]} />
-				<T.MeshStandardMaterial color="#e8873a" flatShading />
-			</T.Mesh>
-		</T.Group>
+		<!-- 프로젝트 섬 깃발: 로고 또는 앞 글자. 천이 선착장 쪽을 본다 -->
+		{#if island.project}
+			<T.Group
+				position={[island.dir.x * r * 0.35, GRASS_TOP, island.dir.z * r * 0.35]}
+				rotation.y={dockYaw}
+			>
+				<Flag project={island.project} {night} />
+			</T.Group>
+		{/if}
 	{/if}
 </T.Group>

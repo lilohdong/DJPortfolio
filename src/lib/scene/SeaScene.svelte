@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { T, useTask, useThrelte } from '@threlte/core';
-	import { Fog, type DirectionalLight, type PerspectiveCamera } from 'three';
+	import { Fog, Vector3, type DirectionalLight, type PerspectiveCamera } from 'three';
+	import type { Island as IslandData } from '../sailing/islands';
+	import {
+		panelShift,
+		visitPose,
+		VISIT_ORBIT_LIMIT,
+		VISIT_TRANSITION
+	} from '../sailing/visit-camera';
 	import { onMount } from 'svelte';
 	import Boat from './Boat.svelte';
 	import Island from './Island.svelte';
@@ -56,12 +63,83 @@
 	let sun = $state<DirectionalLight>();
 	let cameraYaw = 0;
 
+	// 정박 구경 (ui-plan §3.5 안 1의 1단계). 패널이 열리면 카메라가 섬 가까이로 들어가고,
+	// 닫히면 항해 카메라로 돌아온다. 두 자리 사이를 VISIT_TRANSITION초 동안 부드럽게 옮긴다.
+	const { size, dom } = useThrelte();
+	let visitBlend = 0;
+	let visitIsland: IslandData | null = null;
+	let orbit = 0;
+	let orbitInput = 0;
+	const sailPos = new Vector3();
+	const sailLook = new Vector3();
+	const visitPos = new Vector3();
+	const visitLook = new Vector3();
+	const look = new Vector3();
+	/** 키(A/D)로 돌려 볼 때 초당 각도 */
+	const ORBIT_KEY_SPEED = 1.1;
+	/** 마우스로 끌 때 픽셀당 각도 */
+	const ORBIT_DRAG = 0.006;
+
+	// 지도를 열어도 구경 자리는 유지한다 (지도가 화면을 덮으므로 카메라를 굳이 옮기지 않음)
+	const visiting = () => game.openIslandId !== null;
+	const canLookAround = () => visiting() && !game.mapOpen;
+	const clampOrbit = (a: number) => Math.max(-VISIT_ORBIT_LIMIT, Math.min(VISIT_ORBIT_LIMIT, a));
+
+	onMount(() => {
+		// 데스크톱 둘러보기: 장면을 마우스로 끌기 (모바일은 아래 시트와 손가락이 부딪혀 넣지 않음)
+		let dragX: number | null = null;
+		const down = (e: PointerEvent) => {
+			if (e.pointerType !== 'mouse' || e.button !== 0 || !canLookAround()) return;
+			dragX = e.clientX;
+		};
+		const move = (e: PointerEvent) => {
+			if (dragX === null) return;
+			orbit = clampOrbit(orbit - (e.clientX - dragX) * ORBIT_DRAG);
+			dragX = e.clientX;
+		};
+		const up = () => (dragX = null);
+		// 키보드 둘러보기: A, D (패널이 열려 있으면 배 조작은 멈춰 있으므로 겹치지 않는다)
+		const held = { a: false, d: false };
+		const sync = () => (orbitInput = (held.a ? 1 : 0) - (held.d ? 1 : 0));
+		const keydown = (e: KeyboardEvent) => {
+			if (!canLookAround() || e.ctrlKey || e.metaKey || e.altKey) return;
+			if (e.code === 'KeyA') held.a = true;
+			if (e.code === 'KeyD') held.d = true;
+			sync();
+		};
+		const keyup = (e: KeyboardEvent) => {
+			if (e.code === 'KeyA') held.a = false;
+			if (e.code === 'KeyD') held.d = false;
+			sync();
+		};
+		const blur = () => {
+			held.a = held.d = false;
+			orbitInput = 0;
+			dragX = null;
+		};
+		dom.addEventListener('pointerdown', down);
+		window.addEventListener('pointermove', move);
+		window.addEventListener('pointerup', up);
+		window.addEventListener('keydown', keydown);
+		window.addEventListener('keyup', keyup);
+		window.addEventListener('blur', blur);
+		return () => {
+			dom.removeEventListener('pointerdown', down);
+			window.removeEventListener('pointermove', move);
+			window.removeEventListener('pointerup', up);
+			window.removeEventListener('keydown', keydown);
+			window.removeEventListener('keyup', keyup);
+			window.removeEventListener('blur', blur);
+		};
+	});
+
 	useTask((delta) => {
 		game.step(delta);
 		const { x, z, heading } = game.boat;
 
 		if (camera) {
-			if (game.cameraSnap) {
+			const snap = game.cameraSnap;
+			if (snap) {
 				cameraYaw = heading;
 			} else {
 				const k = 1 - Math.exp(-YAW_FOLLOW * Math.min(delta, 0.1));
@@ -69,8 +147,42 @@
 			}
 			const fx = -Math.sin(cameraYaw);
 			const fz = -Math.cos(cameraYaw);
-			camera.position.set(x - fx * CAMERA_BACK, CAMERA_UP, z - fz * CAMERA_BACK);
-			camera.lookAt(x + fx * LOOK_AHEAD, LOOK_HEIGHT, z + fz * LOOK_AHEAD);
+			sailPos.set(x - fx * CAMERA_BACK, CAMERA_UP, z - fz * CAMERA_BACK);
+			sailLook.set(x + fx * LOOK_AHEAD, LOOK_HEIGHT, z + fz * LOOK_AHEAD);
+
+			// 구경할 섬이 바뀌면 둘러보기 각도를 처음으로
+			const target = visiting() ? (game.openIsland ?? null) : null;
+			if (target && target !== visitIsland) {
+				visitIsland = target;
+				orbit = 0;
+			}
+			const goal = target ? 1 : 0;
+			if (game.reducedMotion) visitBlend = goal;
+			else {
+				const step = Math.min(delta, 0.1) / VISIT_TRANSITION;
+				visitBlend =
+					goal > visitBlend ? Math.min(goal, visitBlend + step) : Math.max(goal, visitBlend - step);
+			}
+			if (target) orbit = clampOrbit(orbit + orbitInput * ORBIT_KEY_SPEED * Math.min(delta, 0.1));
+
+			const { width, height } = size.current;
+			const shift = panelShift(width, height);
+			const e = visitBlend * visitBlend * (3 - 2 * visitBlend);
+			if (e > 0 && visitIsland) {
+				const pose = visitPose(visitIsland, orbit, shift.compact);
+				visitPos.set(pose.x, pose.y, pose.z);
+				visitLook.set(pose.lookX, pose.lookY, pose.lookZ);
+				camera.position.lerpVectors(sailPos, visitPos, e);
+				look.lerpVectors(sailLook, visitLook, e);
+				camera.lookAt(look);
+				// 패널이 덮는 자리를 피해 화면 중심만 옮긴다 (카메라 각도는 그대로)
+				camera.setViewOffset(width, height, shift.x * e, shift.y * e, width, height);
+			} else {
+				if (visitBlend === 0) visitIsland = null;
+				camera.position.copy(sailPos);
+				camera.lookAt(sailLook);
+				if (camera.view) camera.clearViewOffset();
+			}
 			game.cameraSnap = false;
 		}
 
