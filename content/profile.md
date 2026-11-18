@@ -8,9 +8,13 @@ name: "오동준"
 name_en: "Dongjun Oh"
 headline: "직접 돌려 보고 확인하는 백엔드 개발자"
 photo:
-  # 볼트 바깥, "바탕 화면\포폴" 폴더 바로 아래 파일. 경로는 볼트 루트 기준 상대 경로. 아직 저장소로 복사하지 않음
-  src: "../동준_정장.png"
+  # src는 static/ 기준 경로(npm run images:import가 변환해 채움). source는 원본 위치로 볼트 루트 기준 상대 경로이며,
+  # 원본이 볼트 바깥("바탕 화면\포폴" 폴더 바로 아래)이라 ../로 시작한다
+  src: "content/profile/photo.webp"
   alt: "오동준 정장 차림 프로필 사진"
+  width: 480
+  height: 640
+  source: "../동준_정장.png"
 status: "구직 중"
 location: "경기도 고양시"
 

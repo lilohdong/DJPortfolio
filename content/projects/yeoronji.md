@@ -34,21 +34,36 @@ links:
     label: "GitHub 저장소 (비공개)"
     url: null
 images:
-  - src: "프로젝트/여론지/yeoronji-list-desktop.png"
+  - src: "content/projects/yeoronji/yeoronji-list-desktop.webp"
     alt: "여론지 이슈 목록 화면 (데스크톱)"
     use: "대표 이미지"
-  - src: "프로젝트/여론지/yeoronji-issue-desktop.png"
+    width: 1280
+    height: 900
+    source: "프로젝트/여론지/yeoronji-list-desktop.png"
+  - src: "content/projects/yeoronji/yeoronji-issue-desktop.webp"
     alt: "이슈 상세 화면 — 찬반 비율과 언론사별 표 (데스크톱)"
     use: "화면 캡처"
-  - src: "프로젝트/여론지/yeoronji-issue-mobile.png"
+    width: 688
+    height: 1600
+    source: "프로젝트/여론지/yeoronji-issue-desktop.png"
+  - src: "content/projects/yeoronji/yeoronji-issue-mobile.webp"
     alt: "이슈 상세 화면 (모바일)"
     use: "화면 캡처"
-  - src: "프로젝트/여론지/yeoronji-list-mobile.png"
+    width: 128
+    height: 1600
+    source: "프로젝트/여론지/yeoronji-issue-mobile.png"
+  - src: "content/projects/yeoronji/yeoronji-list-mobile.webp"
     alt: "이슈 목록 화면 (모바일)"
     use: "화면 캡처"
-  - src: "프로젝트/여론지/yeoronji-nostance-desktop.png"
+    width: 739
+    height: 1600
+    source: "프로젝트/여론지/yeoronji-list-mobile.png"
+  - src: "content/projects/yeoronji/yeoronji-nostance-desktop.webp"
     alt: "찬반 쟁점이 없는 이슈 화면 — 감정 비율만 표시"
     use: "화면 캡처"
+    width: 1230
+    height: 1600
+    source: "프로젝트/여론지/yeoronji-nostance-desktop.png"
 order: 3
 featured: true
 island:

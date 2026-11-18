@@ -26,6 +26,14 @@ BASE_PATH=/DJPortfolio npm run build
 
 Windows에서는 PowerShell로 `$env:BASE_PATH = '/DJPortfolio'; npm run build`를 쓴다. Git Bash는 `/DJPortfolio`를 Windows 경로로 바꿔 버리므로 앞에 `MSYS_NO_PATHCONV=1`을 붙여야 한다.
 
+## 콘텐츠 이미지 가져오기
+
+`content/`에 적힌 이미지를 원본 볼트에서 읽어 WebP로 변환해 `static/content/`에 저장하고, 콘텐츠 파일의 `src`·`width`·`height`를 채운다. 자세한 규칙은 `docs/planning.md` §4.1, §5.
+
+```sh
+npm run images:import -- --vault "<볼트 경로>"   # 또는 PORTFOLIO_VAULT 환경 변수, --dry-run, --force
+```
+
 ## 항해 보기 조작
 
 - `W/A/S/D` 또는 방향키: 전진·후진·회전 / `E` 또는 `Enter`: 선착장 근처에서 정박 / `Esc`: 패널·지도 닫기 / `M`: 지도
