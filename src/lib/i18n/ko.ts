@@ -13,10 +13,7 @@ export const ko = {
 		listTitle: '목록 | 오동준'
 	},
 	home: {
-		heading: '오동준',
-		tagline: '배를 몰아 섬을 찾아가는 포트폴리오입니다.',
-		listLink: '목록으로 보기',
-		loading: '개발자 오동준의 바다로 이동 중…'
+		listLink: '목록으로 보기'
 	},
 	/** 제목 화면 (docs/ui-plan.md §3.2 표의 최종 문구) */
 	titleScreen: {
@@ -32,18 +29,17 @@ export const ko = {
 		contact: '연락처',
 		projectsHeading: '프로젝트',
 		back: '뒤로',
-		// 아래는 임시 문구 (기획 세션이 정함)
 		menuLabel: '제목 화면 메뉴',
 		email: '이메일',
 		github: 'GitHub'
 	},
-	/** 왼쪽 위 플레이어 카드 (임시 문구) */
+	/** 왼쪽 위 플레이어 카드 */
 	nameTag: {
 		toTitle: '제목 화면으로',
-		progress: (visited: number, total: number) => `섬 ${visited}/${total}`,
+		progress: (visited: number, total: number) => `들른 섬 ${visited}/${total}`,
 		progressLabel: (visited: number, total: number) => `들른 섬 ${total}개 중 ${visited}개`
 	},
-	/** 등대섬 패널과 목록 페이지의 소개 (임시 문구) */
+	/** 등대섬 패널과 목록 페이지의 소개 */
 	profile: {
 		skills: '기술',
 		education: '학력',
@@ -52,23 +48,19 @@ export const ko = {
 		contact: '연락처',
 		email: '이메일',
 		github: 'GitHub',
-		skillProjects: (skill: string) => `${skill}을(를) 쓴 프로젝트`,
+		skillProjects: (skill: string) => `${skill} 관련 프로젝트`,
 		formatGraduation(month: string | null, status: string | null): string | null {
 			const parts = [month ? formatMonth(month) : null, status].filter(Boolean);
 			return parts.length > 0 ? parts.join(' ') : null;
 		}
 	},
 	list: {
-		// 아래 넷은 임시 문구 (기획 세션이 정함). 그 밖의 프로젝트, 항해 보기로 전환은 ui-plan §3.8의 말
 		projectsHeading: '프로젝트',
 		otherProjects: '그 밖의 프로젝트',
 		toSailing: '항해 보기로 전환',
-		openProject: (title: string) => `${title} 자세히 보기`,
-		heading: '목록 보기',
-		body: '포트폴리오를 목록으로 보는 페이지입니다. 아직 준비 중입니다.',
-		backToSailing: '항해 보기로 돌아가기'
+		openProject: (title: string) => `${title} 자세히 보기`
 	},
-	/** 프로젝트 개별 페이지 (임시 문구) */
+	/** 프로젝트 개별 페이지 */
 	projectPage: {
 		title: (project: string) => `${project} | 오동준`,
 		backToList: '목록으로 돌아가기',
@@ -136,7 +128,6 @@ export const ko = {
 		stack: '사용 기술',
 		links: '링크',
 		about: '소개',
-		linkPrivate: '(비공개)',
 		formatPeriod(start: string | null, end: string | null): string | null {
 			if (start && end) return `${formatMonth(start)} ~ ${formatMonth(end)}`;
 			if (start) return `${formatMonth(start)} ~`;

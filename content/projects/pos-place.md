@@ -30,7 +30,7 @@ links:
 images:
   # 4장 모두 팀 결과 보고서(hwp)에 실린 실제 실행 화면. 본인이 맡은 화면만 골랐다
   - src: "content/projects/pos-place/posplace-sales-menu.webp"
-    alt: "POS PLACE 매출 관리 화면 (다크 모드): 월간 메뉴 매출 목록과 기간 매출액"
+    alt: "다크 모드의 POS PLACE 매출 관리 화면: 월간 메뉴 매출 목록과 기간 매출액"
     caption: "매출 관리, 다크 모드"
     use: "대표 이미지. 실행 화면"
     width: 1600
@@ -44,7 +44,7 @@ images:
     height: 1041
     source: "프로젝트/POS PLACE/posplace-game-stats.png"
   - src: "content/projects/pos-place/posplace-sales-time.webp"
-    alt: "매출 관리 화면 (라이트 모드): 시간 상품 매출 목록"
+    alt: "라이트 모드의 매출 관리 화면: 시간 상품 매출 목록"
     caption: "시간 충전 매출, 라이트 모드"
     use: "실행 화면"
     width: 1600
