@@ -37,7 +37,6 @@ links:
     url: "https://github.com/lilohdong/maple_alami"
 logo:
   # 원본 512x512 PNG, 같은 폴더에 SVG도 있다
-  # 아직 변환 전이라 src에 원본 경로를 두고 width, height가 없다. 변환은 U4(import 스크립트의 logo 지원) 뒤에 한다
   src: "content/projects/maple-alami/maple-alami-logo.webp"
   alt: "메이플 할일 알리미 로고"
   source: "프로젝트/메이플 할일 알리미/maple-alami-logo.png"
@@ -76,9 +75,7 @@ unverified: []
 
 ![](maple-desktop)
 
-친구들과 메이플스토리 주간 숙제를 자주 놓쳐서 만들었습니다. 캐릭터별 숙제 현황과 주간 결정석 수익을 보여 주고, 리셋 전에 남은 숙제가 있으면 디스코드 봇이 알려 줍니다.
-
-기획과 요구사항 정의, 실사용 테스트, 배포를 맡았고 구현은 Claude Code와 페어 프로그래밍으로 했습니다. 4일 동안 만들어 친구들과 쓰는 디스코드 서버에서 사용합니다.
+친구들과 주간 숙제를 자주 놓쳐서 4일 동안 만들었고, 친구들과 쓰는 디스코드 서버에서 사용합니다.
 
 써 보니 주간 수익이 0으로 나왔습니다. 실제 API 응답을 보니 난이도 표기가 영문이라 한글로 만든 가격표와 맞지 않았습니다. 표기를 하나로 맞추고 저장된 설정도 새 형식으로 옮겼습니다.
 
