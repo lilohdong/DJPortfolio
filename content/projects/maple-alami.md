@@ -11,7 +11,7 @@ period:
 team:
   size: 1
   type: "개인"
-role: "기획, 요구사항 정리, 직접 써 보며 테스트, 배포. 구현은 Claude Code와 함께"
+role: "기획, 요구사항 정리, 직접 써 보며 테스트, 배포"
 stack:
   - React 18
   - TypeScript
