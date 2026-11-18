@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { T, useTask, useThrelte } from '@threlte/core';
+	import { T, useScheduler, useTask, useThrelte } from '@threlte/core';
 	import { Fog, Vector3, type DirectionalLight, type PerspectiveCamera } from 'three';
 	import type { Island as IslandData } from '../sailing/islands';
 	import {
@@ -18,12 +18,19 @@
 	import { kstHour, paletteAt, sunAzimuth, toHex } from '../sailing/time-of-day';
 	import type { Sailing } from '../sailing/sailing.svelte';
 	import type { RenderStyle } from '../sailing/render-style';
+	import { canvasDpr, LOWEST_LEVEL, type Quality } from './quality.svelte';
 
 	let {
 		game,
 		hourOverride,
-		renderStyle
-	}: { game: Sailing; hourOverride: number | null; renderStyle: RenderStyle } = $props();
+		renderStyle,
+		quality
+	}: {
+		game: Sailing;
+		hourOverride: number | null;
+		renderStyle: RenderStyle;
+		quality: Quality;
+	} = $props();
 
 	const { scene } = useThrelte();
 	const pixel = $derived(renderStyle.kind === 'pixel');
@@ -83,11 +90,12 @@
 	// 지도를 열어도 구경 자리는 유지한다 (지도가 화면을 덮으므로 카메라를 굳이 옮기지 않음)
 	const visiting = () => game.openIslandId !== null;
 	const canLookAround = () => visiting() && !game.mapOpen;
+	/** 마우스로 끌어 둘러보는 중이면 끈 자리의 x */
+	let dragX: number | null = null;
 	const clampOrbit = (a: number) => Math.max(-VISIT_ORBIT_LIMIT, Math.min(VISIT_ORBIT_LIMIT, a));
 
 	onMount(() => {
 		// 데스크톱 둘러보기: 장면을 마우스로 끌기 (모바일은 아래 시트와 손가락이 부딪혀 넣지 않음)
-		let dragX: number | null = null;
 		const down = (e: PointerEvent) => {
 			if (e.pointerType !== 'mouse' || e.button !== 0 || !canLookAround()) return;
 			dragX = e.clientX;
@@ -133,6 +141,114 @@
 		};
 	});
 
+	// ── 프레임 조절과 자동 품질 (T-029) ──
+	// Threlte 기본 루프는 모니터 주사율(144Hz면 144번)대로 장면을 그린다. 루프를 바꿔
+	// 상태별 상한을 두고, 프레임 시간이 길면 품질을 한 단계씩 낮춘다.
+	const { renderer } = useThrelte();
+	const { scheduler, frameInvalidated } = useScheduler();
+	const TITLE_FPS = 15;
+	const VISIT_SETTLED_FPS = 20;
+	const IDLE_FPS = 30;
+	const REDUCED_MOTION_FPS = 30;
+	/** 정지 화면에서도 가끔 한 장 그려 시간대 색 등이 따라오게 한다 */
+	const STILL_FPS = 0.2;
+	/** 자동 품질: 이 시간 동안 모아 판단한다 */
+	const MEASURE_WINDOW = 2000;
+	/** 시작 직후와 품질을 바꾼 직후에는 셰이더 컴파일 등으로 느리므로 재지 않는다 */
+	const WARMUP = 3000;
+	/** 정지 화면으로 바꾸는 기준: 가장 낮은 단계에서도 프레임당 이 이상 걸리면 */
+	const STILL_FRAME_MS = 100;
+
+	let idle = false;
+	let visitSettled = false;
+	let stillDirty = true;
+
+	// 정지 화면에서는 패널·지도·이동이 바뀔 때만 한 장 다시 그린다
+	$effect(() => {
+		void game.openIslandId;
+		void game.teleportCount;
+		void game.mapOpen;
+		stillDirty = true;
+	});
+
+	function targetFps(): number {
+		if (document.visibilityState === 'hidden') return 0;
+		if (game.sceneStill) return stillDirty ? 1000 : STILL_FPS;
+		let fps = quality.settings.fpsCap;
+		if (game.reducedMotion) fps = Math.min(fps, REDUCED_MOTION_FPS);
+		// 낮은 단계에서는 상한에 비례해 함께 낮춘다 (상한 30이면 제목 15, 구경 15, 정지 20)
+		if (game.titleShown) return Math.min(fps / 2, TITLE_FPS);
+		if (visitSettled) return Math.min(fps / 2, VISIT_SETTLED_FPS);
+		if (idle) return Math.min((fps * 2) / 3, IDLE_FPS);
+		return fps;
+	}
+
+	let measureFrom = 0;
+	let frames = 0;
+	let slowFrames = 0;
+	let workSum = 0;
+	let intervalSum = 0;
+	let lastRun = 0;
+
+	function resetMeasure(now: number, wait: number) {
+		measureFrom = now + wait;
+		frames = slowFrames = workSum = intervalSum = 0;
+	}
+
+	function measure(now: number, work: number, expected: number) {
+		const interval = lastRun ? now - lastRun : expected;
+		lastRun = now;
+		if (game.sceneStill || now < measureFrom) return;
+		// 탭이 가려졌다 돌아온 간격 같은 것은 빼고 다시 잰다
+		if (interval > 1000) return resetMeasure(now, 0);
+		frames += 1;
+		workSum += work;
+		intervalSum += interval;
+		// 목표: 프레임당 20ms 안팎. 상한보다 1.6배 이상, 25ms 넘게 늦은 프레임을 느린 프레임으로 센다
+		if (interval > Math.max(expected * 1.6, 25)) slowFrames += 1;
+		if (now - measureFrom < MEASURE_WINDOW) return;
+		const avgWork = workSum / frames;
+		const avgInterval = intervalSum / frames;
+		const slow = slowFrames / frames > 0.4 || avgWork > 14;
+		if (!quality.forced && quality.level >= LOWEST_LEVEL) {
+			if (avgWork > STILL_FRAME_MS || avgInterval > STILL_FRAME_MS * 2.5) game.sceneStill = true;
+		} else if (slow && quality.lower()) {
+			return resetMeasure(now, WARMUP);
+		}
+		resetMeasure(now, 0);
+	}
+
+	// 가장 낮은 단계는 캔버스를 CSS보다 작게 그리므로 브라우저가 늘릴 때 계단 모양을 지키게 한다
+	$effect(() => {
+		renderer.domElement.style.imageRendering = canvasDpr(quality.level) < 1 ? 'pixelated' : '';
+	});
+
+	onMount(() => {
+		resetMeasure(performance.now(), WARMUP);
+		// 그림자 지도는 해 자리가 바뀔 때만 다시 그린다 (아래 useTask에서 needsUpdate)
+		renderer.shadowMap.autoUpdate = !pixel;
+		renderer.shadowMap.needsUpdate = true;
+		let last = -Infinity;
+		renderer.setAnimationLoop((time) => {
+			const fps = targetFps();
+			if (fps <= 0) return;
+			const interval = 1000 / fps;
+			// 주사율이 상한보다 높으면 몇 번 건너뛴다. 평균이 상한에 맞도록 마지막 시각을 간격만큼 민다.
+			if (time - last < interval - 1.5) return;
+			last = Math.max(last + interval, time - interval);
+			const start = performance.now();
+			scheduler.run(time);
+			frameInvalidated.current = false;
+			stillDirty = false;
+			measure(start, performance.now() - start, interval);
+		});
+	});
+
+	let shadowX = NaN;
+	let shadowZ = NaN;
+	let shadowSun: readonly number[] | null = null;
+	let shadowOn = true;
+
 	useTask((delta) => {
 		game.step(delta);
 		const { x, z, heading } = game.boat;
@@ -157,7 +273,7 @@
 				orbit = 0;
 			}
 			const goal = target ? 1 : 0;
-			if (game.reducedMotion) visitBlend = goal;
+			if (game.reducedMotion || game.sceneStill) visitBlend = goal;
 			else {
 				const step = Math.min(delta, 0.1) / VISIT_TRANSITION;
 				visitBlend =
@@ -184,13 +300,43 @@
 				if (camera.view) camera.clearViewOffset();
 			}
 			game.cameraSnap = false;
+
+			// 프레임 조절용 상태: 가만히 있는지, 구경 카메라가 자리를 잡았는지
+			const b = game.boat;
+			const input =
+				game.keys.forward !== 0 ||
+				game.keys.turn !== 0 ||
+				game.joystick.forward !== 0 ||
+				game.joystick.turn !== 0;
+			const yawGap = Math.abs(
+				Math.atan2(Math.sin(heading - cameraYaw), Math.cos(heading - cameraYaw))
+			);
+			idle =
+				!input &&
+				Math.abs(b.speed) < 0.05 &&
+				Math.abs(b.turnVelocity) < 0.01 &&
+				yawGap < 0.002 &&
+				visitBlend === 0;
+			visitSettled = target !== null && visitBlend === 1 && orbitInput === 0 && dragX === null;
 		}
 
 		if (sun) {
 			// 그림자 범위가 배 주변을 덮도록 해를 배 기준으로 옮긴다.
-			sun.position.set(x + sunDir[0] * 80, sunDir[1] * 80, z + sunDir[2] * 80);
-			sun.target.position.set(x, 0, z);
-			sun.target.updateMatrixWorld();
+			// 4칸 단위로 끊어 옮기고, 자리나 해 방향이 바뀔 때만 그림자 지도를 다시 그린다.
+			const sx = Math.round(x / 4) * 4;
+			const sz = Math.round(z / 4) * 4;
+			const on = quality.settings.shadows;
+			sun.castShadow = on;
+			if (sx !== shadowX || sz !== shadowZ || sunDir !== shadowSun || on !== shadowOn) {
+				shadowX = sx;
+				shadowZ = sz;
+				shadowSun = sunDir;
+				shadowOn = on;
+				sun.position.set(sx + sunDir[0] * 80, sunDir[1] * 80, sz + sunDir[2] * 80);
+				sun.target.position.set(sx, 0, sz);
+				sun.target.updateMatrixWorld();
+				renderer.shadowMap.needsUpdate = true;
+			}
 		}
 	});
 </script>
@@ -208,7 +354,6 @@
 	bind:ref={sun}
 	color={toHex(palette.sunColor)}
 	intensity={palette.sunIntensity}
-	castShadow
 	shadow.mapSize={[1024, 1024]}
 	shadow.camera.left={-45}
 	shadow.camera.right={45}
@@ -222,8 +367,11 @@
 />
 
 {#if pixel}
-	<PixelWater {game} {palette} />
-	<PixelRender pixelSize={renderStyle.pixelSize} />
+	<PixelWater {game} {palette} still={game.reducedMotion} />
+	<PixelRender
+		pixelSize={renderStyle.pixelSize + quality.settings.extraPx}
+		sharpFlags={quality.settings.sharpFlags === 'always' || game.openIslandId !== null}
+	/>
 {:else}
 	<Ocean {game} color={toHex(palette.water)} />
 {/if}
@@ -232,4 +380,4 @@
 	<Island {island} night={palette.night} />
 {/each}
 
-<Boat {game} flatWater={pixel} />
+<Boat {game} flatWater={pixel} still={game.reducedMotion} />

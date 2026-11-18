@@ -11,7 +11,7 @@
 	} from 'three';
 	import { onDestroy, onMount } from 'svelte';
 	import type { Project } from '../content/types';
-	import { makeClothMaterial, SHARP_LAYER } from './sharp-flags';
+	import { makeClothMaterial, SHARP_LAYER, sharpMeshes } from './sharp-flags';
 
 	// 프로젝트 섬 깃발 (ui-plan §3.10). 깃발 천에 로고를 그리고, 로고가 없으면 이름 앞 글자를 그린다.
 	// 천은 픽셀 렌더 뒤에 화면 해상도로 한 번 더 그려 로고가 선명하게 보인다(sharp-flags.ts).
@@ -138,6 +138,10 @@
 				castShadow
 				oncreate={(ref) => {
 					ref.layers.enable(SHARP_LAYER);
+					sharpMeshes.add(ref);
+					return () => {
+						sharpMeshes.delete(ref);
+					};
 				}}
 			>
 				<T.PlaneGeometry args={[clothW, clothH]} />

@@ -3,8 +3,14 @@
 	import type { Island } from '../sailing/islands';
 	import Flag from './Flag.svelte';
 	import Landmark from './Landmark.svelte';
+	import { useMergeStatic } from './merge-static';
+	import type { Group } from 'three';
 
 	let { island, night }: { island: Island; night: number } = $props();
+
+	// 섬을 이루는 작은 메시들을 한두 개로 합쳐 draw call을 줄인다 (T-029)
+	let root = $state<Group>();
+	useMergeStatic(() => root);
 
 	// 섬 하나: 모래 받침 + 풀밭 + 언덕 + 나무 + 선착장. 등대섬에는 등대를 세운다.
 	// 장식 위치는 섬 id로 정해지는 의사 난수라 매번 같은 모양이 나온다.
@@ -73,7 +79,7 @@
 	const pierCenter = $derived(r + 0.4);
 </script>
 
-<T.Group position={[island.x, 0, island.z]}>
+<T.Group position={[island.x, 0, island.z]} bind:ref={root}>
 	<!-- 모래 받침 -->
 	<T.Mesh position.y={0} receiveShadow castShadow>
 		<T.CylinderGeometry args={[r, r * 1.22, SAND_TOP * 2, 10]} />

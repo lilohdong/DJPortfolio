@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { useTask, useThrelte } from '@threlte/core';
 	import {
+		Camera,
 		DepthTexture,
+		Frustum,
+		Matrix4,
 		Fog,
 		HalfFloatType,
 		NearestFilter,
@@ -14,12 +17,29 @@
 	import { FullScreenQuad } from 'three/examples/jsm/postprocessing/Pass.js';
 	import { onDestroy } from 'svelte';
 	import { SEA_MAX_FOG, SKY_DEPTH } from '../sailing/render-style';
-	import { placeholderDepth, POSTERIZE_LEVELS, SHARP_LAYER, sharpUniforms } from './sharp-flags';
+	import {
+		placeholderDepth,
+		POSTERIZE_LEVELS,
+		SHARP_LAYER,
+		sharpMeshes,
+		sharpUniforms
+	} from './sharp-flags';
 
 	// 픽셀 렌더: 장면을 저해상도 타깃에 그린 뒤, 보간 없이(Nearest) 화면 크기로 늘린다.
 	// 늘리는 셰이더에서 톤 매핑·sRGB 변환 → 색 단계 제한 → 깊이 외곽선을 적용한다.
 	// Canvas의 autoRender를 끈 상태에서만 쓴다(SeaCanvas가 처리).
-	let { pixelSize }: { pixelSize: number } = $props();
+	/** sharpFlags: 깃발 선명 패스를 쓸지 (품질 단계에 따라 구경 화면에서만 쓰기도 한다) */
+	let { pixelSize, sharpFlags = true }: { pixelSize: number; sharpFlags?: boolean } = $props();
+
+	const frustum = new Frustum();
+	const viewProjection = new Matrix4();
+	/** 화면 안에 다시 그릴 깃발이 있는지 */
+	function anyFlagInView(cam: Camera): boolean {
+		viewProjection.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
+		frustum.setFromProjectionMatrix(viewProjection);
+		for (const mesh of sharpMeshes) if (frustum.intersectsObject(mesh)) return true;
+		return false;
+	}
 
 	const { renderer, scene, camera, size, renderStage } = useThrelte();
 	const gl = renderer as WebGLRenderer;
@@ -147,6 +167,8 @@
 			quad.render(gl);
 
 			// 깃발 천만 화면 해상도로 다시 그린다 (sharp-flags.ts). 저해상도 깊이로 가려짐을 판단한다.
+			// 화면 안에 깃발이 없거나 품질 단계가 끄면 건너뛴다.
+			if (!sharpFlags || !anyFlagInView(cam)) return;
 			sharpUniforms.tSceneDepth.value = target.depthTexture ?? placeholderDepth;
 			gl.getDrawingBufferSize(sharpUniforms.uResolution.value);
 			sharpUniforms.uNear.value = material.uniforms.cameraNear.value;
