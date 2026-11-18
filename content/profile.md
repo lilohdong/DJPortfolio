@@ -41,8 +41,9 @@ skills:
       - { name: "FCM 푸시 알림", projects: [calddy, nudgeup] }
   - group: "프론트엔드·앱"
     items:
-      - { name: "React / Next.js", projects: [yeoronji, maple-alami] }
-      - { name: "TypeScript", projects: [yeoronji, maple-alami] }
+      - { name: "React / Next.js", projects: [yeoronji, maple-alami, cpbs] }
+      - { name: "TypeScript", projects: [yeoronji, maple-alami, cpbs] }
+      - { name: "Three.js", projects: [cpbs] }
       - { name: "Flutter", projects: [calddy] }
       - { name: "Android (Java)", projects: [nudgeup] }
       - { name: "Java Swing", projects: [pos-place] }
@@ -50,7 +51,8 @@ skills:
     items:
       - { name: "Docker Compose", projects: [nudgeup, mongscape] }
       - { name: "Caddy, Ubuntu VPS 운영", projects: [mongscape] }
-      - { name: "Cloudflare Pages / Workers / KV", projects: [maple-alami] }
+      - { name: "Cloudflare Pages / Workers / KV", projects: [maple-alami, cpbs] }
+      - { name: "GitHub Actions CI", projects: [cpbs] }
       - { name: "Vercel", projects: [yeoronji] }
   - group: "게임"
     items:
@@ -58,10 +60,10 @@ skills:
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
   - group: "테스트·도구"
     items:
-      - { name: "pytest, Vitest, Playwright", projects: [yeoronji] }
+      - { name: "pytest, Vitest, Playwright", projects: [yeoronji, cpbs] }
       - { name: "NUnit (Unity Test Framework)", projects: [mongscape] }
-      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape] }
-      - { name: "Claude Code (AI 페어 프로그래밍)", projects: [yeoronji, maple-alami, mongscape] }
+      - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, cpbs] }
+      - { name: "Claude Code (AI 페어 프로그래밍)", projects: [yeoronji, maple-alami, mongscape, cpbs] }
 
 education:
   - school: "명지전문대학"
