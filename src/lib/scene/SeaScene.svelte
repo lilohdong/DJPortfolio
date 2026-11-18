@@ -6,6 +6,7 @@
 	import Island from './Island.svelte';
 	import Ocean from './Ocean.svelte';
 	import PixelRender from './PixelRender.svelte';
+	import PixelWater from './PixelWater.svelte';
 	import Sky from './Sky.svelte';
 	import { kstHour, paletteAt, sunAzimuth, toHex } from '../sailing/time-of-day';
 	import type { Sailing } from '../sailing/sailing.svelte';
@@ -18,6 +19,7 @@
 	}: { game: Sailing; hourOverride: number | null; renderStyle: RenderStyle } = $props();
 
 	const { scene } = useThrelte();
+	const pixel = $derived(renderStyle.kind === 'pixel');
 
 	// 시간대: 고정 값(?t=)이 없으면 KST 현재 시각을 30초마다 다시 읽는다.
 	let now = $state(kstHour());
@@ -100,14 +102,15 @@
 	}}
 />
 
-<Ocean {game} color={toHex(palette.water)} pixel={renderStyle.kind === 'pixel'} />
-
-{#if renderStyle.kind === 'pixel'}
+{#if pixel}
+	<PixelWater {game} {palette} />
 	<PixelRender pixelSize={renderStyle.pixelSize} />
+{:else}
+	<Ocean {game} color={toHex(palette.water)} />
 {/if}
 
 {#each game.islands as island (island.id)}
 	<Island {island} night={palette.night} />
 {/each}
 
-<Boat {game} />
+<Boat {game} flatWater={pixel} />

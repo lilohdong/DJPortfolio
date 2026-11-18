@@ -4,7 +4,8 @@
 	import { waveHeight } from '../sailing/waves';
 	import type { Sailing } from '../sailing/sailing.svelte';
 
-	let { game }: { game: Sailing } = $props();
+	/** flatWater: 픽셀 스타일처럼 수면이 평평하면 파도 높이 대신 작게 출렁인다 */
+	let { game, flatWater = false }: { game: Sailing; flatWater?: boolean } = $props();
 
 	// 기본 도형으로 만든 작은 돛단배. 앞쪽은 −z.
 	const hullShape = new Shape()
@@ -47,11 +48,13 @@
 		if (!outer || !inner) return;
 		const { x, z, heading, turnVelocity, speed } = game.boat;
 		const t = game.time;
-		outer.position.set(x, waveHeight(x, z, t) * 0.8 - 0.15, z);
+		const bob = flatWater ? Math.sin(t * 1.1) * 0.06 : waveHeight(x, z, t) * 0.8;
+		const sway = flatWater ? 0.5 : 1;
+		outer.position.set(x, bob - 0.15, z);
 		outer.rotation.y = heading;
 		// 파도에 흔들리고, 돌 때는 바깥쪽으로 살짝 기운다.
-		inner.rotation.x = Math.sin(t * 1.3) * 0.035 + Math.min(speed, 16) * 0.004;
-		inner.rotation.z = Math.sin(t * 1.05 + 1) * 0.045 + turnVelocity * 0.08;
+		inner.rotation.x = Math.sin(t * 1.3) * 0.035 * sway + Math.min(speed, 16) * 0.004;
+		inner.rotation.z = Math.sin(t * 1.05 + 1) * 0.045 * sway + turnVelocity * 0.08;
 	});
 </script>
 
