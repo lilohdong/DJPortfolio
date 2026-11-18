@@ -18,7 +18,7 @@
 	import { kstHour, paletteAt, sunAzimuth, toHex } from '../sailing/time-of-day';
 	import type { Sailing } from '../sailing/sailing.svelte';
 	import type { RenderStyle } from '../sailing/render-style';
-	import { canvasDpr, LOWEST_LEVEL, type Quality } from './quality.svelte';
+	import { canvasDpr, type Quality } from './quality.svelte';
 
 	let {
 		game,
@@ -143,25 +143,25 @@
 
 	// ── 프레임 조절과 자동 품질 (T-029) ──
 	// Threlte 기본 루프는 모니터 주사율(144Hz면 144번)대로 장면을 그린다. 루프를 바꿔
-	// 상태별 상한을 두고, 프레임 시간이 길면 품질을 한 단계씩 낮춘다.
+	// 상태별 상한을 두고, 실제 작업 시간이 길면 품질을 한 단계씩 낮춘다(quality.svelte.ts).
 	const { renderer } = useThrelte();
 	const { scheduler, frameInvalidated } = useScheduler();
-	const TITLE_FPS = 15;
-	const VISIT_SETTLED_FPS = 20;
-	const IDLE_FPS = 30;
 	const REDUCED_MOTION_FPS = 30;
 	/** 정지 화면에서도 가끔 한 장 그려 시간대 색 등이 따라오게 한다 */
 	const STILL_FPS = 0.2;
 	/** 자동 품질: 이 시간 동안 모아 판단한다 */
-	const MEASURE_WINDOW = 2000;
-	/** 시작 직후와 품질을 바꾼 직후에는 셰이더 컴파일 등으로 느리므로 재지 않는다 */
+	const MEASURE_WINDOW = 3000;
+	/** 시작 직후, 제목 화면을 닫은 직후, 품질을 바꾼 직후에는 셰이더 컴파일 등으로 느리므로 재지 않는다 */
 	const WARMUP = 3000;
-	/** 정지 화면으로 바꾸는 기준: 가장 낮은 단계에서도 프레임당 이 이상 걸리면 */
-	const STILL_FRAME_MS = 100;
+	/** 한 단계 낮추는 기준: 프레임당 평균 작업 시간 (60fps의 한 프레임 16.7ms 안에 여유를 두고) */
+	const SLOW_WORK_MS = 12;
+	/** 화질을 깎거나 정지 화면으로 가는 기준 */
+	const STILL_WORK_MS = 100;
 
 	let idle = false;
 	let visitSettled = false;
 	let stillDirty = true;
+	let fpsNow = 0;
 
 	// 정지 화면에서는 패널·지도·이동이 바뀔 때만 한 장 다시 그린다
 	$effect(() => {
@@ -174,46 +174,52 @@
 	function targetFps(): number {
 		if (document.visibilityState === 'hidden') return 0;
 		if (game.sceneStill) return stillDirty ? 1000 : STILL_FPS;
-		let fps = quality.settings.fpsCap;
-		if (game.reducedMotion) fps = Math.min(fps, REDUCED_MOTION_FPS);
-		// 낮은 단계에서는 상한에 비례해 함께 낮춘다 (상한 30이면 제목 15, 구경 15, 정지 20)
-		if (game.titleShown) return Math.min(fps / 2, TITLE_FPS);
-		if (visitSettled) return Math.min(fps / 2, VISIT_SETTLED_FPS);
-		if (idle) return Math.min((fps * 2) / 3, IDLE_FPS);
-		return fps;
+		const caps = quality.settings.caps;
+		const limit = game.reducedMotion ? REDUCED_MOTION_FPS : Infinity;
+		if (game.titleShown) return Math.min(caps.title, limit);
+		if (visitSettled) return Math.min(caps.visit, limit);
+		if (idle) return Math.min(caps.idle, limit);
+		return Math.min(caps.sail, limit);
 	}
 
+	// 측정: 상한 때문에 쉬는 시간은 빼고, 장면을 그리는 데 실제로 걸린 시간(scheduler.run)만 모은다.
+	// 제목 화면, 탭이 가려졌다 돌아온 직후, 시작·단계 변경 직후의 프레임은 표본에서 뺀다.
 	let measureFrom = 0;
 	let frames = 0;
-	let slowFrames = 0;
 	let workSum = 0;
-	let intervalSum = 0;
 	let lastRun = 0;
+	let wasTitle = true;
 
 	function resetMeasure(now: number, wait: number) {
 		measureFrom = now + wait;
-		frames = slowFrames = workSum = intervalSum = 0;
+		frames = workSum = 0;
 	}
 
-	function measure(now: number, work: number, expected: number) {
-		const interval = lastRun ? now - lastRun : expected;
+	function measure(now: number, work: number) {
+		const gap = lastRun ? now - lastRun : 0;
 		lastRun = now;
+		if (game.titleShown) {
+			wasTitle = true;
+			return;
+		}
+		if (wasTitle) {
+			wasTitle = false;
+			return resetMeasure(now, WARMUP);
+		}
+		if (gap > 1000) return resetMeasure(now, WARMUP);
 		if (game.sceneStill || now < measureFrom) return;
-		// 탭이 가려졌다 돌아온 간격 같은 것은 빼고 다시 잰다
-		if (interval > 1000) return resetMeasure(now, 0);
 		frames += 1;
 		workSum += work;
-		intervalSum += interval;
-		// 목표: 프레임당 20ms 안팎. 상한보다 1.6배 이상, 25ms 넘게 늦은 프레임을 느린 프레임으로 센다
-		if (interval > Math.max(expected * 1.6, 25)) slowFrames += 1;
 		if (now - measureFrom < MEASURE_WINDOW) return;
 		const avgWork = workSum / frames;
-		const avgInterval = intervalSum / frames;
-		const slow = slowFrames / frames > 0.4 || avgWork > 14;
-		if (!quality.forced && quality.level >= LOWEST_LEVEL) {
-			if (avgWork > STILL_FRAME_MS || avgInterval > STILL_FRAME_MS * 2.5) game.sceneStill = true;
-		} else if (slow && quality.lower()) {
-			return resetMeasure(now, WARMUP);
+		quality.lastWorkMs = avgWork;
+		if (!quality.forced) {
+			if (avgWork > STILL_WORK_MS) {
+				// 그리는 횟수를 다 줄여도 한 프레임에 100ms가 넘는 기기: 화질을 깎고, 그래도 넘으면 정지 화면
+				if (!quality.lower(true)) game.sceneStill = true;
+				return resetMeasure(now, WARMUP);
+			}
+			if (avgWork > SLOW_WORK_MS && quality.lower()) return resetMeasure(now, WARMUP);
 		}
 		resetMeasure(now, 0);
 	}
@@ -221,6 +227,39 @@
 	// 가장 낮은 단계는 캔버스를 CSS보다 작게 그리므로 브라우저가 늘릴 때 계단 모양을 지키게 한다
 	$effect(() => {
 		renderer.domElement.style.imageRendering = canvasDpr(quality.level) < 1 ? 'pixelated' : '';
+	});
+
+	// ?quality=debug: 화면 구석에 단계, 렌더러 판정, 작업 시간, 프레임 상한을 작게 띄운다 (숫자와 약어만)
+	onMount(() => {
+		if (!quality.debug) return;
+		const box = document.createElement('div');
+		box.dataset.qualityDebug = '';
+		box.setAttribute('aria-hidden', 'true');
+		Object.assign(box.style, {
+			position: 'fixed',
+			left: '4px',
+			bottom: '4px',
+			zIndex: '9999',
+			padding: '2px 6px',
+			font: '11px/1.4 monospace',
+			color: '#fff',
+			background: 'rgba(0,0,0,0.6)',
+			pointerEvents: 'none'
+		});
+		document.body.appendChild(box);
+		const tick = () => {
+			const dpr = renderer.getPixelRatio().toFixed(2);
+			box.textContent =
+				`Q L${quality.level}${quality.forced ? ' fixed' : ''} ${quality.renderer === 'software' ? 'SW' : quality.renderer === 'hardware' ? 'HW' : '?'}` +
+				` work ${quality.lastWorkMs.toFixed(1)}ms cap ${Math.round(fpsNow)} px ${renderStyle.pixelSize + quality.settings.extraPx} dpr ${dpr}` +
+				`${quality.settings.shadows ? '' : ' noshadow'}${game.sceneStill ? ' STILL' : ''}`;
+		};
+		tick();
+		const id = setInterval(tick, 500);
+		return () => {
+			clearInterval(id);
+			box.remove();
+		};
 	});
 
 	onMount(() => {
@@ -231,6 +270,7 @@
 		let last = -Infinity;
 		renderer.setAnimationLoop((time) => {
 			const fps = targetFps();
+			fpsNow = fps;
 			if (fps <= 0) return;
 			const interval = 1000 / fps;
 			// 주사율이 상한보다 높으면 몇 번 건너뛴다. 평균이 상한에 맞도록 마지막 시각을 간격만큼 민다.
@@ -240,10 +280,9 @@
 			scheduler.run(time);
 			frameInvalidated.current = false;
 			stillDirty = false;
-			measure(start, performance.now() - start, interval);
+			measure(start, performance.now() - start);
 		});
 	});
-
 	let shadowX = NaN;
 	let shadowZ = NaN;
 	let shadowSun: readonly number[] | null = null;
@@ -368,10 +407,7 @@
 
 {#if pixel}
 	<PixelWater {game} {palette} still={game.reducedMotion} />
-	<PixelRender
-		pixelSize={renderStyle.pixelSize + quality.settings.extraPx}
-		sharpFlags={quality.settings.sharpFlags === 'always' || game.openIslandId !== null}
-	/>
+	<PixelRender pixelSize={renderStyle.pixelSize + quality.settings.extraPx} />
 {:else}
 	<Ocean {game} color={toHex(palette.water)} />
 {/if}
