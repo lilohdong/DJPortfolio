@@ -84,9 +84,10 @@ images:
 order: 2
 featured: true
 island:
-  x: 50
-  z: 0
+  x: -34
+  z: -18
   size: 6
+  landmark: "bell"
 unverified:
   - "화면 이미지 5장은 실제 앱 화면이 아니라 디자인 시안. 나중에 실제 앱 화면 캡처로 교체 예정"
 ---

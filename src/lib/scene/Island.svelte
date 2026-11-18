@@ -2,6 +2,7 @@
 	import { T } from '@threlte/core';
 	import type { Island } from '../sailing/islands';
 	import Flag from './Flag.svelte';
+	import Landmark from './Landmark.svelte';
 
 	let { island, night }: { island: Island; night: number } = $props();
 
@@ -27,6 +28,16 @@
 	/** 선착장 방향 (rotation.y) */
 	const dockYaw = $derived(Math.atan2(island.dir.x, island.dir.z));
 
+	// 조형물: 깃발 천이 펼쳐지는 쪽(선착장 방향에서 −90도)의 반대편, 선착장 쪽으로 비스듬한 자리.
+	// 구경 카메라(선착장 쪽)에서 깃발과 나란히 보이고 선착장을 가리지 않는다.
+	const landmark = $derived(island.project?.landmark ?? null);
+	const landmarkScale = $derived(r / 6);
+	const landmarkPos = $derived({
+		x: Math.cos(dockAngle + 0.9) * r * 0.5,
+		z: Math.sin(dockAngle + 0.9) * r * 0.5
+	});
+	const flagPos = $derived({ x: island.dir.x * r * 0.35, z: island.dir.z * r * 0.35 });
+
 	const trees = $derived.by(() => {
 		const rand = seeded(island.id);
 		const count = Math.max(3, Math.round(r * 0.7));
@@ -34,7 +45,15 @@
 		for (let i = 0; i < count; i++) {
 			const a = dockAngle + 0.9 + (i / count) * (Math.PI * 2 - 1.8) + (rand() - 0.5) * 0.3;
 			const d = r * (0.45 + rand() * 0.2);
-			list.push({ x: Math.cos(a) * d, z: Math.sin(a) * d, s: 0.8 + rand() * 0.5 });
+			const t = { x: Math.cos(a) * d, z: Math.sin(a) * d, s: 0.8 + rand() * 0.5 };
+			// 조형물과 깃발 자리는 비운다
+			if (
+				landmark &&
+				Math.hypot(t.x - landmarkPos.x, t.z - landmarkPos.z) < 2.4 * landmarkScale + 0.8
+			)
+				continue;
+			if (Math.hypot(t.x - flagPos.x, t.z - flagPos.z) < 1.4) continue;
+			list.push(t);
 		}
 		return list;
 	});
@@ -146,6 +165,15 @@
 			/>
 		</T.Group>
 	{:else}
+		{#if landmark}
+			<T.Group
+				position={[landmarkPos.x, GRASS_TOP, landmarkPos.z]}
+				rotation.y={dockYaw}
+				scale={landmarkScale}
+			>
+				<Landmark kind={landmark} {night} />
+			</T.Group>
+		{/if}
 		<!-- 프로젝트 섬 깃발: 로고 또는 앞 글자. 천이 선착장 쪽을 본다 -->
 		{#if island.project}
 			<T.Group

@@ -73,9 +73,10 @@ images:
 order: 1
 featured: true
 island:
-  x: 50
-  z: -28
+  x: 32
+  z: -22
   size: 6
+  landmark: "calendar"
 unverified: []
 ---
 

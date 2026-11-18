@@ -60,9 +60,10 @@ images:
 order: 6
 featured: true
 island:
-  x: 78
-  z: 28
+  x: -50
+  z: 22
   size: 6
+  landmark: "pos-counter"
 unverified: []
 # 담당 근거: 팀 결과 보고서 "1.4 역할분담"과 화면별 "화면 개발자 명". 재고 자동 차감·단위 변환 트리거·환불 매출 차감은 다른 팀원 담당이라 본인 기여에서 뺐다
 ---

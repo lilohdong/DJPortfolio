@@ -8,6 +8,18 @@ export interface IslandPlacement {
 	size: number;
 }
 
+/** 섬 위 조형물 종류 (content 파일의 island.landmark). 장면이 이 값으로 모양을 고른다 */
+export const LANDMARKS = [
+	'calendar',
+	'bell',
+	'bar-chart',
+	'checklist',
+	'monkey',
+	'pos-counter',
+	'batter'
+] as const;
+export type Landmark = (typeof LANDMARKS)[number];
+
 export interface ProjectLink {
 	type: string;
 	label: string;
@@ -43,6 +55,8 @@ export interface Project {
 	order: number;
 	featured: boolean;
 	island: IslandPlacement;
+	/** 섬 위 조형물. 없으면 null */
+	landmark: Landmark | null;
 	/** 로고. 패널 머리, 지도, 3D 깃발에 쓴다 */
 	logo: ContentImage | null;
 	/** 대표 이미지(use: "대표 이미지"). 본문에 적혀 있어도 본문에서는 빼고 여기에만 둔다 */

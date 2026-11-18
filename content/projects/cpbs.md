@@ -69,9 +69,10 @@ images:
 order: 7
 featured: false
 island:
-  x: 106
-  z: -28
+  x: 88
+  z: -6
   size: 4.5
+  landmark: "batter"
 unverified:
   - "투구 측정(영상 125구)을 누가 했는지 — 커밋 메시지에는 측정 결과만 있음"
 ---
