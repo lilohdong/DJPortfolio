@@ -47,14 +47,14 @@ logo:
   height: 256
 images:
   - src: "content/projects/maple-alami/maple-desktop.webp"
-    alt: "메이플 할일 알리미 대시보드 (데스크톱)"
+    alt: "메이플 할일 알리미 데스크톱 대시보드"
     caption: "데모 데이터로 본 캐릭터별 숙제와 주간 결정석 수익"
     use: "대표 이미지"
     width: 1280
     height: 1000
     source: "프로젝트/메이플 할일 알리미/maple-desktop.png"
   - src: "content/projects/maple-alami/maple-mobile.webp"
-    alt: "대시보드 (모바일)"
+    alt: "모바일 대시보드"
     caption: "모바일 대시보드"
     use: "화면 캡처"
     width: 500
@@ -78,7 +78,7 @@ unverified: []
 
 ![](maple-desktop)
 
-친구들과 주간 숙제를 자주 놓쳐서 4일 동안 만들었고, 친구들과 쓰는 디스코드 서버에서 사용합니다.
+친구들과 주간 숙제를 자주 놓쳐서 만들었고, 친구들과 쓰는 디스코드 서버에서 사용합니다.
 
 써 보니 주간 수익이 0으로 나왔습니다. 실제 API 응답을 보니 난이도 표기가 영문이라 한글로 만든 가격표와 맞지 않았습니다. 표기를 하나로 맞추고 저장된 설정도 새 형식으로 옮겼습니다.
 

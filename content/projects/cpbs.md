@@ -46,21 +46,21 @@ logo:
   height: 180
 images:
   - src: "content/projects/cpbs/cpbs-batting.webp"
-    alt: "타격 트레이닝 화면: 3D 타석 시점, 스코어보드와 스트라이크 존 (모바일)"
+    alt: "모바일 타격 트레이닝 화면: 3D 타석 시점, 스코어보드와 스트라이크 존"
     caption: "모바일 타격 트레이닝 화면"
     use: "대표 이미지"
     width: 739
     height: 1600
     source: "프로젝트/cpbs/cpbs-batting.png"
   - src: "content/projects/cpbs/cpbs-home.webp"
-    alt: "CPBS 첫 화면: 투구 배치 그림과 기능 목록 (모바일)"
+    alt: "모바일 CPBS 첫 화면: 투구 배치 그림과 기능 목록"
     caption: "모바일 첫 화면"
     use: "화면 캡처"
     width: 739
     height: 1600
     source: "프로젝트/cpbs/cpbs-home.png"
   - src: "content/projects/cpbs/cpbs-skill-change.webp"
-    alt: "스킬 변경 시뮬레이터 입력 화면: 카드, 포지션, 변경권, 목표 선택 (모바일)"
+    alt: "모바일 스킬 변경 시뮬레이터 입력 화면: 카드, 포지션, 변경권, 목표 선택"
     caption: "모바일 스킬 변경 시뮬레이터"
     use: "화면 캡처"
     width: 739
@@ -80,7 +80,7 @@ unverified:
 
 게임에는 투수를 골라 반복해서 타격을 연습할 방법이 없어서 만들었습니다.
 
-서버 없이 만들어 Cloudflare Pages에 올렸고, 4일 동안 새 버전을 11번 냈습니다.
+서버 없이 만들어 Cloudflare Pages에 올렸습니다.
 
 <!-- more -->
 

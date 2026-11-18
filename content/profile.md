@@ -6,7 +6,7 @@
 
 name: "오동준"
 name_en: "Dongjun Oh"
-headline: "적응형 개발자"
+headline: "주니어 개발자"
 photo:
   # src는 static/ 기준 경로(npm run images:import가 변환해 채움). source는 원본 위치로 볼트 루트 기준 상대 경로이며,
   # 원본이 볼트 바깥("바탕 화면\포폴" 폴더 바로 아래)이라 ../로 시작한다
@@ -25,7 +25,6 @@ intro: |
   Java Swing, Android와 Spring Boot, Flutter와 Supabase, Unity, Next.js, React와 Three.js를 썼고, 최근 프로젝트는 Claude Code로 구현합니다.
 
 intro_points:
-  - "CPBS는 4일 동안 11번 릴리스했습니다."
   - "Mongscape에서 처음으로 서버를 직접 호스팅해 VPS에 배포했습니다."
 
 skills:
@@ -96,7 +95,7 @@ contact:
   links: []
 
 unverified:
-  - "intro 문구 승인 (headline \"적응형 개발자\"는 2026-11-18 사용자 확정)"
+  - "intro 문구 승인 (headline \"주니어 개발자\"는 2026-11-18 사용자 확정, 이전 안 \"적응형 개발자\")"
   - "자격증 취득일 (답변에 이름만 있음)"
 ---
 

@@ -37,35 +37,35 @@ links:
     url: null
 images:
   - src: "content/projects/yeoronji/yeoronji-list-desktop.webp"
-    alt: "여론지 이슈 목록 화면 (데스크톱)"
+    alt: "데스크톱 여론지 이슈 목록 화면"
     caption: "최신 정치 이슈 목록"
     use: "대표 이미지"
     width: 1280
     height: 900
     source: "프로젝트/여론지/yeoronji-list-desktop.png"
   - src: "content/projects/yeoronji/yeoronji-issue-desktop.webp"
-    alt: "이슈 상세 화면: 찬반 비율과 언론사별 표 (데스크톱)"
+    alt: "데스크톱 이슈 상세 화면: 찬반 비율과 언론사별 표"
     caption: "이슈 상세 화면의 찬반 비율과 언론사별 여론 표"
     use: "화면 캡처"
     width: 688
     height: 1600
     source: "프로젝트/여론지/yeoronji-issue-desktop.png"
   - src: "content/projects/yeoronji/yeoronji-issue-mobile.webp"
-    alt: "이슈 상세 화면 (모바일)"
+    alt: "모바일 이슈 상세 화면"
     caption: "모바일 이슈 상세 화면"
     use: "화면 캡처"
     width: 128
     height: 1600
     source: "프로젝트/여론지/yeoronji-issue-mobile.png"
   - src: "content/projects/yeoronji/yeoronji-list-mobile.webp"
-    alt: "이슈 목록 화면 (모바일)"
+    alt: "모바일 이슈 목록 화면"
     caption: "모바일 이슈 목록"
     use: "화면 캡처"
     width: 739
     height: 1600
     source: "프로젝트/여론지/yeoronji-list-mobile.png"
   - src: "content/projects/yeoronji/yeoronji-nostance-desktop.webp"
-    alt: "찬반 쟁점이 없는 이슈 화면 (감정 비율만 표시)"
+    alt: "찬반 쟁점이 없어 감정 비율만 표시한 이슈 화면"
     caption: "찬반 쟁점이 없어 감정 비율만 보여 주는 이슈"
     use: "화면 캡처"
     width: 1230
