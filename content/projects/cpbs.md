@@ -10,7 +10,7 @@ period:
 team:
   size: 1
   type: "개인"
-role: "기획·설계 결정·검증·배포 (구현은 설계 문서와 구현 계획을 바탕으로 AI 코딩 도구와 함께 진행)"
+role: "기획·설계 결정·검증·배포 (구현은 설계 문서와 구현 계획을 바탕으로 Claude Code와 함께 진행)"
 stack:
   - React 19
   - TypeScript
@@ -36,7 +36,28 @@ links:
   - type: repo
     label: "GitHub 저장소 (비공개)"
     url: null
-images: []
+images:
+  - src: "content/projects/cpbs/cpbs-batting.webp"
+    alt: "타격 트레이닝 화면 — 3D 타석 시점, 스코어보드와 스트라이크 존 (모바일)"
+    caption: "타격 트레이닝 (모바일)"
+    use: "대표 이미지"
+    width: 739
+    height: 1600
+    source: "프로젝트/cpbs/cpbs-batting.png"
+  - src: "content/projects/cpbs/cpbs-home.webp"
+    alt: "CPBS 첫 화면 — 투구 배치 그림과 기능 목록 (모바일)"
+    caption: "첫 화면 (모바일)"
+    use: "화면 캡처"
+    width: 739
+    height: 1600
+    source: "프로젝트/cpbs/cpbs-home.png"
+  - src: "content/projects/cpbs/cpbs-skill-change.webp"
+    alt: "스킬 변경 시뮬레이터 입력 화면 — 카드, 포지션, 변경권, 목표 선택 (모바일)"
+    caption: "스킬 변경 시뮬레이터 (모바일)"
+    use: "화면 캡처"
+    width: 739
+    height: 1600
+    source: "프로젝트/cpbs/cpbs-skill-change.png"
 order: 7
 featured: false
 island:
@@ -44,8 +65,6 @@ island:
   z: -28
   size: 4.5
 unverified:
-  - "화면 캡처 없음 — 저장소에는 링크 미리보기용 브랜드 이미지(public/og.png)만 있음"
-  - "role 표현: 저장소의 설계 문서(docs/superpowers)와 .claude 설정으로 AI 코딩 도구 사용이 확인되지만, 본인과 AI의 구체적인 분담은 사용자 확인 필요"
   - "투구 측정(영상 125구)을 누가 했는지 — 커밋 메시지에는 측정 결과만 있음"
 ---
 
