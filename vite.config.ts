@@ -16,7 +16,14 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 			adapter: adapter(),
-			paths: { base }
+			paths: { base },
+			prerender: {
+				// "/#project-<slug>"는 요소 id가 아니라 항해 화면이 스크립트로 읽는 주소다
+				// (그 섬에 정박한 상태로 시작). 이런 주소만 빠진 id 검사에서 뺀다.
+				handleMissingId: ({ id, message }) => {
+					if (!id.startsWith('project-')) throw new Error(message);
+				}
+			}
 		})
 	]
 });

@@ -1,15 +1,38 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { resolve } from '$app/paths';
+	import type { Profile } from '../content/types';
 	import { ko } from '../i18n/ko';
 	import type { Sailing } from '../sailing/sailing.svelte';
 	import IslandPanel from './IslandPanel.svelte';
 	import Joystick from './Joystick.svelte';
 	import MapOverlay from './MapOverlay.svelte';
 	import Button from './kit/Button.svelte';
+	import PlayerCard from './PlayerCard.svelte';
+	import { VisitLog } from './visits.svelte';
 
 	// 3D 위에 겹치는 화면 요소와 키보드 입력.
 	// sceneReady가 false(로딩 중, 3D 실패)여도 지도 버튼·지도·패널은 동작한다.
-	let { game, sceneReady }: { game: Sailing; sceneReady: boolean } = $props();
+	let {
+		game,
+		profile,
+		sceneReady,
+		onshowtitle
+	}: {
+		game: Sailing;
+		profile: Profile;
+		sceneReady: boolean;
+		/** 왼쪽 위 플레이어 카드를 누르면 제목 화면으로 */
+		onshowtitle: () => void;
+	} = $props();
+
+	// 들른 섬: 패널을 연 프로젝트 섬을 센다 (플레이어 카드의 진행 표시)
+	const visits = new VisitLog();
+	const projectIds = $derived(game.islands.filter((i) => i.project).map((i) => i.id));
+	$effect(() => {
+		const island = game.openIsland;
+		if (island?.project) visits.add(island.id);
+	});
 
 	let coarsePointer = $state(false);
 	onMount(() => {
@@ -132,6 +155,13 @@
 		{/key}
 	{/if}
 
+	<PlayerCard
+		{profile}
+		visited={visits.count(projectIds)}
+		total={projectIds.length}
+		ontitle={onshowtitle}
+	/>
+
 	<div class="pointer-events-auto absolute top-4 right-4 flex gap-2">
 		<Button
 			shortcut={coarsePointer ? undefined : ko.map.key}
@@ -177,7 +207,7 @@
 	{/if}
 
 	{#if showHint}
-		<p
+		<div
 			id="controls-hint"
 			class={[
 				'absolute left-1/2 w-max max-w-[calc(100%-2rem)] -translate-x-1/2 ui-panel px-4 py-2 text-center text-body-sm',
@@ -185,8 +215,17 @@
 				coarsePointer ? 'top-24' : 'bottom-4'
 			]}
 		>
-			{coarsePointer ? ko.controls.hintTouch : ko.controls.hint}
-		</p>
+			<p>{coarsePointer ? ko.controls.hintTouch : ko.controls.hint}</p>
+			{#if helpOpen}
+				<!-- "목록으로 보기"는 제목 화면과 이 안내 상자에 둔다 (ui-plan §3.3) -->
+				<a
+					class="pointer-events-auto mt-2 inline-block font-semibold text-link underline underline-offset-4"
+					href={resolve('list/')}
+				>
+					{ko.home.listLink}
+				</a>
+			{/if}
+		</div>
 	{/if}
 
 	{#if sceneReady && coarsePointer && game.controlsActive}
@@ -197,6 +236,7 @@
 		{#key game.openIsland.id}
 			<IslandPanel
 				island={game.openIsland}
+				islands={game.islands}
 				prev={neighbors.prev}
 				next={neighbors.next}
 				onclose={closePanel}

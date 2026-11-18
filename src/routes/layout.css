@@ -160,3 +160,27 @@
 		1px -1px 0 var(--color-shadow),
 		-1px 1px 0 var(--color-shadow);
 }
+
+/* 터치 화면에서는 단축키 표시(E, M, Esc)를 숨긴다. 레이어 밖 규칙이라 ui-kbd보다 우선한다 */
+@media (pointer: coarse) {
+	.ui-kbd {
+		display: none;
+	}
+}
+
+/* 인쇄: 바탕은 흰색, 글자와 테두리는 검은색, 그림자 없음 (목록 페이지와 프로젝트 페이지) */
+@media print {
+	:root {
+		--color-panel: #ffffff;
+		--color-panel-raised: #ffffff;
+		--color-panel-hover: #ffffff;
+		--color-ink: #000000;
+		--color-ink-muted: #333333;
+		--color-line: #000000;
+		--color-accent: #000000;
+		--color-link: #000000;
+		--color-shadow: #ffffff;
+		--ui-shadow-offset: 0px;
+		--ui-panel-alpha: 100%;
+	}
+}

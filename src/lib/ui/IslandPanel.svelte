@@ -1,26 +1,28 @@
 <script lang="ts">
 	import { asset } from '$app/paths';
+	import { page } from '$app/state';
 	import type { AssetPath } from '$app/types';
-	import type { BodyBlock, ContentImage } from '../content/types';
+	import type { Profile } from '../content/types';
 	import { ko } from '../i18n/ko';
 	import type { Island } from '../sailing/islands';
-	import ContentFigure from './ContentFigure.svelte';
-	import ImageZoom from './ImageZoom.svelte';
+	import ProfileArticle from './ProfileArticle.svelte';
+	import ProjectArticle from './ProjectArticle.svelte';
 	import Button from './kit/Button.svelte';
-	import Chip from './kit/Chip.svelte';
 
-	// 정박 화면의 글 패널 (docs/ui-plan.md §3.6).
-	// 순서: 머리(로고, 제목, 요약) → 기간, 팀, 역할 → 대표 그림 → 한 일 → 본문(사진이 사이사이)
-	//       → 접힌 자세한 내용과 사진 더 보기 → 사용 기술 → 링크 → 이전, 다음 섬
+	// 정박 화면의 글 패널 (docs/ui-plan.md §3.6, §3.7).
+	// 프로젝트 섬은 ProjectArticle, 등대섬은 ProfileArticle을 보여 준다.
 	// 다른 섬으로 바뀔 때는 부르는 쪽이 {#key}로 새로 만들어 펼침 상태와 스크롤을 처음으로 돌린다.
 	let {
 		island,
+		islands = [],
 		prev = null,
 		next = null,
 		onclose,
 		onnavigate
 	}: {
 		island: Island;
+		/** 바다에 떠 있는 섬 전체. 등대섬 패널의 기술에서 프로젝트 섬으로 갈 때 쓴다 */
+		islands?: Island[];
 		prev?: Island | null;
 		next?: Island | null;
 		onclose: () => void;
@@ -29,41 +31,20 @@
 
 	const t = ko.panel;
 	const project = $derived(island.project);
-	const period = $derived(
-		project ? t.formatPeriod(project.period.start, project.period.end) : null
+	// 프로필은 +layout.server.ts가 모든 페이지에 넘긴다.
+	const profile = $derived(page.data.profile as Profile | undefined);
+	const projectTitles = $derived(
+		Object.fromEntries(
+			islands.filter((i) => i.project).map((i) => [i.project!.slug, i.project!.title])
+		)
 	);
-	const team = $derived(
-		project ? (project.team.note ?? t.formatTeam(project.team.size, project.team.type)) : null
-	);
-	const hasMore = $derived(
-		!!project && (project.more.length > 0 || project.extraImages.length > 0)
-	);
-
-	let expanded = $state(false);
-	let zoomed = $state<ContentImage | null>(null);
 
 	let heading = $state<HTMLHeadingElement>();
 	$effect(() => {
 		// 패널이 열리면 제목으로 초점을 옮긴다 (화면 낭독기, 키보드 스크롤).
 		heading?.focus({ preventScroll: true });
 	});
-
-	const zoom = (image: ContentImage) => (zoomed = image);
 </script>
-
-{#snippet blocks(list: BodyBlock[])}
-	{#each list as block, i (i)}
-		{#if block.type === 'text'}
-			<p>{block.text}</p>
-		{:else}
-			<ContentFigure image={block.image} onzoom={zoom} />
-		{/if}
-	{/each}
-{/snippet}
-
-{#snippet sectionTitle(label: string)}
-	<h3 class="mb-2 font-display text-label text-accent">{label}</h3>
-{/snippet}
 
 <aside
 	class="pointer-events-auto absolute inset-x-0 bottom-0 flex max-h-[70dvh] flex-col border-x-0 border-b-0 ui-panel md:top-20 md:right-4 md:bottom-4 md:left-auto md:max-h-none md:w-[26rem] md:border-x-(length:--ui-border-width) md:border-b-(length:--ui-border-width) xl:w-[30rem]"
@@ -109,111 +90,13 @@
 
 	<div class="flex-1 overflow-y-auto overscroll-contain px-5 py-5 text-body">
 		{#if project}
-			<dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-body-sm">
-				{#if period}
-					<dt class="font-semibold text-ink-muted">{t.period}</dt>
-					<dd>
-						{period}
-						{#if project.period.note}
-							<span class="text-ink-muted">{t.formatPeriodNote(project.period.note)}</span>
-						{/if}
-					</dd>
-				{/if}
-				{#if team}
-					<dt class="font-semibold text-ink-muted">{t.team}</dt>
-					<dd>{team}</dd>
-				{/if}
-				{#if project.role}
-					<dt class="font-semibold text-ink-muted">{t.role}</dt>
-					<dd>{project.role}</dd>
-				{/if}
-			</dl>
-
-			{#if project.cover}
-				<div class="mt-5">
-					<ContentFigure image={project.cover} onzoom={zoom} eager />
-				</div>
-			{/if}
-
-			{#if project.highlights.length > 0}
-				<section class="mt-6">
-					{@render sectionTitle(t.highlights)}
-					<ul class="list-[square] space-y-1 pl-5 marker:text-accent">
-						{#each project.highlights as item (item)}
-							<li>{item}</li>
-						{/each}
-					</ul>
-				</section>
-			{/if}
-
-			{#if project.body.length > 0 || hasMore}
-				<section class="mt-6" aria-label={t.about}>
-					<div class="space-y-4">{@render blocks(project.body)}</div>
-
-					{#if hasMore}
-						<div id="island-panel-more" class="mt-4 space-y-4" hidden={!expanded}>
-							{@render blocks(project.more)}
-							{#if project.extraImages.length > 0}
-								<div class="pt-2">
-									{@render sectionTitle(t.morePhotos)}
-									<div class="grid grid-cols-2 gap-3">
-										{#each project.extraImages as image (image.key)}
-											<ContentFigure {image} onzoom={zoom} />
-										{/each}
-									</div>
-								</div>
-							{/if}
-						</div>
-						<Button
-							class="mt-4"
-							aria-expanded={expanded}
-							aria-controls="island-panel-more"
-							onclick={() => (expanded = !expanded)}
-						>
-							{expanded ? t.readLess : t.readMore}
-							<span aria-hidden="true">{expanded ? '▴' : '▾'}</span>
-						</Button>
-					{/if}
-				</section>
-			{/if}
-
-			{#if project.stack.length > 0}
-				<section class="mt-6">
-					{@render sectionTitle(t.stack)}
-					<ul class="flex flex-wrap gap-2">
-						{#each project.stack as item (item)}
-							<Chip as="li">{item}</Chip>
-						{/each}
-					</ul>
-				</section>
-			{/if}
-
-			{#if project.links.length > 0}
-				<section class="mt-6">
-					{@render sectionTitle(t.links)}
-					<ul class="space-y-1">
-						{#each project.links as link (link.label)}
-							<li>
-								{#if link.url}
-									<!-- 외부 주소(https://…)만 들어오므로 resolve()를 거치지 않는다 (로더에서 검사) -->
-									<!-- eslint-disable svelte/no-navigation-without-resolve -->
-									<a
-										class="font-semibold text-link underline underline-offset-4"
-										href={link.url}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										{link.label}
-									</a>
-									<!-- eslint-enable svelte/no-navigation-without-resolve -->
-								{:else}
-									<span class="text-ink-muted">{link.label}</span>
-								{/if}
-							</li>
-						{/each}
-					</ul>
-				</section>
-			{/if}
+			<ProjectArticle {project} />
+		{:else if profile}
+			<ProfileArticle
+				{profile}
+				{projectTitles}
+				onselectproject={onnavigate ? (slug) => onnavigate(`project-${slug}`) : undefined}
+			/>
 		{:else}
 			<p>{ko.lighthousePanel.body}</p>
 		{/if}
@@ -239,9 +122,5 @@
 				</Button>
 			{/if}
 		</nav>
-	{/if}
-
-	{#if zoomed}
-		<ImageZoom image={zoomed} onclose={() => (zoomed = null)} />
 	{/if}
 </aside>

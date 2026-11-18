@@ -18,10 +18,63 @@ export const ko = {
 		listLink: '목록으로 보기',
 		loading: '개발자 오동준의 바다로 이동 중…'
 	},
+	/** 제목 화면 (docs/ui-plan.md §3.2 표의 최종 문구) */
+	titleScreen: {
+		/** 말줄임표는 넣지 않는다. 화면에서 움직이는 점을 붙인다 */
+		loading: '개발자 오동준의 바다로 이동 중',
+		ready: '바다에 도착했습니다',
+		loadFailed: '바다를 불러오지 못했습니다. 목록에서 같은 내용을 볼 수 있습니다.',
+		noWebgl: '이 브라우저에서는 바다를 띄울 수 없습니다. 목록에서 같은 내용을 볼 수 있습니다.',
+		start: '항해 시작',
+		startLoading: '항해 시작, 불러오는 중',
+		projects: '프로젝트 바로 보기',
+		list: '목록으로 보기',
+		contact: '연락처',
+		projectsHeading: '프로젝트',
+		back: '뒤로',
+		// 아래는 임시 문구 (기획 세션이 정함)
+		menuLabel: '제목 화면 메뉴',
+		email: '이메일',
+		github: 'GitHub'
+	},
+	/** 왼쪽 위 플레이어 카드 (임시 문구) */
+	nameTag: {
+		toTitle: '제목 화면으로',
+		progress: (visited: number, total: number) => `섬 ${visited}/${total}`,
+		progressLabel: (visited: number, total: number) => `들른 섬 ${total}개 중 ${visited}개`
+	},
+	/** 등대섬 패널과 목록 페이지의 소개 (임시 문구) */
+	profile: {
+		skills: '기술',
+		education: '학력',
+		certifications: '자격증',
+		activities: '활동',
+		contact: '연락처',
+		email: '이메일',
+		github: 'GitHub',
+		skillProjects: (skill: string) => `${skill}을(를) 쓴 프로젝트`,
+		formatGraduation(month: string | null, status: string | null): string | null {
+			const parts = [month ? formatMonth(month) : null, status].filter(Boolean);
+			return parts.length > 0 ? parts.join(' ') : null;
+		}
+	},
 	list: {
+		// 아래 넷은 임시 문구 (기획 세션이 정함). 그 밖의 프로젝트, 항해 보기로 전환은 ui-plan §3.8의 말
+		projectsHeading: '프로젝트',
+		otherProjects: '그 밖의 프로젝트',
+		toSailing: '항해 보기로 전환',
+		openProject: (title: string) => `${title} 자세히 보기`,
 		heading: '목록 보기',
 		body: '포트폴리오를 목록으로 보는 페이지입니다. 아직 준비 중입니다.',
 		backToSailing: '항해 보기로 돌아가기'
+	},
+	/** 프로젝트 개별 페이지 (임시 문구) */
+	projectPage: {
+		title: (project: string) => `${project} | 오동준`,
+		backToList: '목록으로 돌아가기',
+		pageNav: '프로젝트 이동',
+		prev: (project: string) => `이전 프로젝트: ${project}`,
+		next: (project: string) => `다음 프로젝트: ${project}`
 	},
 	fallback: {
 		noWebgl: '이 브라우저에서는 바다를 띄울 수 없습니다.',
