@@ -2,6 +2,7 @@
 	import { asset, resolve } from '$app/paths';
 	import type { AssetPath } from '$app/types';
 	import { ko } from '#lib/i18n/ko.ts';
+	import ContactButtons from '#lib/ui/ContactButtons.svelte';
 	import ProfileArticle from '#lib/ui/ProfileArticle.svelte';
 	import ProjectCard from '#lib/ui/ProjectCard.svelte';
 	import type { PageProps } from './$types';
@@ -44,28 +45,8 @@
 							{profile.headline}
 						</p>
 					{/if}
-					<p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-body-sm">
-						{#if profile.contact.email}
-							<!-- eslint-disable svelte/no-navigation-without-resolve -->
-							<a
-								class="font-semibold text-link underline underline-offset-4"
-								href="mailto:{profile.contact.email}"
-							>
-								{profile.contact.email}
-							</a>
-						{/if}
-						{#if profile.contact.github}
-							<a
-								class="font-semibold text-link underline underline-offset-4"
-								href={profile.contact.github}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								{ko.profile.github}
-							</a>
-							<!-- eslint-enable svelte/no-navigation-without-resolve -->
-						{/if}
-					</p>
+					<!-- 주소를 글자로 보는 곳은 아래 소개의 "연락처" 구역이다 -->
+					<div class="mt-3"><ContactButtons contact={profile.contact} /></div>
 				</div>
 			</div>
 			<a class="ui-btn" href={resolve('/')}>{ko.list.toSailing}</a>
