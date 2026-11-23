@@ -11,20 +11,24 @@ photo:
   # src는 static/ 기준 경로(npm run images:import가 변환해 채움). source는 원본 위치로 볼트 루트 기준 상대 경로이며,
   # 원본이 볼트 바깥("바탕 화면\포폴" 폴더 바로 아래)이라 ../로 시작한다
   src: "content/profile/photo.webp"
-  alt: "오동준 정장 차림 프로필 사진"
+  alt: "오동준 정장 프로필 사진"
   width: 480
   height: 640
   source: "../동준_정장.png"
 status: "구직 중"
-location: "경기도 고양시"
+location: "경기도 고양시 덕양구"
 
 # intro 근거: 각 프로젝트 파일의 stack. 프로젝트 7개의 주 기술 조합이 서로 다르다.
 intro: |
-  일곱 개 프로젝트를 모두 다른 기술 조합으로 만들었습니다.
-  Java Swing, Android와 Spring Boot, Flutter와 Supabase, Unity, Next.js, React와 Three.js를 썼습니다.
+  변화하는 환경에 빠르게 적응할 수 있는 능력을 갖춘 개발자, 오동준입니다.
 
 intro_points:
-  - "Mongscape에서 처음으로 서버를 직접 호스팅해 VPS에 배포했습니다."
+  ### "개발이 좋습니다"
+  - 어려서부터 혼자서 무언갈 만드는 것을 좋아했습니다. 개발을 접하고 나서는 내 손으로 웹이나 앱, 프로그램을 만들어냈을 때의 성취감에 반했습니다.
+  ### "적응력이 뛰어납니다"
+  - 사람은 늘 변하는 환경 속에서 살아갑니다. 저는 주변 사람들에게서 "새로운 환경에 빠르게 적응한다"는 말을 자주 들어 왔습니다. 기술과 일하는 방식이 빠르게 바뀌는 AI 시대에 이 적응력이 제 가장 큰 강점이 될 것이라고 생각합니다.
+  ### "끝까지 쫓습니다"
+  - 문제에 직면했을 때, 그 문제를 회피하지 않고 마주하려 노력합니다. 
 
 skills:
   # 숙련도 표시는 하지 않고, 각 기술을 쓴 프로젝트(slug)로 연결한다.
@@ -58,8 +62,6 @@ skills:
       - { name: "BlazePose / Unity AI Inference", projects: [mongscape] }
   - group: "테스트와 도구"
     items:
-      - { name: "pytest, Vitest, Playwright", projects: [yeoronji, cpbs] }
-      - { name: "NUnit", projects: [mongscape] }
       - { name: "Git / GitHub", projects: [calddy, nudgeup, pos-place, mongscape, cpbs] }
 
 education:
@@ -76,8 +78,8 @@ activities:
     detail: "SNS와 캘린더의 결합, 'Calddy'"
     date: "2026"
     project: calddy
-  - title: "Mongscape v1.0.0 정식 출시"
-    detail: "GitHub Releases"
+  - title: "2026 한국게임학회 GGC 논문 투고"
+    detail: "전용 장비 없이 웹캠만으로 즐기는 운동형 엔드리스 러너 'MongScape'"
     date: "2026-11-14"
     project: mongscape
 
