@@ -9,7 +9,7 @@ import {
 	type Warn
 } from './parse.server';
 import { loadProjects } from './projects.server';
-import type { Profile, ProjectLink } from './types';
+import type { IntroPoint, Profile, ProjectLink } from './types';
 
 // content/profile.md 를 빌드(사전 렌더링) 시점에 읽는다.
 // "확인 필요" 값은 null이나 빈 목록으로 바꾸고, unverified(확인 필요 메모)는 넘기지 않는다.
@@ -29,6 +29,23 @@ function parseContactLinks(value: unknown): ProjectLink[] {
 			links.push({ type: text(item.type) ?? 'doc', label, url });
 	}
 	return links;
+}
+
+// intro_points 항목은 { title, body } 객체이거나 문자열(소제목 없는 요점)이다.
+function parseIntroPoints(value: unknown, warn: Warn): IntroPoint[] {
+	if (!Array.isArray(value)) return [];
+	const points: IntroPoint[] = [];
+	for (const item of value) {
+		if (isRecord(item)) {
+			const body = text(item.body);
+			if (body) points.push({ title: text(item.title), body });
+			else warn(`${PATH}: intro_points 항목 "${text(item.title) ?? ''}"에 body 없음`);
+		} else {
+			const body = text(item);
+			if (body) points.push({ title: null, body });
+		}
+	}
+	return points;
 }
 
 let cache: Profile | null = null;
@@ -63,7 +80,7 @@ export function loadProfile(): Profile {
 			.split(/\r?\n/)
 			.map((line) => line.trim())
 			.filter((line) => line !== ''),
-		introPoints: textList(data.intro_points),
+		introPoints: parseIntroPoints(data.intro_points, warn),
 		skills: records(data.skills)
 			.map((group) => ({
 				group: text(group.group) ?? '',

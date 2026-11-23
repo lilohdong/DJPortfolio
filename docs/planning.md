@@ -287,7 +287,7 @@ content/
 | `photo` | `{ src, alt, width, height, source }` (§4.1) | 등대섬 |
 | `status`, `location` | 문자열 | 등대섬 |
 | `intro` | 여러 줄 문자열 | 등대섬 자기소개 |
-| `intro_points` | 문자열 배열 | 등대섬 요점 |
+| `intro_points` | `{ title, body }` 배열. 항목을 문자열로만 쓰면 소제목 없는 요점 | 등대섬과 목록 머리 소개. `title`은 소제목, `body`는 그 아래 문단 |
 | `skills[]` | `{ group, items: [{ name, projects: [slug…] }] }` | 공방섬, 목록 "기술". `projects`의 slug로 프로젝트 섬에 연결 |
 | `education[]` | `{ school, major, degree, graduation, status }` (`graduation`은 `"YYYY-MM"`) | 항로섬 |
 | `experience[]` | 선택. 회사 경력이 생기면 `{ company, role, period, points[] }`로 추가. 지금은 필드 자체가 없음 | 항로섬 |

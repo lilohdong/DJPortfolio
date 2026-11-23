@@ -77,6 +77,11 @@ export interface SkillItem {
 	projects: string[];
 }
 
+export interface IntroPoint {
+	title: string | null;
+	body: string;
+}
+
 export interface Profile {
 	name: string;
 	nameEn: string | null;
@@ -86,7 +91,8 @@ export interface Profile {
 	location: string | null;
 	/** 소개 문장. 줄바꿈 단위로 나눈 목록 */
 	intro: string[];
-	introPoints: string[];
+	/** 소개 요점. 소제목(title)과 본문(body). 문자열만 쓴 항목은 title이 null */
+	introPoints: IntroPoint[];
 	skills: { group: string; items: SkillItem[] }[];
 	education: {
 		school: string;
