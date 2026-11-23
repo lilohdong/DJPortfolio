@@ -27,8 +27,11 @@
 	let {
 		game,
 		palette,
-		still = false
-	}: { game: Sailing; palette: Palette; still?: boolean } = $props();
+		still = false,
+		flowRate
+	}: { game: Sailing; palette: Palette; still?: boolean; flowRate?: () => number } = $props();
+	let waterTime = 0;
+	let lastT = -1;
 
 	const { scene, camera } = useThrelte();
 	const viewDir = new Vector3();
@@ -311,7 +314,11 @@
 		(material.uniforms.boatPos.value as Vector2).set(x, z);
 
 		const u = material.uniforms;
-		if (!still) u.time.value = t;
+		// 물결 시간: 동작 줄이기면 멈추고, flowRate가 있으면 그 배율로 흐른다 (가속 없는 환경의 정지 상태)
+		const dt = lastT < 0 ? 0 : Math.max(0, t - lastT);
+		lastT = t;
+		if (!still) waterTime += dt * (flowRate?.() ?? 1);
+		u.time.value = waterTime;
 		// 물결 조각을 화면 가로로 눕히기 위한 카메라 방향 (수면 위 성분)
 		camera.current.getWorldDirection(viewDir);
 		const len = Math.hypot(viewDir.x, viewDir.z) || 1;
