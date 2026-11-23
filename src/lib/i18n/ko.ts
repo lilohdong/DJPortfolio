@@ -13,7 +13,7 @@ export const ko = {
 		listTitle: '목록 | 오동준'
 	},
 	home: {
-		listLink: '목록으로 보기'
+		listLink: '소개'
 	},
 	/** 제목 화면 (docs/ui-plan.md §3.2 표의 최종 문구) */
 	titleScreen: {
@@ -25,7 +25,7 @@ export const ko = {
 		start: '항해 시작',
 		startLoading: '항해 시작, 불러오는 중',
 		projects: '프로젝트 바로 보기',
-		list: '목록으로 보기',
+		list: '소개',
 		contact: '연락처',
 		projectsHeading: '프로젝트',
 		back: '뒤로',
@@ -72,7 +72,7 @@ export const ko = {
 		noWebgl: '이 브라우저에서는 바다를 띄울 수 없습니다.',
 		loadFailed: '바다를 불러오지 못했습니다.',
 		hint: '지도에서 섬을 누르면 그 섬의 내용이 열립니다. 목록에서는 모든 프로젝트를 한 페이지로 봅니다.',
-		listLink: '목록으로 보기',
+		listLink: '소개',
 		/** 바다를 움직이지 않는 그림으로 둘 때 (T-029) */
 		still:
 			'지금은 바다를 멈춘 그림으로 보여 드립니다. 지도에서 섬을 누르면 그 섬의 내용이 열리고, 목록에서는 모든 프로젝트를 한 페이지로 봅니다.'

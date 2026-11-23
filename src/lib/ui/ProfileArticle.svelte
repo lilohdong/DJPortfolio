@@ -3,6 +3,7 @@
 	import type { AssetPath } from '$app/types';
 	import type { Profile } from '../content/types';
 	import { ko } from '../i18n/ko';
+	import ContactButtons from './ContactButtons.svelte';
 
 	// 소개 글 (docs/ui-plan.md §3.7). 등대섬 패널과 목록 페이지가 함께 쓴다.
 	// 기술을 누르면 그 기술을 쓴 프로젝트가 펼쳐진다. 패널에서는 그 섬으로 가는 버튼,
@@ -74,6 +75,7 @@
 				{#if profile.status}<span>{profile.status}</span>{/if}
 				{#if profile.location}<span>{profile.location}</span>{/if}
 			</p>
+			<div class="mt-3"><ContactButtons contact={profile.contact} /></div>
 		</div>
 	</div>
 {/if}
