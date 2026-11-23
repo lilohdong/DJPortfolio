@@ -8,7 +8,7 @@
 		VISIT_ORBIT_LIMIT,
 		VISIT_TRANSITION
 	} from '../sailing/visit-camera';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import Boat from './Boat.svelte';
 	import Island from './Island.svelte';
 	import Ocean from './Ocean.svelte';
@@ -171,10 +171,95 @@
 		stillDirty = true;
 	});
 
+	// ── 가속이 없는 환경(소프트웨어 렌더)의 움직임/멈춤 전환 (T-029 후속) ──
+	// 움직일 때는 부드러움이 먼저: 픽셀을 키우고 캔버스를 줄여 그리는 픽셀 수를 줄이고 30fps를 지킨다.
+	// 멈춰서 볼 때는 선명함이 먼저: 픽셀 4와 깃발 선명 패스로 돌아오고, 프레임은 낮게, 물결은 천천히.
+	// 가속이 있는 환경(HW)은 이 경로를 타지 않는다.
+	const swDynamic = untrack(() => quality.renderer === 'software' && !quality.forced);
+	/** 움직일 때 쓰는 단계. 실제 프레임 간격이 길면 다음 단계로 (한 번 올리면 내리지 않음) */
+	const SW_MOVE_STEPS: readonly { px: number; dpr: number }[] = [
+		{ px: 6, dpr: 0.5 },
+		{ px: 8, dpr: 0.5 },
+		{ px: 8, dpr: 0.35 }
+	];
+	const SW_CAPS = { sail: 30, idle: 10, visit: 8, title: 8 };
+	/** 멈춘 뒤 이만큼 지나야 선명한 화면으로 돌아온다 (잠깐 멈췄다 다시 움직일 때 깜빡이지 않게) */
+	const SW_SHARP_DELAY = 400;
+	/** 멈춰 있는 동안 물결이 흐르는 빠르기 (10fps로 뚝뚝 움직이는 것이 덜 보이게) */
+	const SW_STILL_FLOW = 0.35;
+	let swMoveStep = 0;
+	let swSharp = true;
+	let swStillSince = 0;
+	let swMoving = false;
+	// 움직이는 동안의 실제 프레임 간격 (상한 30을 지키는지)
+	let swMoveFrom = 0;
+	let swMoveFrames = 0;
+	let swMoveGapSum = 0;
+
+	/** 이번 프레임의 픽셀 크기 */
+	function pixelNow(): number {
+		const base = renderStyle.pixelSize + quality.settings.extraPx;
+		if (!swDynamic || swSharp) return base;
+		return Math.max(base, SW_MOVE_STEPS[swMoveStep].px);
+	}
+	/** 이번 프레임의 캔버스 배율 */
+	function dprNow(): number {
+		const base = canvasDpr(quality.level);
+		if (!swDynamic || swSharp) return base;
+		return Math.min(base, SW_MOVE_STEPS[swMoveStep].dpr);
+	}
+	const sharpNow = () => !swDynamic || swSharp;
+	const flowNow = () => (swDynamic && swSharp ? SW_STILL_FLOW : 1);
+
+	/** 지난 프레임의 상태로 이번 프레임을 움직임/멈춤 중 무엇으로 그릴지 정한다 */
+	function updateSwMode(now: number) {
+		if (!swDynamic) return;
+		const moving = !game.titleShown && !idle && !visitSettled && !game.sceneStill;
+		if (moving) {
+			if (!swMoving) {
+				swMoving = true;
+				swMoveFrom = now + 500;
+				swMoveFrames = swMoveGapSum = 0;
+			}
+			swSharp = false;
+			swStillSince = 0;
+		} else {
+			swMoving = false;
+			if (!swStillSince) swStillSince = now;
+			if (now - swStillSince >= SW_SHARP_DELAY) swSharp = true;
+		}
+	}
+
+	/** 움직이는 동안 실제 간격을 보고, 30fps를 못 지키면 픽셀을 더 키운다 */
+	function measureSwMove(now: number, gap: number) {
+		if (!swDynamic || !swMoving || swSharp || now < swMoveFrom || gap > 1000) return;
+		swMoveFrames += 1;
+		swMoveGapSum += gap;
+		if (now - swMoveFrom < 2000) return;
+		const avgGap = swMoveGapSum / swMoveFrames;
+		// 상한 30(33ms)인데 평균 42ms(약 24fps)보다 길면 그리는 비용이 큰 것이다
+		if (avgGap > 42 && swMoveStep < SW_MOVE_STEPS.length - 1) swMoveStep += 1;
+		swMoveFrom = now + 500;
+		swMoveFrames = swMoveGapSum = 0;
+	}
+
+	/** 최근 1초 동안 실제로 그린 횟수 (디버그 표시) */
+	let fpsCount = 0;
+	let fpsShown = 0;
+	let fpsWindowStart = 0;
+
+	function stateLabel(): string {
+		if (game.sceneStill) return 'stop';
+		if (game.titleShown) return 'title';
+		if (visitSettled) return 'visit';
+		if (idle) return 'still';
+		return 'sail';
+	}
+
 	function targetFps(): number {
 		if (document.visibilityState === 'hidden') return 0;
 		if (game.sceneStill) return stillDirty ? 1000 : STILL_FPS;
-		const caps = quality.settings.caps;
+		const caps = swDynamic ? SW_CAPS : quality.settings.caps;
 		const limit = game.reducedMotion ? REDUCED_MOTION_FPS : Infinity;
 		if (game.titleShown) return Math.min(caps.title, limit);
 		if (visitSettled) return Math.min(caps.visit, limit);
@@ -224,11 +309,6 @@
 		resetMeasure(now, 0);
 	}
 
-	// 가장 낮은 단계는 캔버스를 CSS보다 작게 그리므로 브라우저가 늘릴 때 계단 모양을 지키게 한다
-	$effect(() => {
-		renderer.domElement.style.imageRendering = canvasDpr(quality.level) < 1 ? 'pixelated' : '';
-	});
-
 	// ?quality=debug: 화면 구석에 단계, 렌더러 판정, 작업 시간, 프레임 상한을 작게 띄운다 (숫자와 약어만)
 	onMount(() => {
 		if (!quality.debug) return;
@@ -251,7 +331,8 @@
 			const dpr = renderer.getPixelRatio().toFixed(2);
 			box.textContent =
 				`Q L${quality.level}${quality.forced ? ' fixed' : ''} ${quality.renderer === 'software' ? 'SW' : quality.renderer === 'hardware' ? 'HW' : '?'}` +
-				` work ${quality.lastWorkMs.toFixed(1)}ms cap ${Math.round(fpsNow)} px ${renderStyle.pixelSize + quality.settings.extraPx} dpr ${dpr}` +
+				` ${stateLabel()} fps ${fpsShown.toFixed(0)}/${Math.round(fpsNow)} work ${quality.lastWorkMs.toFixed(1)}ms px ${pixelNow()} dpr ${dpr}` +
+				`${swDynamic ? ` mv${swMoveStep}${swSharp ? ' sharp' : ''}` : ''}` +
 				`${quality.settings.shadows ? '' : ' noshadow'}${game.sceneStill ? ' STILL' : ''}`;
 		};
 		tick();
@@ -277,10 +358,27 @@
 			if (time - last < interval - 1.5) return;
 			last = Math.max(last + interval, time - interval);
 			const start = performance.now();
+			const gap = lastRun ? start - lastRun : 0;
+			// 해상도는 그리기 바로 전에 바꾼다. 캔버스 크기를 바꾸면 화면이 지워지므로,
+			// 같은 작업 안에서 곧바로 그려야 빈 화면이 한 프레임 끼지 않는다.
+			updateSwMode(start);
+			const dpr = dprNow();
+			if (renderer.getPixelRatio() !== dpr) {
+				renderer.setPixelRatio(dpr);
+				// CSS보다 작게 그릴 때는 브라우저가 늘리면서 계단 모양을 지키게 한다
+				renderer.domElement.style.imageRendering = dpr < 1 ? 'pixelated' : '';
+			}
 			scheduler.run(time);
 			frameInvalidated.current = false;
 			stillDirty = false;
+			measureSwMove(start, gap);
 			measure(start, performance.now() - start);
+			fpsCount += 1;
+			if (start - fpsWindowStart >= 1000) {
+				fpsShown = (fpsCount * 1000) / (start - fpsWindowStart);
+				fpsCount = 0;
+				fpsWindowStart = start;
+			}
 		});
 	});
 	let shadowX = NaN;
@@ -406,8 +504,8 @@
 />
 
 {#if pixel}
-	<PixelWater {game} {palette} still={game.reducedMotion} />
-	<PixelRender pixelSize={renderStyle.pixelSize + quality.settings.extraPx} />
+	<PixelWater {game} {palette} still={game.reducedMotion} flowRate={flowNow} />
+	<PixelRender pixelSize={renderStyle.pixelSize + quality.settings.extraPx} {pixelNow} {sharpNow} />
 {:else}
 	<Ocean {game} color={toHex(palette.water)} />
 {/if}

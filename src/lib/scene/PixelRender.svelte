@@ -29,7 +29,21 @@
 	// 늘리는 셰이더에서 톤 매핑·sRGB 변환 → 색 단계 제한 → 깊이 외곽선을 적용한다.
 	// Canvas의 autoRender를 끈 상태에서만 쓴다(SeaCanvas가 처리).
 	/** sharpFlags: 깃발 선명 패스를 쓸지 (품질 단계에 따라 구경 화면에서만 쓰기도 한다) */
-	let { pixelSize, sharpFlags = true }: { pixelSize: number; sharpFlags?: boolean } = $props();
+	/**
+	 * pixelNow, sharpNow: 프레임마다 읽는 값 (가속이 없는 환경에서 움직일 때와 멈췄을 때를 바꾼다).
+	 * 없으면 pixelSize, sharpFlags를 쓴다.
+	 */
+	let {
+		pixelSize,
+		sharpFlags = true,
+		pixelNow,
+		sharpNow
+	}: {
+		pixelSize: number;
+		sharpFlags?: boolean;
+		pixelNow?: () => number;
+		sharpNow?: () => boolean;
+	} = $props();
 
 	const frustum = new Frustum();
 	const viewProjection = new Matrix4();
@@ -142,16 +156,24 @@
 
 	const quad = new FullScreenQuad(material);
 
-	$effect(() => {
+	// 저해상도 타깃 크기는 그리기 직전에 맞춘다. 가속이 없는 환경에서는 움직임에 따라 픽셀 크기가
+	// 프레임 사이에 바뀌는데(SeaScene), 효과(effect)로 따로 바꾸면 한 프레임 늦거나 빈 화면이 낄 수 있다.
+	let targetW = 0;
+	let targetH = 0;
+	function fitTarget(px: number) {
 		const { width, height } = size.current;
-		const w = Math.max(1, Math.round(width / pixelSize));
-		const h = Math.max(1, Math.round(height / pixelSize));
+		const w = Math.max(1, Math.round(width / px));
+		const h = Math.max(1, Math.round(height / px));
+		if (w === targetW && h === targetH) return;
+		targetW = w;
+		targetH = h;
 		target.setSize(w, h);
 		material.uniforms.lowRes.value.set(w, h);
-	});
+	}
 
 	useTask(
 		() => {
+			fitTarget(pixelNow?.() ?? pixelSize);
 			const cam = camera.current;
 			if (cam instanceof PerspectiveCamera) {
 				material.uniforms.cameraNear.value = cam.near;
@@ -168,7 +190,7 @@
 
 			// 깃발 천만 화면 해상도로 다시 그린다 (sharp-flags.ts). 저해상도 깊이로 가려짐을 판단한다.
 			// 화면 안에 깃발이 없거나 품질 단계가 끄면 건너뛴다.
-			if (!sharpFlags || !anyFlagInView(cam)) return;
+			if (!(sharpNow?.() ?? sharpFlags) || !anyFlagInView(cam)) return;
 			sharpUniforms.tSceneDepth.value = target.depthTexture ?? placeholderDepth;
 			gl.getDrawingBufferSize(sharpUniforms.uResolution.value);
 			sharpUniforms.uNear.value = material.uniforms.cameraNear.value;
