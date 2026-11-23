@@ -24,12 +24,15 @@
 	const t = ko.profile;
 	let openSkill = $state<string | null>(null);
 
+	// 구역 사이 간격과 구분선. 소개 요점의 소제목과 구역 제목이 섞여 보이지 않게 한다
+	const sectionClass = 'mt-7 border-t-2 border-line/15 pt-5';
+
 	const graduation = (item: Profile['education'][number]) =>
 		t.formatGraduation(item.graduation, item.status);
 </script>
 
 {#snippet sectionTitle(label: string)}
-	<h3 class="mb-2 font-display text-label text-accent">{label}</h3>
+	<h3 class="mb-3 font-display text-label text-accent">{label}</h3>
 {/snippet}
 
 {#snippet projectLink(slug: string)}
@@ -75,23 +78,35 @@
 	</div>
 {/if}
 
+<!-- 소개: 소개 문장을 조금 크게 두고, 그 아래 요점을 소제목과 문단으로 쌓는다.
+     목록 페이지처럼 넓은 곳에서도 한 줄로 쌓고 줄 길이만 40rem으로 묶는다.
+     세 열로 나란히 두면 요점 길이가 달라 열 높이가 들쭉날쭉하고 한 줄이 너무 짧아졌다. -->
 {#if profile.intro.length > 0 || profile.introPoints.length > 0}
-	<div class={[identity && 'mt-5', 'space-y-3']}>
-		{#each profile.intro as line, i (i)}
-			<p>{line}</p>
-		{/each}
-		{#if profile.introPoints.length > 0}
-			<ul class="list-[square] space-y-1 pl-5 marker:text-accent">
-				{#each profile.introPoints as point (point)}
-					<li>{point}</li>
+	<div class={['max-w-[40rem] break-keep', identity && 'mt-6']}>
+		{#if profile.intro.length > 0}
+			<div class="space-y-2 text-[17px] leading-[28px] font-semibold text-ink">
+				{#each profile.intro as line, i (i)}
+					<p>{line}</p>
 				{/each}
-			</ul>
+			</div>
+		{/if}
+		{#if profile.introPoints.length > 0}
+			<div class={['space-y-6', profile.intro.length > 0 && 'mt-6']}>
+				{#each profile.introPoints as point, i (i)}
+					<div class="border-l-2 border-accent/60 pl-4">
+						{#if point.title}
+							<h3 class="mb-2 font-display text-label text-ink">{point.title}</h3>
+						{/if}
+						<p class="text-ink">{point.body}</p>
+					</div>
+				{/each}
+			</div>
 		{/if}
 	</div>
 {/if}
 
 {#if profile.skills.length > 0}
-	<section class="mt-6">
+	<section class={sectionClass}>
 		{@render sectionTitle(t.skills)}
 		<div class="space-y-4">
 			{#each profile.skills as group (group.group)}
@@ -140,15 +155,17 @@
 {/if}
 
 {#if profile.education.length > 0}
-	<section class="mt-6">
+	<section class={sectionClass}>
 		{@render sectionTitle(t.education)}
-		<ul class="space-y-1 text-body-sm">
+		<ul class="space-y-2 text-body-sm">
 			{#each profile.education as item (item.school)}
 				<li>
-					<span class="font-semibold">{item.school}</span>
-					{#if item.major}<span>{item.major}</span>{/if}
-					{#if item.degree}<span>{item.degree}</span>{/if}
-					{#if graduation(item)}<span class="text-ink-muted">{graduation(item)}</span>{/if}
+					<p class="font-semibold">{item.school}</p>
+					<p class="flex flex-wrap gap-x-2 text-ink-muted">
+						{#if item.major}<span>{item.major}</span>{/if}
+						{#if item.degree}<span>{item.degree}</span>{/if}
+						{#if graduation(item)}<span>{graduation(item)}</span>{/if}
+					</p>
 				</li>
 			{/each}
 		</ul>
@@ -156,13 +173,13 @@
 {/if}
 
 {#if profile.activities.length > 0}
-	<section class="mt-6">
+	<section class={sectionClass}>
 		{@render sectionTitle(t.activities)}
-		<ul class="space-y-2 text-body-sm">
+		<ul class="space-y-4 text-body-sm">
 			{#each profile.activities as item (item.title)}
 				<li>
-					<span class="font-semibold">{item.title}</span>
-					{#if item.date}<span class="text-ink-muted">{item.date}</span>{/if}
+					{#if item.date}<p class="text-caption text-ink-muted">{item.date}</p>{/if}
+					<p class="font-semibold">{item.title}</p>
 					{#if item.detail}<p class="text-ink-muted">{item.detail}</p>{/if}
 					{#if item.project && item.project in projectTitles}
 						<p>{@render projectLink(item.project)}</p>
@@ -174,7 +191,7 @@
 {/if}
 
 {#if profile.certifications.length > 0}
-	<section class="mt-6">
+	<section class={sectionClass}>
 		{@render sectionTitle(t.certifications)}
 		<ul class="flex flex-wrap gap-2">
 			{#each profile.certifications as item (item)}
@@ -185,7 +202,7 @@
 {/if}
 
 {#if profile.contact.email || profile.contact.github || profile.contact.links.length > 0}
-	<section class="mt-6">
+	<section class={sectionClass}>
 		{@render sectionTitle(t.contact)}
 		<dl class="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-body-sm">
 			{#if profile.contact.email}
